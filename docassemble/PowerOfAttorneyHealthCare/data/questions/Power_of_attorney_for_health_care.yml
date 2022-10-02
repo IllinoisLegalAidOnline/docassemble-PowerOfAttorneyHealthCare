@@ -2,6 +2,9 @@ metadata:
   title: Power of attorney agent health care
   short title: POA health care
   comment: This program helps you create documents to give another person access or control of your health care decisions.
+  authors:
+    - Vivian McNaughton
+    - Matt Newsted
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
@@ -17,7 +20,6 @@ objects:
 ---
 sections:
   - review_answers: Review your answers
----  
 ---
 # Road map
 sections:
@@ -55,8 +57,6 @@ code: |
   is_guardian
   if when_authorize == 'only':
     health_records
-  if when_authorize != 'only':
-    health_records = False
   quality_of_life
   set_progress(60)
   if agent_limitation == True:
@@ -77,6 +77,10 @@ code: |
     witness.address.address
   nav.set_section('section_download')
   set_progress(100)
+  successors[0].text_block
+  successors[1].text_block
+  successors[2].text_block
+  successors[3].text_block
   get_docs_screen
 ---
 id: welcome
@@ -130,7 +134,7 @@ subquestion: |
   ${ collapse_template(get_legal_help) }  
 
 fields:
-  - To continue, you must accept the [**terms of use**](s://www.illinoislegalaid.org/about/terms-of-use).: accept
+  - To continue, you must accept the [**terms of use**](https://www.illinoislegalaid.org/about/terms-of-use).: accept
     datatype: checkboxes
     none of the above: False
     minlength: 1
@@ -152,9 +156,9 @@ content: |
 id: about power of attorney
 continue button field: about_poa
 question: |
-  About the power of attorney for health care
+  About the Power of Attorney for Health Care
 subquestion: |
-  A power of attorney for health care is a form that lets you choose a person to make health care decisions for you. The person you choose will then be able to make health care decisions for you when you can't make decisions for yourself.
+  A Power of Attorney for Health Care is a form that lets you choose a person to make health care decisions for you. The person you choose will be able to make health care decisions for you when you can't make decisions for yourself.
   
   A few examples of possible decisions the person you choose can make include:
   
@@ -163,7 +167,7 @@ subquestion: |
   * Making end-of-life decisions, and
   * Deciding what happens to your body when you die.
 
-  [Learn more about setting up a power of attorney for health care](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare)
+  [Learn more about setting up a Power of Attorney for Health Care](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare)
 ---
 id: for yourself
 question: |
@@ -220,7 +224,7 @@ subquestion: |
   ${principal.name.full(middle='full')} must be an Illinois resident to use this form.
   % endif
   
-  If you do not live in Illinois, use [**this website**](https://www.lsc.gov/about-lsc/what-legal-aid/get-legal-help) to find a legal aid organization near you.
+  If you do not live in Illinois, use [**the Legal Services Corporation website**](https://www.lsc.gov/about-lsc/what-legal-aid/get-legal-help) to find a legal aid organization near you.
 buttons:
   - Exit: exit
   - Restart: restart
@@ -293,7 +297,7 @@ question: |
   % endif
 subquestion: |
   % if for_yourself == True:
-  A guardian of your person is someone appointed by the court to manage your health and well-being. They are able to make decisions on matters other than health care and would typically have rights, powers and duties over you similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
+  A guardian of your person is someone appointed by the court to manage your health and well-being. They are able to make decisions on matters other than health care and would typically have rights, powers, and duties over you similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % else:
   A guardian of ${principal.name.full(middle='full')}'s person is someone appointed by the court to manage ${principal.name.full(middle='full')}'s health and well-being. They are able to make decisions on matters other than health care and would typically have rights, powers and duties over ${principal.name.full(middle='full')} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % endif
@@ -321,20 +325,37 @@ choices:
   - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their decisions.: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
 ---
+depends on:
+  - for_yourself
+  - when_you_authorize
+  - when_principal_authorize
 code: |
   if for_yourself == True:
     when_authorize = when_you_authorize
   else:
     when_authorize = when_principal_authorize
 ---
+depends on: 
+  - when_authorize
+  - health_records
+code: |
+  if when_authorize == "only":
+    records_check = health_records
+  if when_authorize == "now":
+    records_check = True
+  if when_authorize == "do_not":
+    records_check = False
+---
 id: health records
 question: |
   % if for_yourself == True:
-  Do you want ${agent.name.full(middle='True')} to have complete access to your medical health records?
+  Do you want ${agent.name.full(middle='True')} to have complete access to your medical health records now?
   % else:
-  Does ${principal.name.full(middle='True')} want ${agent.name.full(middle='True')} to have complete access to their medical health records?
+  Does ${principal.name.full(middle='True')} want ${agent.name.full(middle='True')} to have complete access to their medical health records now?
   % endif
 subquestion: |
+  This information will help figure out when the Power of Attorney should begin.
+  
   % if for_yourself == True:
   ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
   ${agent.name.full(middle='full')} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers.
@@ -458,15 +479,13 @@ fields:
     datatype: yesnoradio
 terms:
   incompetent: |
-    Incompetent means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. For some purposes, a person may be certified by a doctor as unable to make decisions or handle business affairs.
+    Incompetent means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
 ---
 id: any other successors
 question: |
   Do you want to name another successor agent?
 subquestion: |
-  % if len(successors.elements) > 1:  
   So far you have told us about ${comma_and_list(successors.complete_elements().full_names())}.
-  % endif  
 fields:
   - "Anyone else?": successors.there_is_another
     datatype: yesnoradio
@@ -517,7 +536,7 @@ sets:
 question: |
   What is ${successors[i].name.full(middle='full')}'s phone number?
 subquestion: |
-  If you do not know this, leave this blank
+  If you do not know this, leave this blank.
 fields:
   - Phone number: successors[i].phone_number
     datatype: al_international_phone
@@ -594,6 +613,14 @@ fields:
     required: False
 ---
 depends on:
+  - successors[i].phone_number
+code: |
+  if defined('successors[i].phone_number'):
+    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
+  else:
+    successors[i].proper_number = ""
+---
+depends on:
   - successors[i].name.first
   - successors[i].name.middle
   - successors[i].name.last
@@ -604,10 +631,13 @@ depends on:
   - successors[i].address.zip
   - successors[i].phone_number
 code: |
-  if successors[i].phone_number == "":
+  if defined('successors[i].phone_number') == False:
     successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
   else:
-    successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + phone_number_formatted(successors[i].phone_number)
+    if successors[i].proper_number != "None":
+      successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
+    else:
+      successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
 ---
 id: get docs screen
 event: get_docs_screen
@@ -670,25 +700,21 @@ attachment:
       - "agent_address": ${ agent.address.on_one_line()}
       - "agent_phone": ${ agent.phone_number}
       - "agent_is_guardian": ${is_guardian}
-      - "later_no_records": ${True if when_authorize == 'only' and health_records == False else False}
-      - "later_yes_records": ${True if when_authorize == 'only' and health_records == True else False}
+      - "later_no_records": ${True if when_authorize == 'only' and records_check == False else False}
+      - "later_yes_records": ${True if when_authorize == 'only' and records_check == True else False}
       - "decisions_now": ${True if when_authorize == 'now' else False}
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_limits}
       - "witness_name": ${witness.name.full(middle='full')}
       - "witness_address": ${witness.address.on_one_line()}
-      - "successor_one": ${successors[0].name.full(middle='full') + ", " + successors[0].address.on_one_line()}
-      - "successor_two": ${successors[1].name.full(middle='full') + ", " + successors[1].address.on_one_line()}
-      - "successor_three": ${successors[2].name.full(middle='full') + ", " + successors[2].address.on_one_line()}
-      - "successor_four": ${successors[3].name.full(middle='full') + ", " + successors[3].address.on_one_line()}
-      - "successor_one_phone": ${phone_number_formatted(successors[0].phone_number)}
-      - "successor_two_phone": ${phone_number_formatted(successors[1].phone_number)}
-      - "successor_three_phone": ${phone_number_formatted(successors[2].phone_number)}
-      - "successor_four_phone": ${phone_number_formatted(successors[3].phone_number)}
+      - "successor_one": ${successors[0].text_block}
+      - "successor_two": ${successors[1].text_block}
+      - "successor_three": ${successors[2].text_block}
+      - "successor_four": ${successors[3].text_block}
 ---
 objects:
-  - poa_health_care: ALDocument.using(title="Power of attorney for health care", filename="poa_health_care", enabled=True, has_addendum=False)
+  - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
 ---
 objects:
@@ -865,6 +891,10 @@ columns:
       row_item.address.on_one_line(bare=True) if defined("row_item.address.address") else ""
   - Phone: |
       phone_number_formatted(row_item.phone_number) if defined("row_item.phone_number") else ""
+edit:
+  - name.first
+  - address.address
+  - phone_number
 delete buttons: True
 confirm: True
 ---
