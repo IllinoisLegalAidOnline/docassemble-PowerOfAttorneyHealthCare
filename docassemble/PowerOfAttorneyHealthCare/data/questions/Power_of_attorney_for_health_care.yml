@@ -1,5 +1,5 @@
 metadata:
-  title: Power of attorney agent health care
+  title: Power of attorney for health care
   short title: POA health care
   comment: This program helps you create documents to give another person access or control of your health care decisions.
   authors:
@@ -17,6 +17,13 @@ objects:
   - agent: ALIndividual
   - successors: ALPeopleList
   - witness: ALIndividual
+  - success_strings: ALPeopleList
+---
+code: |
+  ilao_easy_form_title = "Power of attorney for health care"
+  ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
+  github_user = 'IllinoisLegalAidOnline'
+  github_repo_name = 'docassemble-PowerOfAttorneyHealthCare'
 ---
 sections:
   - review_answers: Review your answers
@@ -26,7 +33,7 @@ sections:
   - section_intro: Start
   #- section_qualify: Do you qualify?
   - section_principal: Principal
-  - section_agent: Agent
+  - section_agent: Agent and powers
   - section_successors: Successor agents
   - section_witness: Witness
   - section_download: Download
@@ -34,8 +41,6 @@ sections:
 # interview order block
 mandatory: True
 code: |
-  ilao_easy_form_title = "Power of attorney for health care"
-  ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
   nav.set_section('section_intro')
   sees_nav_bar
   set_progress(5)
@@ -66,10 +71,6 @@ code: |
     successors.there_are_any = True
     successors.complete_attribute = 'complete'
     successors.gather()
-    #for person in successors:
-      #person.name.first
-      #person.address.address
-      #person.phone_number
   nav.set_section('section_witness')
   set_progress(80)
   if witness_known == True:
@@ -77,10 +78,14 @@ code: |
     witness.address.address
   nav.set_section('section_download')
   set_progress(100)
-  successors[0].text_block
-  successors[1].text_block
-  successors[2].text_block
-  successors[3].text_block
+  if successors.number_gathered() > 0:
+    success_strings[0].text_block
+  if successors.number_gathered() > 1:
+    success_strings[1].text_block
+  if successors.number_gathered() > 2:
+    success_strings[2].text_block
+  if successors.number_gathered() > 3:
+    success_strings[3].text_block
   get_docs_screen
 ---
 id: welcome
@@ -291,15 +296,15 @@ fields:
 id: agent as guardian
 question: |
   % if for_yourself == True:
-  Do you want ${agent.name.full(middle='full')} appointed as your guardian?
+  Do you want ${agent.name.full(middle='full')} appointed as your guardian, if needed?
   % else:
-  Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} appointed as their legal guardian?
+  Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} appointed as their legal guardian, if needed?
   % endif
 subquestion: |
   % if for_yourself == True:
-  A guardian of your person is someone appointed by the court to manage your health and well-being. They are able to make decisions on matters other than health care and would typically have rights, powers, and duties over you similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
+  A court may find it necessary to appoint a legal guardian to manage your health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over you similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % else:
-  A guardian of ${principal.name.full(middle='full')}'s person is someone appointed by the court to manage ${principal.name.full(middle='full')}'s health and well-being. They are able to make decisions on matters other than health care and would typically have rights, powers and duties over ${principal.name.full(middle='full')} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
+  A court may find it necessary to appoint a legal guardian to manage ${principal.name.full(middle='full')}'s health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over ${principal.name.full(middle='full')} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % endif
   
   If you click **No**, then a court may appoint someone other than ${agent.name.full(middle='full')} to be guardian.
@@ -322,7 +327,7 @@ question: |
 field: when_principal_authorize
 choices:
   - Only when ${principal.name.full(middle='full')} cannot make their own decisions.: only
-  - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their decisions.: now
+  - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their own decisions.: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
 ---
 depends on:
@@ -473,7 +478,11 @@ question: |
   Does ${principal.name.full(middle='full')} want to name successor agents?
   % endif
 subquestion: |
-  The person named as a successor agent will have power of attorney for health care for you if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits or refuses to accept the office of agent.
+  % if for_yourself == True:
+  The person named as a successor agent will have power of attorney for health care for you if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  % else:
+  The person named as a successor agent will have power of attorney for health care for ${principal.name.full(middle='full')} if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  % endif
 fields:
   - no label: any_successors
     datatype: yesnoradio
@@ -483,7 +492,11 @@ terms:
 ---
 id: any other successors
 question: |
+  % if for_yourself == True:
   Do you want to name another successor agent?
+  % else:
+  Does ${principal.name.full(middle='full')} want to name another successor agent?
+  % endif
 subquestion: |
   So far you have told us about ${comma_and_list(successors.complete_elements().full_names())}.
 fields:
@@ -632,12 +645,11 @@ depends on:
   - successors[i].phone_number
 code: |
   if defined('successors[i].phone_number') == False:
-    successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+  elif successors[i].proper_number != "None": 
+    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
   else:
-    if successors[i].proper_number != "None":
-      successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
-    else:
-      successors[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
 ---
 id: get docs screen
 event: get_docs_screen
@@ -700,18 +712,18 @@ attachment:
       - "agent_address": ${ agent.address.on_one_line()}
       - "agent_phone": ${ agent.phone_number}
       - "agent_is_guardian": ${is_guardian}
-      - "later_no_records": ${True if when_authorize == 'only' and records_check == False else False}
-      - "later_yes_records": ${True if when_authorize == 'only' and records_check == True else False}
+      - "later_no_records": ${True if when_authorize == 'only' and health_records == False else False}
+      - "later_yes_records": ${True if when_authorize == 'only' and health_records == True else False}
       - "decisions_now": ${True if when_authorize == 'now' else False}
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_limits}
       - "witness_name": ${witness.name.full(middle='full')}
       - "witness_address": ${witness.address.on_one_line()}
-      - "successor_one": ${successors[0].text_block}
-      - "successor_two": ${successors[1].text_block}
-      - "successor_three": ${successors[2].text_block}
-      - "successor_four": ${successors[3].text_block}
+      - "successor_one": ${success_strings[0].text_block if successors.number_gathered() > 0 else ""}
+      - "successor_two": ${success_strings[1].text_block if successors.number_gathered() > 1 else ""}
+      - "successor_three": ${success_strings[2].text_block if successors.number_gathered() > 2 else ""}
+      - "successor_four": ${success_strings[3].text_block if successors.number_gathered() > 3 else ""}
 ---
 objects:
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
