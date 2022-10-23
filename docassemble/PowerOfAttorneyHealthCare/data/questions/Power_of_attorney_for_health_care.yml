@@ -70,6 +70,7 @@ code: |
   if any_successors == True:
     successors.there_are_any = True
     successors.complete_attribute = 'complete'
+    cap_at_4
     successors.gather()
   nav.set_section('section_witness')
   set_progress(80)
@@ -78,14 +79,7 @@ code: |
     witness.address.address
   nav.set_section('section_download')
   set_progress(100)
-  if successors.number_gathered() > 0:
-    success_strings[0].text_block
-  if successors.number_gathered() > 1:
-    success_strings[1].text_block
-  if successors.number_gathered() > 2:
-    success_strings[2].text_block
-  if successors.number_gathered() > 3:
-    success_strings[3].text_block
+  list_successors
   get_docs_screen
 ---
 id: welcome
@@ -307,7 +301,7 @@ subquestion: |
   A court may find it necessary to appoint a legal guardian to manage ${principal.name.full(middle='full')}'s health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over ${principal.name.full(middle='full')} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % endif
   
-  If you click **No**, then a court may appoint someone other than ${agent.name.full(middle='full')} to be guardian.
+  If you click **No**, then a court may appoint someone other than ${agent.name.full(middle='full')} to be guardian if needed.
 fields:
   - no label: is_guardian
     datatype: yesnoradio
@@ -362,13 +356,13 @@ subquestion: |
   This information will help figure out when the Power of Attorney should begin.
   
   % if for_yourself == True:
-  ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
-  ${agent.name.full(middle='full')} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers.
-  This includes the ability to demand an opinion as to whether you are able to make your own decisions.
+  If you click **Yes**, ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
+  
+  ${agent.name.full(middle='full')} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers. This includes the ability to demand an opinion as to whether you are able to make your own decisions.
   % else:
-  ${agent.name.full(middle='full')} may use ${principal.name.full(middle='full')}'s medical records for the purpose of helping them with their health care plans and decisions.
-  ${agent.name.full(middle='full')} would have the authority to share their records with others as needed (such as their doctors) and would be able to communicate with their doctor and other health care providers.
-  This includes the ability to demand an opinion as to whether ${principal.name.full(middle='full')} is able to make their own decisions.
+  If you click **Yes**, ${agent.name.full(middle='full')} may use ${principal.name.full(middle='full')}'s medical records for the purpose of helping them with their health care plans and decisions.
+  
+  ${agent.name.full(middle='full')} would have the authority to share their records with others as needed (such as their doctors) and would be able to communicate with their doctor and other health care providers. This includes the ability to demand an opinion as to whether ${principal.name.full(middle='full')} is able to make their own decisions.
   % endif
 fields:
   - no label: health_records
@@ -626,12 +620,11 @@ fields:
     required: False
 ---
 depends on:
-  - successors[i].phone_number
+  -successors[i].name.first
 code: |
-  if defined('successors[i].phone_number'):
-    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
-  else:
-    successors[i].proper_number = ""
+  if successors.number_gathered() >= 4:
+    successors.there_is_another = False
+  cap_at_4 = True
 ---
 depends on:
   - successors[i].name.first
@@ -644,6 +637,33 @@ depends on:
   - successors[i].address.zip
   - successors[i].phone_number
 code: |
+  if successors.number_gathered() > 0:
+    #for person in successors:
+      #success_strings[person.index()].text_block
+    success_strings[0].text_block
+  if successors.number_gathered() > 1:
+    success_strings[1].text_block
+  if successors.number_gathered() > 2:
+    success_strings[2].text_block
+  if successors.number_gathered() > 3:
+    success_strings[3].text_block
+  list_successors = True
+---
+depends on:
+  - successors[i].name.first
+  - successors[i].name.middle
+  - successors[i].name.last
+  - successors[i].address.address
+  - successors[i].address.unit
+  - successors[i].address.city
+  - successors[i].address.state
+  - successors[i].address.zip
+  - successors[i].phone_number
+code: |
+  if defined('successors[i].phone_number'):
+    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
+  else:
+    successors[i].proper_number = ""
   if defined('successors[i].phone_number') == False:
     success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
   elif successors[i].proper_number != "None": 
@@ -891,7 +911,9 @@ question: |
 subquestion: |
   ${ successors.table }
 
+  % if successors.number_gathered() < 4:
   ${ successors.add_action() }
+  % endif
 ---
 id: successors table
 table: successors.table
