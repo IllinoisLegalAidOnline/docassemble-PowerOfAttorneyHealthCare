@@ -15,7 +15,10 @@ include:
 objects:
   - principal: ALIndividual
   - agent: ALIndividual
-  - successors: ALPeopleList
+  - successors: ALPeopleList.using(
+        object_type=ALIndividual,
+        complete_attribute='complete',
+        there_are_any=True)
   - witness: ALIndividual
   - success_strings: ALPeopleList
 ---
@@ -68,10 +71,7 @@ code: |
     agent_limits
   nav.set_section('section_successors')
   if any_successors == True:
-    successors.there_are_any = True
-    successors.complete_attribute = 'complete'
-    cap_at_4
-    successors.gather()
+    show_successors
   nav.set_section('section_witness')
   set_progress(80)
   if witness_known == True:
@@ -484,6 +484,28 @@ terms:
   incompetent: |
     Incompetent means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
 ---
+mandatory: True
+continue button field: show_successors
+question: |
+  Your successors
+subquestion: |
+  % for x in successors:
+  * ${ x } lives at 
+  % if x.phone_number != "":
+  ${ x.address.on_one_line(bare=True) }
+  and can be reached at 
+  ${ phone_number_formatted(x.phone_number) }.
+  % else:
+  ${ x.address.on_one_line(bare=True) }.
+  % endif
+  % endfor
+---
+code: |
+  successors[i].name.first
+  successors[i].address.address
+  successors[i].phone_number
+  successors[i].complete = True
+---
 id: any other successors
 question: |
   % if for_yourself == True:
@@ -496,11 +518,6 @@ subquestion: |
 fields:
   - "Anyone else?": successors.there_is_another
     datatype: yesnoradio
----
-code: |
-  successors[i].address.address
-  successors[i].phone_number
-  successors[i].complete = True
 ---
 sets:
   - successors[i].name.first
@@ -619,12 +636,12 @@ fields:
   - ZIP code: witness.address.zip
     required: False
 ---
-depends on:
-  -successors[i].name.first
+#depends on:
+  #-successors[i].name.first
 code: |
   if successors.number_gathered() >= 4:
     successors.there_is_another = False
-  cap_at_4 = True
+  #cap_at_4 = True
 ---
 depends on:
   - successors[i].name.first
@@ -679,8 +696,6 @@ subquestion: |
   Your forms are ready. View and download your forms below. Click **Make changes** to fix any mistakes.
   
   Read the instructions to learn what to do next.
-
-  Thank you for using ILAO Easy Forms!
   
   ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size="md") }
 
