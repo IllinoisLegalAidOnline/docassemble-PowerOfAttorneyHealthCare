@@ -27,9 +27,9 @@ code: |
   ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
   github_user = 'IllinoisLegalAidOnline'
   github_repo_name = 'docassemble-PowerOfAttorneyHealthCare'
----
-sections:
-  - review_answers: Review your answers
+#---
+#sections:
+#  - review_answers: Review your answers
 ---
 # Road map
 sections:
@@ -71,7 +71,8 @@ code: |
     agent_limits
   nav.set_section('section_successors')
   if any_successors == True:
-    show_successors
+    successors.gather()
+    #show_successors
   nav.set_section('section_witness')
   set_progress(80)
   if witness_known == True:
@@ -166,7 +167,7 @@ subquestion: |
   * Making end-of-life decisions, and
   * Deciding what happens to your body when you die.
 
-  [Learn more about setting up a Power of Attorney for Health Care](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare)
+  Learn more about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
 id: for yourself
 question: |
@@ -484,21 +485,21 @@ terms:
   incompetent: |
     Incompetent means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
 ---
-mandatory: True
-continue button field: show_successors
-question: |
-  Your successors
-subquestion: |
-  % for x in successors:
-  * ${ x } lives at 
-  % if x.phone_number != "":
-  ${ x.address.on_one_line(bare=True) }
-  and can be reached at 
-  ${ phone_number_formatted(x.phone_number) }.
-  % else:
-  ${ x.address.on_one_line(bare=True) }.
-  % endif
-  % endfor
+#mandatory: True
+#continue button field: show_successors
+#question: |
+#  Your successors
+#subquestion: |
+#  % for x in successors:
+#  * ${ x } lives at 
+#  % if x.phone_number != "":
+#  ${ x.address.on_one_line(bare=True) }
+#  and can be reached at 
+#  ${ phone_number_formatted(x.phone_number) }.
+#  % else:
+#  ${ x.address.on_one_line(bare=True) }.
+#  % endif
+#  % endfor
 ---
 code: |
   successors[i].name.first
@@ -677,16 +678,21 @@ depends on:
   - successors[i].address.zip
   - successors[i].phone_number
 code: |
-  if defined('successors[i].phone_number'):
-    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
-  else:
-    successors[i].proper_number = ""
-  if defined('successors[i].phone_number') == False:
-    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
-  elif successors[i].proper_number != "None": 
-    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
-  else:
-    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+  success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
+  if successors[i].phone_number != "None":
+    success_strings[i].text_block += ", " + str(phone_number_formatted(successors[i].phone_number))
+
+
+#  if defined('successors[i].phone_number'):
+#    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
+#  else:
+#    successors[i].proper_number = ""
+#  if defined('successors[i].phone_number') == False:
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+#  elif successors[i].proper_number != "None": 
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
+#  else:
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
 ---
 id: get docs screen
 event: get_docs_screen
@@ -745,7 +751,7 @@ attachment:
       - "principal_address": ${ principal.address.on_one_line()}
       - "agent_name": ${ agent.name.full(middle='full')}
       - "agent_address": ${ agent.address.on_one_line()}
-      - "agent_phone": ${ agent.phone_number}
+      - "agent_phone": ${ phone_number_formatted(agent.phone_number) }
       - "agent_is_guardian": ${is_guardian}
       - "later_no_records": ${True if when_authorize == 'only' and health_records == False else False}
       - "later_yes_records": ${True if when_authorize == 'only' and health_records == True else False}
@@ -930,22 +936,52 @@ subquestion: |
   ${ successors.add_action() }
   % endif
 ---
+id: successor review
+continue button field: x.review_successor
+generic object: ALIndividual
+question: |
+  Edit ${ x.name.full(middle="full") }'s information
+review: 
+  - Edit: x.name.first
+    button: |
+      **Successor name:**
+      ${ x.name.full(middle="full")  }
+  - Edit: x.address.address
+    button: |
+      **${ x.name.full(middle="full") }'s address: **
+      ${ x.address.on_one_line(bare=True) }
+  - Edit: x.phone_number
+    button: |
+      **${ x.name.full(middle="full") }'s phone number:**
+      ${ phone_number_formatted(x.phone_number) }
+---
 id: successors table
 table: successors.table
 rows: successors
 columns:
   - Name: |
       row_item.name.full(middle="full") if defined("row_item.name.first") else ""
-  - Address: |
-      row_item.address.on_one_line(bare=True) if defined("row_item.address.address") else ""
-  - Phone: |
-      phone_number_formatted(row_item.phone_number) if defined("row_item.phone_number") else ""
-edit:
-  - name.first
-  - address.address
-  - phone_number
+  - Successor, address, and phone number: |
+      action_button_html(url_action(row_item.attr_name("review_successor")), label="Edit", icon="pencil-alt")
 delete buttons: True
 confirm: True
+
+#id: successors table
+#table: successors.table
+#rows: successors
+#columns:
+#  - Name: |
+#      row_item.name.full(middle="full") if defined("row_item.name.first") else ""
+#  - Address: |
+#      row_item.address.on_one_line(bare=True) if defined("row_item.address.address") else ""
+#  - Phone: |
+#      phone_number_formatted(row_item.phone_number) if defined("row_item.phone_number") else ""
+#edit:
+#  - name.first
+#  - address.address
+#  - phone_number
+#delete buttons: True
+#confirm: True
 ---
 id: section_principal
 event: section_principal
