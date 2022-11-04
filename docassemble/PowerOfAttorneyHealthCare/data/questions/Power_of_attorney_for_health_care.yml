@@ -291,7 +291,7 @@ fields:
 id: agent as guardian
 question: |
   % if for_yourself == True:
-  Do you want ${agent.name.full(middle='full')} appointed as your guardian, if needed?
+  Do you want ${agent.name.full(middle='full')} appointed as your legal guardian, if needed?
   % else:
   Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} appointed as their legal guardian, if needed?
   % endif
@@ -530,10 +530,10 @@ question: |
   What is the ${ordinal(i)} successor's name?
   % endif
 fields:
-  - First name: successors[i].name.first
-  - Middle name: successors[i].name.middle
+  - First: successors[i].name.first
+  - Middle: successors[i].name.middle
     required: False
-  - Last name: successors[i].name.last
+  - Last: successors[i].name.last
   - Suffix: successors[i].name.suffix
     code: |
       name_suffix()
@@ -688,11 +688,11 @@ code: |
 #  else:
 #    successors[i].proper_number = ""
 #  if defined('successors[i].phone_number') == False:
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
 #  elif successors[i].proper_number != "None": 
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line() + ", " + successors[i].proper_number
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True) + ", " + successors[i].proper_number
 #  else:
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line()
+#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
 ---
 id: get docs screen
 event: get_docs_screen
@@ -748,9 +748,9 @@ attachment:
     editable: False
     fields:
       - "principal_name": ${ principal.name.full(middle='full') }
-      - "principal_address": ${ principal.address.on_one_line()}
+      - "principal_address": ${ principal.address.on_one_line(bare=True)}
       - "agent_name": ${ agent.name.full(middle='full')}
-      - "agent_address": ${ agent.address.on_one_line()}
+      - "agent_address": ${ agent.address.on_one_line(bare=True)}
       - "agent_phone": ${ phone_number_formatted(agent.phone_number) }
       - "agent_is_guardian": ${is_guardian}
       - "later_no_records": ${True if when_authorize == 'only' and health_records == False else False}
@@ -759,8 +759,8 @@ attachment:
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_limits}
-      - "witness_name": ${witness.name.full(middle='full')}
-      - "witness_address": ${witness.address.on_one_line()}
+      - "witness_name": ${witness.name.full(middle='full') if witness_known == True else ""}
+      - "witness_address": ${witness.address.on_one_line(bare=True) if witness_known == True and witness.address.address != ""  else ""}
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
       - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
@@ -820,9 +820,9 @@ review:
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
-      **Do you want ${agent.name.full(middle='full')} to serve as guardian?**
+      **Do you want ${agent.name.full(middle='full')} to serve as your legal guardian?**
       % else:
-      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as guardian?**
+      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as their legal guardian?**
       % endif
       ${word(yesno(is_guardian))}
   - Edit: when_you_authorize
@@ -1036,9 +1036,9 @@ review:
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
-      **Do you want ${agent.name.full(middle='full')} to serve as guardian?**
+      **Do you want ${agent.name.full(middle='full')} to serve as your legal guardian?**
       % else:
-      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as guardian?**
+      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as their legal guardian?**
       % endif
       ${word(yesno(is_guardian))}
   - Edit: when_you_authorize
