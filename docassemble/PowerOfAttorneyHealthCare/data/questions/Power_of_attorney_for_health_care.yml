@@ -51,7 +51,8 @@ code: |
   accept_terms
   about_poa
   nav.set_section('section_principal')
-  for_yourself
+  if for_yourself == False:
+    other_principal
   set_progress(20)
   principal.name.first
   if in_illinois == False:
@@ -89,7 +90,7 @@ question: |
 subquestion: |
   Welcome to Illinois Legal Aid Online's **Power of attorney for health care** Easy Form.
 
-  This program helps you create documents to give another person access to or control of your health care decisions.
+  This program helps you create documents to give someone you trust power of attorney for your health care. This means they can make choices about your health care when you cannot. They will also have access to your health care information.
   
   Learn about [**setting up a power of attorney for health care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
@@ -102,10 +103,12 @@ subquestion: |
   To use this program you will need to know:
 
   * The name, address, and phone number of the person you want to designate as the agent with power of attorney,
-  * When you want to authorize the agent to start making decisions for you, and
-  * What you want the agent to do about life-sustaining treatments and other health care issues.
+  * When you want to a uthorize the agent to start making decisions for you, and
+  * What you want the agent to do and not do regarding life-sustaining treatments and other health care issues.
 
-  After you download your forms, you will need to sign the form establishing power of attorney in the presence of a witness. The witness will also need to sign the form. Then, you will want to give copies of the power of attorney to your agent as well as your health care providers. [**Read more about how to set up a power of attorney for healthcare**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).
+  Your agent must be at least 18 years old.
+
+  After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. It is best to have two witnesses and get the document notarized. If only one witness signs, the power of attorney may not be recognized outside of Illinois. Then, you will want to give copies of the power of attorney to your agent as well as your health care providers. [**Read more about how to set up a power of attorney for healthcare**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).
     
   Set aside 5 to 15 minutes to finish this program. You can log in and save your work to return to later. 
   
@@ -184,6 +187,13 @@ terms:
     The agent is the person who will make medical decisions for the principal if the principal is too ill to make or communicate their own choices.
   principal: |
     The principal is the person who chooses an agent to make decisions about the principal's medical treatment.
+---
+id: other principal notice
+continue button field: other_principal
+question: |
+  Note about using this program for another person
+subquestion: |
+  You can use this program for someone other than yourself, but that person must be the one to make any choices.
 ---
 id: principal name
 question: |
@@ -313,6 +323,8 @@ question: |
 field: when_you_authorize
 choices:
   - Only when I cannot make decisions for myself.: only
+    help: |
+      A doctor will determine when you are unable to make decisions.
   - Now and continuing after I am no longer able to make decisions for myself.: now
   - I do not want to decide this now.: do_not
 ---
@@ -322,6 +334,8 @@ question: |
 field: when_principal_authorize
 choices:
   - Only when ${principal.name.full(middle='full')} cannot make their own decisions.: only
+    help: |
+      A doctor will determine when they are unable to make decisions.
   - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their own decisions.: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
 ---
@@ -381,6 +395,8 @@ choices:
     help: |
       This means that ${agent.name.full(middle='full')} will make choices to keep you alive as long as reasonably possible, even if you are suffering, brain-dead, or unable to recover.
   - I do not want to decide this now.: do_not
+    help: |
+      If you sign the form without deciding this, the default instruction is to prolong your life to the greatest extent possible.
 ---
 template: quality_explain_you
 
@@ -407,6 +423,8 @@ choices:
     help: |
       This means that ${agent.name.full(middle='full')} will make choices to keep ${principal.name.full(middle='full')} alive as long as reasonably possible, even if they are suffering, brain-dead, or unable to recover.
   - They do not want to decide this now.: do_not
+    help: |
+      If they sign the form without deciding this, the default instruction is to prolong their life to the greatest extent possible.
 ---
 template: quality_explain_principal
 
