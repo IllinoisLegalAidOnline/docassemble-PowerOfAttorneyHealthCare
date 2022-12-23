@@ -47,9 +47,10 @@ code: |
   nav.set_section('section_intro')
   sees_nav_bar
   set_progress(5)
+  about_poa
   how_to_use
   accept_terms
-  about_poa
+  next_steps
   nav.set_section('section_principal')
   if for_yourself == False:
     other_principal
@@ -103,12 +104,9 @@ subquestion: |
   To use this program you will need to know:
 
   * The name, address, and phone number of the person you want to designate as the agent with power of attorney,
-  * When you want to a uthorize the agent to start making decisions for you, and
+  * The names, address, and phone numbers of any successor agents,
+  * When you want to authorize the agent to start making decisions for you, and
   * What you want the agent to do and not do regarding life-sustaining treatments and other health care issues.
-
-  Your agent must be at least 18 years old.
-
-  After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. It is best to have two witnesses and get the document notarized. If only one witness signs, the power of attorney may not be recognized outside of Illinois. Then, you will want to give copies of the power of attorney to your agent as well as your health care providers. [**Read more about how to set up a power of attorney for healthcare**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).
     
   Set aside 5 to 15 minutes to finish this program. You can log in and save your work to return to later. 
   
@@ -125,6 +123,19 @@ subject: |
 content: |  
 
   This is an example of help. Click again to hide.
+---
+id: next steps
+continue button field: next_steps
+question: |
+  After the interview
+subquestion: |
+    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. 
+    
+    It is best to have two witnesses and get the document notarized. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
+    
+    After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
+    
+    [**Read more about how to set up a power of attorney for healthcare**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
 ---
 id: accept terms
 question: |
@@ -170,6 +181,8 @@ subquestion: |
   * Making end-of-life decisions, and
   * Deciding what happens to your body when you die.
 
+  Your agent must be at least 18 years old. The agent does not have to be a family member but it should be someone you trust. You can select successor agents as backup if the first agent becomes unable to make these decisions.
+
   Learn more about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
 id: for yourself
@@ -191,9 +204,12 @@ terms:
 id: other principal notice
 continue button field: other_principal
 question: |
-  Note about using this program for another person
+  Making a Power of Attorney for someone else
 subquestion: |
-  You can use this program for someone other than yourself, but that person must be the one to make any choices.
+  You can use this program for someone other than yourself, but:
+  
+  * That person must have directed you to make a Power of Attorney for Health Care, and
+  * That person must choose what powers they want to give their agent.
 ---
 id: principal name
 question: |
@@ -296,7 +312,6 @@ subquestion: |
 fields:
   - Phone number: agent.phone_number
     datatype: al_international_phone
-    required: False
 ---
 id: agent as guardian
 question: |
@@ -457,14 +472,14 @@ subquestion: |
   Your agent will have the authority to make any decision you could make to obtain or terminate any type of health care. You may limit what they can decide. Common restrictions include:
   
   * Starting or stopping a specific treatment,
-  * Authorizing an autopsy, or
-  * Disposing remains.
+  * Authorizing an autopsy or organ donation, or
+  * Choosing what will be done with your remains, such as cremation or burial.
   % else:
-  ${principal.name.full(middle='full')}'s agent will have the authority to make any decision you could make to obtain or terminate any type of health care. You may limit what they can decide. Common restrictions include:
+  ${principal.name.full(middle='full')}'s agent will have the authority to make any decision ${principal.name.full(middle='full')} could make to obtain or terminate any type of health care. ${principal.name.full(middle='full')} may limit what they can decide. Common restrictions include:
   
   * Startng or stopping a specific treatment,
-  * Authorizing an autopsy, or
-  * Disposing remains.
+  * Authorizing an autopsy or organ donation, or
+  * Choosing what will be done with ${principal.name.full(middle='full')}'s remains, such as cremation or burial.
   % endif
 fields:
   - no label: agent_limitation
@@ -583,7 +598,6 @@ subquestion: |
 fields:
   - Phone number: successors[i].phone_number
     datatype: al_international_phone
-    required: False
 ---
 id: witness known
 question: |
@@ -622,9 +636,17 @@ fields:
 ---
 template: do_not_know
 subject: |
+  % if for_yourself == True:
   **What if I don't know this now?**
+  % else:
+  **What if ${principal.name.full(middle='full')} does not know this now?**
+  % endif
 content: | 
+  % if for_yourself == True:
   You can leave the witness section of the form blank for now and complete it later when you know who will be your witness.
+  % else:
+  ${principal.name.full(middle='full')} can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
+  % endif
 ---
 id: witness name
 question: |
