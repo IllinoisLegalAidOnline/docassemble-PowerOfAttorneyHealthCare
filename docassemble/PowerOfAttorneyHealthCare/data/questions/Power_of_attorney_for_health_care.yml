@@ -65,10 +65,19 @@ code: |
   set_progress(40)
   agent.phone_number
   is_guardian
+  if when_authorize == "do_not":
+    authorization_warning
   if when_authorize == 'only':
     health_records
-  quality_of_life
+  if quality_of_life == "do_not":
+    quality_warning
   set_progress(60)
+  if for_yourself == True:
+    self_remains_preference
+    self_organ_donor
+  else:
+    other_remains_preference
+    other_organ_donor
   if agent_limitation == True:
     agent_limits
   nav.set_section('section_successors')
@@ -81,8 +90,11 @@ code: |
     witness.name.first
     witness.address.address
   nav.set_section('section_download')
+  if when_authorize == "do_not" or quality_of_life == "do_not":
+    completion_reminder
   set_progress(100)
   list_successors
+  agent_instructions
   get_docs_screen
 ---
 id: welcome
@@ -93,7 +105,7 @@ subquestion: |
 
   This program helps you create documents to give someone you trust power of attorney for your health care. This means they can make choices about your health care when you cannot. They will also have access to your health care information.
   
-  Learn about [**setting up a power of attorney for health care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
 ---
 id: instructions
@@ -135,7 +147,7 @@ subquestion: |
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
     
-    [**Read more about how to set up a power of attorney for healthcare**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
+    To learn more, read ILAO's article about[**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
 ---
 id: accept terms
 question: |
@@ -183,7 +195,7 @@ subquestion: |
 
   Your agent must be at least 18 years old. The agent does not have to be a family member but it should be someone you trust. You can select successor agents as backup if the first agent becomes unable to make these decisions.
 
-  Learn more about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
 id: for yourself
 question: |
@@ -342,6 +354,8 @@ choices:
       A doctor will determine when you are unable to make decisions.
   - Now and continuing after I am no longer able to make decisions for myself.: now
   - I do not want to decide this now.: do_not
+    help: |
+      If you do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, your agent will not make decisions for you until you cannot make your own decisions.
 ---
 id: agent authorization principal
 question: |
@@ -353,6 +367,19 @@ choices:
       A doctor will determine when they are unable to make decisions.
   - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their own decisions.: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
+    help: |
+      If they do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, their agent will not make decisions for them until they cannot make their own decisions.
+---
+id: when authorize warning
+question: |
+  Warning about authorization
+subquestion: |
+  % if for_yourself == True:
+  If you do not decide when you want ${agent.name.full(middle='full')} to start making choices for you, they will not be able to until you are unable to make choices for yourself.
+  % else:
+  If ${principal.name.full(middle='full')} does not decide when they want ${agent.name.full(middle='full')} to start making choices for them, ${agent.name.full(middle='full')} will not be able to until they are unable to make choices of their own.
+  % endif
+continue button field: authorization_warning
 ---
 depends on:
   - for_yourself
@@ -411,7 +438,7 @@ choices:
       This means that ${agent.name.full(middle='full')} will make choices to keep you alive as long as reasonably possible, even if you are suffering, brain-dead, or unable to recover.
   - I do not want to decide this now.: do_not
     help: |
-      If you sign the form without deciding this, the default instruction is to prolong your life to the greatest extent possible.
+      If you sign the form without deciding this, your agent will have to make this choice.
 ---
 template: quality_explain_you
 
@@ -439,7 +466,7 @@ choices:
       This means that ${agent.name.full(middle='full')} will make choices to keep ${principal.name.full(middle='full')} alive as long as reasonably possible, even if they are suffering, brain-dead, or unable to recover.
   - They do not want to decide this now.: do_not
     help: |
-      If they sign the form without deciding this, the default instruction is to prolong their life to the greatest extent possible.
+      If they sign the form without deciding this, their agent will have to make this choice.
 ---
 template: quality_explain_principal
 
@@ -454,6 +481,21 @@ content: |
   **They want their life to be prolonged to the greatest extent possible.**
   Staying alive is more important to ${principal.name.full(middle='full')}, no matter how sick they are, how much they are suffering, the cost of the procedures, or how unlikely their chances for recovery. ${principal.name.full(middle='full')} wants their life to be prolonged to the greatest extent possible allowed by reasonable medical standards.
 ---
+id: quality of life warning
+question: |
+  Warning about care preference
+subquestion: |
+  % if for_yourself == True:
+  If you do not decide whether ${agent.name.full(middle='full')} should focus on your quality of life or the length of your life, they will have to make that decision their self.
+  % else:
+  If ${principal.name.full(middle='full')} do not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that decision
+  % endif
+continue button field: quality_warning
+---
+depends on:
+  - for_yourself
+  - quality_of_life_you
+  - quality_of_life_principal
 code: |
   if for_yourself == True:
     quality_of_life = quality_of_life_you
@@ -471,21 +513,71 @@ subquestion: |
   % if for_yourself == True:
   Your agent will have the authority to make any decision you could make to obtain or terminate any type of health care. You may limit what they can decide. Common restrictions include:
   
-  * Starting or stopping a specific treatment,
-  * Authorizing an autopsy or organ donation, or
-  * Choosing what will be done with your remains, such as cremation or burial.
+  * Starting a specific treatment,
+  * Stopping a specific treatment, or
+  * Authorizing an autopsy.
   % else:
   ${principal.name.full(middle='full')}'s agent will have the authority to make any decision ${principal.name.full(middle='full')} could make to obtain or terminate any type of health care. ${principal.name.full(middle='full')} may limit what they can decide. Common restrictions include:
   
-  * Startng or stopping a specific treatment,
-  * Authorizing an autopsy or organ donation, or
-  * Choosing what will be done with ${principal.name.full(middle='full')}'s remains, such as cremation or burial.
+  * Starting a specific treatment,
+  * Stopping a specific treatment, or
+  * Authorizing an autopsy.
   % endif
 fields:
   - no label: agent_limitation
     datatype: yesnoradio
 ---
-id: agent limits
+id: self remains disposal
+question: |
+  If you pass away, what would you like ${agent.name.full(middle='full')} to do with your remains?
+fields: 
+  - Preference: self_remains_preference
+    input type: radio
+    choices: 
+    - I would prefer a burial for my remains.
+    - I would prefer my remains be cremated.
+    - I would like to type a specific preference.
+    - I do not have a preference.
+  - Specific preference: self_specific_burial_preference
+    show if: 
+      variable: self_remains_preference
+      is: "I would like to type a specific preference." 
+---
+id: other remains disposal
+question: |
+  If ${principal.name.full(middle='full')} passes away, what would they like ${agent.name.full(middle='full')} to do with their remains?
+fields: 
+  - Preference: other_remains_preference
+    input type: radio
+    choices: 
+    - They would prefer a burial for their remains.
+    - They would prefer their remains be cremated.
+    - They have a specific preference.
+    - They do not have a preference.
+  - Specific preference: other_specific_burial_preference
+    show if: 
+      variable: other_remains_preference
+      is: "They have a specific preference." 
+---
+id: self organ donor
+question: |
+  Are you an organ donor?
+field: self_organ_donor
+choices: 
+  - Yes
+  - No
+  - I would like my agent to decide this.
+---
+id: other organ donor
+question: |
+  Is ${principal.name.full(middle='full')} an organ donor?
+field: other_organ_donor
+choices: 
+  - Yes
+  - No
+  - They would like their agent to decide this.
+---
+id: other agent limits
 question: |
   % if for_yourself == True:
   What limits or special rules do you want to include?
@@ -493,10 +585,53 @@ question: |
   What limits or special rules does ${principal.name.full(middle='full')} want to include?
   % endif
 subquestion: |
-  For example: "The Agent may not donate any of my remains to science or to be used for transplantation."
+  For example: "The Agent may not donate any of my remains to science."
 fields:
   - Limits: agent_limits
     input type: area
+---
+depends on:
+  - agent_limits
+  - other_organ_donor
+  - self_organ_donor
+  - other_specific_burial_preference
+  - self_specific_burial_preference
+  - other_remains_preference
+  - self_remains_preference
+  - for_yourself
+  - agent_limitation
+code: |
+  agent_instructions = ""
+  if for_yourself == True:
+    if self_remains_preference != "I do not have a preference.":
+      if self_remains_preference != "I would like to type a specific preference.":
+        agent_instructions += self_remains_preference
+        agent_instructions += " "
+      elif self_remains_preference != "I would like to type a specific preference.":
+        agent_instructions += self_specific_burial_preference
+    if self_organ_donor == "They would like their agent to decide this.":
+      agent_instructions += "My agent is authorized to make a gift of my organs at their discretion. "
+    elif self_organ_donor == "No":
+      agent_instructions += "My agent is not authorized to make a gift of my organs. "
+    elif self_organ_donor == "Yes":
+      agent_instructions += "My agent should make a gift of my organs. "
+    if agent_limitation == True:
+      agent_instructions += agent_limits
+  else:
+    if other_remains_preference != "They do not have a preference.":
+      if other_remains_preference != "They have a specific preference.":
+        agent_instructions += other_remains_preference
+        agent_instructions += " "
+      elif other_remains_preference == "They have a specific preference.":
+        agent_instructions += other_specific_burial_preference
+    if other_organ_donor == "I would like my agent to decide this.":
+      agent_instructions += "My agent is authorized to make a gift of my organs. "
+    elif other_organ_donor == "No":
+      agent_instructions += "My agent is not authorized to make a gift of my organs. "
+    elif other_organ_donor == "Yes":
+      agent_instructions += "My agent should make a gift of my organs. "
+    if agent_limitation == True:
+      agent_instructions += agent_limits
 ---
 id: any successors
 question: |
@@ -734,6 +869,37 @@ code: |
 #  else:
 #    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
 ---
+id: completion reminder
+question: |
+  Reminder about unanswered questions
+subquestion: |
+  % if for_yourself == True:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  You have left some decisions to be made later. You may want to review your Power of Attorney form and make those choices before signing it.
+  % else:
+  You have not decided whether you want ${agent.name.full(middle='full')} to prioritize your quality of life or the length of your life. You may want to review your Power of Attorney form and make that choice before signing it.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  You have not decided when you want ${agent.name.full(middle='full')} to start making decisions for you. You may want to review your Power of Attorney form and make that choice before signing it.
+  % endif
+  % endif
+  % else:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  ${principal.name.full(middle='full')} has left some decisions to be made later. They may want to review their Power of Attorney form and make those choices before signing it.
+  % else:
+  ${principal.name.full(middle='full')} has not decided whether they want ${agent.name.full(middle='full')} to prioritize their quality of life or the length of their life. They may want to review your Power of Attorney form and make that choice before signing it.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  ${principal.name.full(middle='full')} has not decided when they want ${agent.name.full(middle='full')} to start making decisions for them. They may want to review their Power of Attorney form and make that choice before signing it.
+  % endif
+  % endif
+  % endif
+continue button field: completion_reminder
+---
 id: get docs screen
 event: get_docs_screen
 question: |
@@ -798,7 +964,7 @@ attachment:
       - "decisions_now": ${True if when_authorize == 'now' else False}
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
-      - "agent_limits": ${agent_limits}
+      - "agent_limits": ${agent_instructions}
       - "witness_name": ${witness.name.full(middle='full') if witness_known == True else ""}
       - "witness_address": ${witness.address.on_one_line(bare=True) if witness_known == True and witness.address.address != ""  else ""}
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
@@ -924,6 +1090,34 @@ review:
       % if quality_of_life == 'do_not':
       They do not want to decide this now.
       % endif
+    show if: for_yourself == False
+  - Edit: self_remains_preference
+    button: |
+      **Your disposition of remains instructions:**
+      % if self_remains_preference != 'I would like to type a specific preference.':
+      ${self_remains_preference}
+      % else:
+      ${self_specific_burial_preference}
+      % endif
+    show if: for_yourself
+  - Edit: other_remains_preference
+    button: |
+      **${principal.name.full(middle='full')}'s disposition of remains instructions:**
+      % if other_remains_preference != 'They have a specific preference.':
+      ${other_remains_preference}
+      % else:
+      ${other_specific_burial_preference}
+      % endif
+    show if: for_yourself == False
+  - Edit: self_organ_donor
+    button: |
+      **Would you like to donate your organs?**
+      ${self_organ_donor}
+    show if: for_yourself
+  - Edit: other_organ_donor
+    button: |
+      **Would ${principal.name.full(middle='full')} like to donate their organs?**
+      ${self_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
@@ -1140,6 +1334,34 @@ review:
       % if quality_of_life == 'do_not':
       They do not want to decide this now.
       % endif
+    show if: for_yourself == False
+  - Edit: self_remains_preference
+    button: |
+      **Your disposition of remains instructions:**
+      % if self_remains_preference != 'I would like to type a specific preference.':
+      ${self_remains_preference}
+      % else:
+      ${self_specific_burial_preference}
+      % endif
+    show if: for_yourself
+  - Edit: other_remains_preference
+    button: |
+      **${principal.name.full(middle='full')}'s disposition of remains instructions:**
+      % if other_remains_preference != 'They have a specific preference.':
+      ${other_remains_preference}
+      % else:
+      ${other_specific_burial_preference}
+      % endif
+    show if: for_yourself == False
+  - Edit: self_organ_donor
+    button: |
+      **Would you like to donate your organs?**
+      ${self_organ_donor}
+    show if: for_yourself
+  - Edit: other_organ_donor
+    button: |
+      **Would ${principal.name.full(middle='full')} like to donate their organs?**
+      ${self_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
