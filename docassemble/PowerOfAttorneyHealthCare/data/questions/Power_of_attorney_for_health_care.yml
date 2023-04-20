@@ -147,7 +147,7 @@ subquestion: |
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
     
-    To learn more, read ILAO's article about[**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
+    To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
 ---
 id: accept terms
 question: |
@@ -376,8 +376,12 @@ question: |
 subquestion: |
   % if for_yourself == True:
   If you do not decide when you want ${agent.name.full(middle='full')} to start making choices for you, they will not be able to until you are unable to make choices for yourself.
+  
+  A doctor will determine when you are unable to make decisions.
   % else:
   If ${principal.name.full(middle='full')} does not decide when they want ${agent.name.full(middle='full')} to start making choices for them, ${agent.name.full(middle='full')} will not be able to until they are unable to make choices of their own.
+  
+  A doctor will determine when they are unable to make decisions.
   % endif
 continue button field: authorization_warning
 ---
@@ -486,9 +490,9 @@ question: |
   Warning about care preference
 subquestion: |
   % if for_yourself == True:
-  If you do not decide whether ${agent.name.full(middle='full')} should focus on your quality of life or the length of your life, they will have to make that decision their self.
+  If you do not decide whether ${agent.name.full(middle='full')} should focus on your quality of life or the length of your life, they will have to make that choice.
   % else:
-  If ${principal.name.full(middle='full')} do not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that decision
+  If ${principal.name.full(middle='full')} do not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that choice.
   % endif
 continue button field: quality_warning
 ---
@@ -561,7 +565,7 @@ fields:
 ---
 id: self organ donor
 question: |
-  Are you an organ donor?
+  Do you want to donate your organs?
 field: self_organ_donor
 choices: 
   - Yes
@@ -570,7 +574,7 @@ choices:
 ---
 id: other organ donor
 question: |
-  Is ${principal.name.full(middle='full')} an organ donor?
+  Does ${principal.name.full(middle='full')} want to donate their organs?
 field: other_organ_donor
 choices: 
   - Yes
@@ -609,7 +613,7 @@ code: |
         agent_instructions += " "
       elif self_remains_preference != "I would like to type a specific preference.":
         agent_instructions += self_specific_burial_preference
-    if self_organ_donor == "They would like their agent to decide this.":
+    if self_organ_donor == "I would like my agent to decide this.":
       agent_instructions += "My agent is authorized to make a gift of my organs at their discretion. "
     elif self_organ_donor == "No":
       agent_instructions += "My agent is not authorized to make a gift of my organs. "
