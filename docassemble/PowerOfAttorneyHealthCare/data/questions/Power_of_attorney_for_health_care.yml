@@ -492,7 +492,7 @@ subquestion: |
   % if for_yourself == True:
   If you do not decide whether ${agent.name.full(middle='full')} should focus on your quality of life or the length of your life, they will have to make that choice.
   % else:
-  If ${principal.name.full(middle='full')} do not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that choice.
+  If ${principal.name.full(middle='full')} does not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that choice.
   % endif
 continue button field: quality_warning
 ---
