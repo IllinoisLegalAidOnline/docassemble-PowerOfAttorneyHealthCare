@@ -308,13 +308,17 @@ question: |
 fields:
   - Street address: agent.address.address
     address autocomplete: True
+    required: False
   - Address line 2: agent.address.unit
     required: False
   - City: agent.address.city
+    required: False
   - State: agent.address.state
+    required: False
     code: |
       states_list() 
   - ZIP code: agent.address.zip
+    required: False
 ---
 id: agent phone
 question: |
@@ -420,10 +424,14 @@ subquestion: |
   If you click **Yes**, ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
   
   ${agent.name.full(middle='full')} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers. This includes the ability to demand an opinion as to whether you are able to make your own decisions.
+  
+  If you become incapacitated, ${agent.name.full(middle='full')} will have access to your medical records even if you select **No** here.
   % else:
   If you click **Yes**, ${agent.name.full(middle='full')} may use ${principal.name.full(middle='full')}'s medical records for the purpose of helping them with their health care plans and decisions.
   
   ${agent.name.full(middle='full')} would have the authority to share their records with others as needed (such as their doctors) and would be able to communicate with their doctor and other health care providers. This includes the ability to demand an opinion as to whether ${principal.name.full(middle='full')} is able to make their own decisions.
+  
+  If ${principal.name.full(middle='full')} become incapacitated, ${agent.name.full(middle='full')} will have access to their medical records even if you select **No** here.
   % endif
 fields:
   - no label: health_records
@@ -534,6 +542,10 @@ fields:
 id: self remains disposal
 question: |
   If you pass away, what would you like ${agent.name.full(middle='full')} to do with your remains?
+subquestion: |
+  If you have a prepaid burial plan or cemetery plot, you should select **I would like to type a specific preference" and enter information regarding the plan or plot.
+  
+  If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with your remains.
 fields: 
   - Preference: self_remains_preference
     input type: radio
@@ -550,6 +562,10 @@ fields:
 id: other remains disposal
 question: |
   If ${principal.name.full(middle='full')} passes away, what would they like ${agent.name.full(middle='full')} to do with their remains?
+subquestion: |
+  If ${principal.name.full(middle='full')} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference" and enter information regarding the plan or plot.
+  
+  If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with ${principal.name.full(middle='full')} remains.
 fields: 
   - Preference: other_remains_preference
     input type: radio
@@ -647,8 +663,12 @@ question: |
 subquestion: |
   % if for_yourself == True:
   The person named as a successor agent will have power of attorney for health care for you if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  
+  If you list more than one successor agent, you should list them in order of preference. A successor agent will only have power of attorney if ${agent.name.full(middle='full')} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
   % else:
   The person named as a successor agent will have power of attorney for health care for ${principal.name.full(middle='full')} if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  
+  If ${principal.name.full(middle='full')} lists more than one successor agent, they should list them in order of preference. A successor agent will only have power of attorney if ${agent.name.full(middle='full')} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
   % endif
 fields:
   - no label: any_successors
@@ -700,7 +720,7 @@ question: |
   What is the successor's name?
   % else:
   What is the ${ordinal(i)} successor's name?
-  % endif
+  % endif  
 fields:
   - First: successors[i].name.first
   - Middle: successors[i].name.middle
@@ -750,9 +770,9 @@ subquestion: |
   The witness must be 18 or older and:
  
   % if any_successors == True: 
-  * Cannot be related to you, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
+  * Cannot be related by blood or marriage to you, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
   % else:
-  * Cannot be related to you or to the agent (${agent.name.full(middle='full')}),
+  * Cannot be related by blood or marriage to you or to the agent (${agent.name.full(middle='full')}),
   % endif
   * Cannot be named as the agent or a successor agent with power of attorney, and
   * Cannot be providing you with medical treatment (such as your doctor or nurse) or related to anyone providing you with medical treatment.
@@ -760,9 +780,9 @@ subquestion: |
   The witness must be 18 or older and:
 
   % if any_successors == True: 
-  * Cannot be related to ${principal.name.full(middle='full')}, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
+  * Cannot be related by blood or marriage to ${principal.name.full(middle='full')}, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
   % else:
-  * Cannot be related to ${principal.name.full(middle='full')} or to the agent (${agent.name.full(middle='full')}),
+  * Cannot be related by blood or marriage to ${principal.name.full(middle='full')} or to the agent (${agent.name.full(middle='full')}),
   % endif
   * Cannot be named as the agent or a successor agent with power of attorney, and
   * Cannot be providing ${principal.name.full(middle='full')} with medical treatment (such as their doctor or nurse) or related to anyone providing them with medical treatment.
