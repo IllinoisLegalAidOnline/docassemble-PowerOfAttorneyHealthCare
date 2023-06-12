@@ -80,6 +80,7 @@ code: |
     other_organ_donor
   if agent_limitation == True:
     agent_limits
+  delayed_revocation
   nav.set_section('section_successors')
   if any_successors == True:
     successors.gather()
@@ -222,6 +223,10 @@ subquestion: |
   
   * That person must have directed you to make a Power of Attorney for Health Care, and
   * That person must choose what powers they want to give their agent.
+  
+   When you help someone make a Power of Attorney form, you must follow their express wishes. If they cannot understand what they are signing or tell you their wishes, you should not use this program. 
+  
+  If you make a Power of Attorney for someone else that does not follow their instructions, you could face legal consequences. You could be charged with forgery, which can be punished with jail time.
 ---
 id: principal name
 question: |
@@ -328,6 +333,7 @@ subquestion: |
 fields:
   - Phone number: agent.phone_number
     datatype: al_international_phone
+    required: False
 ---
 id: agent as guardian
 question: |
@@ -609,6 +615,31 @@ subquestion: |
 fields:
   - Limits: agent_limits
     input type: area
+---
+id: delayed revocation
+question: |
+  % if for_yourself == True:
+  Do you want to delay future revocation of this power of attorney?
+  % else:
+  Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?
+  % endif
+subquestion: |
+  % if for_yourself == True:
+  Revocation is when you end the power of attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**Ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  
+  If you select **Yes** and later revoke your power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
+  
+  If you select **No** and later revoke your power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
+  % else:
+  Revocation is when ${principal.name.full(middle='full')} ends the power of attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**Ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  
+  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
+  
+  If you select **No** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+  % endif
+fields:
+  - no label: delayed_revocation
+    datatype: yesnoradio
 ---
 depends on:
   - agent_limits
@@ -995,6 +1026,8 @@ attachment:
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
       - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
       - "successor_four": ${success_strings[3] if successors.number_gathered() > 3 else ""}
+      - "yes_delay": ${True if delayed_revocation == True else False}
+      - "no_delay": ${False if delayed_revocation == True else True}
 ---
 objects:
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
@@ -1046,7 +1079,11 @@ review:
   - Edit: agent.phone_number
     button: |
       **${agent.name.full(middle='full')}'s phone number:**
+      % if agent.phone_number != "":
       ${phone_number_formatted(agent.phone_number)}
+      % else:
+      None entered
+      % endif
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
@@ -1152,6 +1189,14 @@ review:
       **Limits for ${agent.name.full(middle='full')}:**
       ${agent_limits}
     show if: agent_limitation
+  - Edit: delayed_revocation
+    button: |
+      % if for_yourself == True:
+      **Do you want to delay future revocation of this power of attorney by 30 days?**
+      % else:
+      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      % endif
+      ${word(yesno(delayed_revocation))}
   - Edit: any_successors
     button: |
       **Are there any successor agents?**
@@ -1290,7 +1335,11 @@ review:
   - Edit: agent.phone_number
     button: |
       **${agent.name.full(middle='full')}'s phone number:**
+      % if agent.phone_number != "":
       ${phone_number_formatted(agent.phone_number)}
+      % else:
+      None entered
+      % endif
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
@@ -1396,6 +1445,14 @@ review:
       **Limits for ${agent.name.full(middle='full')}:**
       ${agent_limits}
     show if: agent_limitation
+  - Edit: delayed_revocation
+    button: |
+      % if for_yourself == True:
+      **Do you want to delay future revocation of this power of attorney by 30 days?**
+      % else:
+      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      % endif
+      ${word(yesno(delayed_revocation))}
 ---
 event: section_successors
 question: |
