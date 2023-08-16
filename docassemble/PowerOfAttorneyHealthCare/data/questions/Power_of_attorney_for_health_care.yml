@@ -49,7 +49,6 @@ code: |
   set_progress(5)
   about_poa
   how_to_use
-  accept_terms
   next_steps
   nav.set_section('section_principal')
   if for_yourself == False:
@@ -569,7 +568,7 @@ id: other remains disposal
 question: |
   If ${principal.name.full(middle='full')} passes away, what would they like ${agent.name.full(middle='full')} to do with their remains?
 subquestion: |
-  If ${principal.name.full(middle='full')} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference" and enter information regarding the plan or plot.
+  If ${principal.name.full(middle='full')} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference** and enter information regarding the plan or plot.
   
   If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with ${principal.name.full(middle='full')} remains.
 fields: 
@@ -619,23 +618,23 @@ fields:
 id: delayed revocation
 question: |
   % if for_yourself == True:
-  Do you want to delay future revocation of this power of attorney?
+  Do you want to delay future revocation of this Power of Attorney?
   % else:
-  Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?
+  Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?
   % endif
 subquestion: |
   % if for_yourself == True:
-  Revocation is when you end the power of attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**Ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when you end the Power of Attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and later revoke your power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
+  If you select **Yes** and later revoke your Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
   
   If you select **No** and later revoke your power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
   % else:
-  Revocation is when ${principal.name.full(middle='full')} ends the power of attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**Ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when ${principal.name.full(middle='full')} ends the Power of Attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
+  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
   
-  If you select **No** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+  If you select **No** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
   % endif
 fields:
   - no label: delayed_revocation
@@ -788,6 +787,7 @@ subquestion: |
 fields:
   - Phone number: successors[i].phone_number
     datatype: al_international_phone
+    required: False
 ---
 id: witness known
 question: |
@@ -909,7 +909,7 @@ depends on:
   - successors[i].phone_number
 code: |
   success_strings[i] = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
-  if successors[i].phone_number != "None":
+  if successors[i].phone_number != "":
     success_strings[i] += ", " + str(phone_number_formatted(successors[i].phone_number))
 
 
@@ -1034,8 +1034,8 @@ objects:
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="Download all forms")
-  - al_court_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="Download all forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_court_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
 event: review_answers
@@ -1251,7 +1251,7 @@ review:
       ${ x.name.full(middle="full")  }
   - Edit: x.address.address
     button: |
-      **${ x.name.full(middle="full") }'s address: **
+      **${ x.name.full(middle="full") }'s address:**
       ${ x.address.on_one_line(bare=True) }
   - Edit: x.phone_number
     button: |
