@@ -106,7 +106,7 @@ subquestion: |
 
   This program helps you create documents to give someone you trust power of attorney for your health care. This means they can make choices about your health care when you cannot. They will also have access to your health care information.
   
-  To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**setting up a power of attorney for health care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
 ---
 id: instructions
@@ -140,11 +140,11 @@ content: |
 id: next steps
 continue button field: next_steps
 question: |
-  After the interview
+  Your next steps
 subquestion: |
     After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. 
     
-    It is best to have two witnesses and get the document notarized. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
+    You do not need to have two witnesses and get the document notarized, but it is best to do so. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
     
@@ -187,16 +187,16 @@ terms:
 id: other principal notice
 continue button field: other_principal
 question: |
-  Making a Power of Attorney for someone else
+  Making a power of attorney for someone else
 subquestion: |
   You can use this program for someone other than yourself, but:
   
   * That person must have directed you to make a Power of Attorney for Health Care, and
   * That person must choose what powers they want to give their agent.
   
-   When you help someone make a Power of Attorney form, you must follow their express wishes. If they cannot understand what they are signing or tell you their wishes, you should not use this program. 
+   When you help someone make a Power of Attorney for Health Care form, you must follow their express wishes. If they cannot understand what they are signing or tell you their wishes, you should not use this program. 
   
-  If you make a Power of Attorney for someone else that does not follow their instructions, you could face legal consequences. You could be charged with forgery, which can be punished with jail time.
+  If you make a Power of Attorney for Health Care for someone else that does not follow their instructions, you could face legal consequences. You could be charged with forgery, which can be punished with jail time.
 ---
 id: principal name
 question: |
@@ -335,7 +335,7 @@ choices:
   - Now and continuing after I am no longer able to make decisions for myself.: now
   - I do not want to decide this now.: do_not
     help: |
-      If you do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, your agent will not make decisions for you until you cannot make your own decisions.
+      If you do not make a choice before signing, the power of attorney will default to the first choice. If that happens, your agent will not make decisions for you until you cannot make your own decisions.
 ---
 id: agent authorization principal
 question: |
@@ -348,7 +348,7 @@ choices:
   - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their own decisions.: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
     help: |
-      If they do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, their agent will not make decisions for them until they cannot make their own decisions.
+      If they do not make a choice before signing, the power of attorney will default to the first choice. If that happens, their agent will not make decisions for them until they cannot make their own decisions.
 ---
 id: when authorize warning
 question: |
@@ -394,7 +394,7 @@ question: |
   Does ${principal.name.full(middle='True')} want ${agent.name.full(middle='True')} to have complete access to their medical health records now?
   % endif
 subquestion: |
-  This information will help figure out when the Power of Attorney should begin.
+  This information will help figure out when the power of attorney should begin.
   
   % if for_yourself == True:
   If you click **Yes**, ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
@@ -551,6 +551,8 @@ fields:
     - They have a specific preference.
     - They do not have a preference.
   - Specific preference: other_specific_burial_preference
+    help: |
+      This answer should be written in the first person. For example, "I would prefer a natural burial for my remains."
     show if: 
       variable: other_remains_preference
       is: "They have a specific preference." 
@@ -589,23 +591,23 @@ fields:
 id: delayed revocation
 question: |
   % if for_yourself == True:
-  Do you want to delay future revocation of this Power of Attorney?
+  Do you want to delay future revocation of this power of attorney?
   % else:
-  Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?
+  Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?
   % endif
 subquestion: |
   % if for_yourself == True:
-  Revocation is when you end the Power of Attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when you end the power of attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and later revoke your Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
+  If you select **Yes** and later revoke your power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
   
   If you select **No** and later revoke your power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
   % else:
-  Revocation is when ${principal.name.full(middle='full')} ends the Power of Attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when ${principal.name.full(middle='full')} ends the power of attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
+  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
   
-  If you select **No** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+  If you select **No** and ${principal.name.full(middle='full')} later revokes the power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
   % endif
 fields:
   - no label: delayed_revocation
@@ -631,26 +633,29 @@ code: |
       elif self_remains_preference != "I would like to type a specific preference.":
         agent_instructions += self_specific_burial_preference
     if self_organ_donor == "I would like my agent to decide this.":
-      agent_instructions += "My agent is authorized to make a gift of my organs at their discretion. "
+      agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
     elif self_organ_donor == "No":
-      agent_instructions += "My agent is not authorized to make a gift of my organs. "
+      agent_instructions += " My agent is not authorized to make a gift of my organs. "
     elif self_organ_donor == "Yes":
-      agent_instructions += "My agent should make a gift of my organs. "
+      agent_instructions += " My agent should make a gift of my organs. "
     if agent_limitation == True:
       agent_instructions += agent_limits
   else:
     if other_remains_preference != "They do not have a preference.":
       if other_remains_preference != "They have a specific preference.":
-        agent_instructions += other_remains_preference
-        agent_instructions += " "
+        if other_remains_preference == "They would prefer a burial for their remains.":
+          agent_instructions += "I would prefer a burial for my remains."
+        elif other_remains_preference == "They would prefer their remains be cremated.":
+          agent_instructions += "I would prefer my remains be cremated."
+
       elif other_remains_preference == "They have a specific preference.":
         agent_instructions += other_specific_burial_preference
-    if other_organ_donor == "I would like my agent to decide this.":
-      agent_instructions += "My agent is authorized to make a gift of my organs. "
+    if other_organ_donor == "They would like their agent to decide this.":
+      agent_instructions += " My agent is authorized to make a gift of my organs. "
     elif other_organ_donor == "No":
-      agent_instructions += "My agent is not authorized to make a gift of my organs. "
+      agent_instructions += " My agent is not authorized to make a gift of my organs. "
     elif other_organ_donor == "Yes":
-      agent_instructions += "My agent should make a gift of my organs. "
+      agent_instructions += " My agent should make a gift of my organs. "
     if agent_limitation == True:
       agent_instructions += agent_limits
 ---
@@ -902,25 +907,25 @@ subquestion: |
   % if for_yourself == True:
   % if quality_of_life == "do_not":
   % if when_authorize == "do_not":
-  You have left some decisions to be made later. You may want to review your Power of Attorney form and make those choices before signing it.
+  You have left some decisions to be made later. You may want to review your Power of Attorney for Health Care form and make those choices before signing it.
   % else:
-  You have not decided whether you want ${agent.name.full(middle='full')} to prioritize your quality of life or the length of your life. You may want to review your Power of Attorney form and make that choice before signing it.
+  You have not decided whether you want ${agent.name.full(middle='full')} to prioritize your quality of life or the length of your life. You may want to review your Power of Attorney for Health Care form and make that choice before signing it.
   % endif
   % else:
   % if when_authorize == "do_not":
-  You have not decided when you want ${agent.name.full(middle='full')} to start making decisions for you. You may want to review your Power of Attorney form and make that choice before signing it.
+  You have not decided when you want ${agent.name.full(middle='full')} to start making decisions for you. You may want to review your Power of Attorney for Health Care form and make that choice before signing it.
   % endif
   % endif
   % else:
   % if quality_of_life == "do_not":
   % if when_authorize == "do_not":
-  ${principal.name.full(middle='full')} has left some decisions to be made later. They may want to review their Power of Attorney form and make those choices before signing it.
+  ${principal.name.full(middle='full')} has left some decisions to be made later. They may want to review their Power of Attorney for Health Care form and make those choices before signing it.
   % else:
-  ${principal.name.full(middle='full')} has not decided whether they want ${agent.name.full(middle='full')} to prioritize their quality of life or the length of their life. They may want to review your Power of Attorney form and make that choice before signing it.
+  ${principal.name.full(middle='full')} has not decided whether they want ${agent.name.full(middle='full')} to prioritize their quality of life or the length of their life. They may want to review your Power of Attorney for Health Care form and make that choice before signing it.
   % endif
   % else:
   % if when_authorize == "do_not":
-  ${principal.name.full(middle='full')} has not decided when they want ${agent.name.full(middle='full')} to start making decisions for them. They may want to review their Power of Attorney form and make that choice before signing it.
+  ${principal.name.full(middle='full')} has not decided when they want ${agent.name.full(middle='full')} to start making decisions for them. They may want to review their Power of Attorney for Health Care form and make that choice before signing it.
   % endif
   % endif
   % endif
