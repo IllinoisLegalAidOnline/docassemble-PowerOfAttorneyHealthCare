@@ -1262,6 +1262,7 @@ confirm: True
 #delete buttons: True
 #confirm: True
 ---
+section: Principal
 id: section_principal
 event: section_principal
 question: |
@@ -1294,6 +1295,7 @@ review:
       % endif
       ${principal.address.on_one_line(bare=True)}
 ---
+section: Agent and powers
 event: section_agent
 question: |
   About the agent
@@ -1430,6 +1432,7 @@ review:
       % endif
       ${word(yesno(delayed_revocation))}
 ---
+section: Successor agents
 event: section_successors
 question: |
   About the successor agents
@@ -1449,6 +1452,7 @@ review:
       % endfor    
     show if: any_successors
 ---
+section: Witness
 event: section_witness
 question: |
   About the witness
