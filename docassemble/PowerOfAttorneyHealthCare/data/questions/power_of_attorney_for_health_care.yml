@@ -155,7 +155,7 @@ continue button field: about_poa
 question: |
   About the Power of Attorney for Health Care
 subquestion: |
-  A Power of Attorney for Health Care is a form that lets you choose a person to make health care decisions for you. The person you choose will be able to make health care decisions for you when you can't make decisions for yourself.
+  A Power of Attorney for Health Care is a form that lets you choose a person to make health care decisions for you. The person you choose will be able to make health care decisions for you when you can't make decisions for yourself. This written form is often called an "advance directive."
   
   A few examples of possible decisions the person you choose can make include:
   
@@ -630,7 +630,7 @@ code: |
       if self_remains_preference != "I would like to type a specific preference.":
         agent_instructions += self_remains_preference
         agent_instructions += " "
-      elif self_remains_preference != "I would like to type a specific preference.":
+      elif self_remains_preference == "I would like to type a specific preference.":
         agent_instructions += self_specific_burial_preference
     if self_organ_donor == "I would like my agent to decide this.":
       agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
@@ -651,7 +651,7 @@ code: |
       elif other_remains_preference == "They have a specific preference.":
         agent_instructions += other_specific_burial_preference
     if other_organ_donor == "They would like their agent to decide this.":
-      agent_instructions += " My agent is authorized to make a gift of my organs. "
+      agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
     elif other_organ_donor == "No":
       agent_instructions += " My agent is not authorized to make a gift of my organs. "
     elif other_organ_donor == "Yes":
@@ -1154,7 +1154,7 @@ review:
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name.full(middle='full')} like to donate their organs?**
-      ${self_organ_donor}
+      ${other_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
@@ -1410,7 +1410,7 @@ review:
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name.full(middle='full')} like to donate their organs?**
-      ${self_organ_donor}
+      ${other_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
