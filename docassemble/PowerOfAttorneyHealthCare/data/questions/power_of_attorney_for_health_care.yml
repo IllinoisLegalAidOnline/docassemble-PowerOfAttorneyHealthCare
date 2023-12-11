@@ -61,7 +61,8 @@ code: |
   principal.address.address
   nav.set_section('section_agent')
   agent.name.first
-  agent.address.address
+  if agent.in_america == False:
+    agent.intl_address_full
   set_progress(40)
   agent.phone_number
   is_guardian
@@ -89,7 +90,7 @@ code: |
   set_progress(80)
   if witness_known == True:
     witness.name.first
-    witness.address.address
+    witness.address_string
   nav.set_section('section_download')
   if when_authorize == "do_not" or quality_of_life == "do_not":
     completion_reminder
@@ -279,21 +280,45 @@ fields:
 ---
 id: agent address
 question: |
-  What is ${agent.name.full(middle='full')}'s address?
+  Enter ${agent.name.full(middle='full')}'s address
+subquestion: |
+  ${collapse_template(intl_address_help)}
 fields:
+  - Does ${agent.name.full(middle='full')} have a United States address?: agent.in_america
+    datatype: yesnoradio
+    default: True
+    help: |
+      Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
   - Street address: agent.address.address
     address autocomplete: True
-    required: False
+    show if: agent.in_america
   - Address line 2: agent.address.unit
     required: False
+    show if: agent.in_america
   - City: agent.address.city
-    required: False
+    show if: agent.in_america
   - State: agent.address.state
-    required: False
+    show if: agent.in_america
     code: |
       states_list() 
   - ZIP code: agent.address.zip
-    required: False
+    show if: agent.in_america
+  - Non-US address line 1 (street address, apartment number): agent.intl_address_1
+    show if: 
+      variable: agent.in_america
+      is: False
+  - Non-US address line 2 (city, province or state, postal code, country): agent.intl_address_2
+    show if: 
+      variable: agent.in_america
+      is: False
+---
+template: intl_address_help
+subject: |
+  **What if my agent does not have a United States address?**
+content: |
+  You are able to list someone outside of the United States as your agent. However, there may issues if a doctor or hospital is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
+  
+  For international addresses, there will be space for two lines to enter the address. You should enter the international address using the English alphabet.
 ---
 id: agent phone
 question: |
@@ -701,7 +726,7 @@ terms:
 ---
 code: |
   successors[i].name.first
-  successors[i].address.address
+  successors[i].in_america
   successors[i].phone_number
   successors[i].complete = True
 ---
@@ -739,19 +764,47 @@ fields:
 ---
 id: successor address
 sets:
-  - successors[i].address.address
+  - successors[i].in_america
 question: |
-  What is ${successors[i].name.full(middle='full')}'s address?
+  Enter ${successors[i].name.full(middle='full')}'s address
+subquestion: |
+  ${collapse_template(success_intl_address_help)}
 fields:
+  - Does ${successors[i].name.full(middle='full')} have a United States address?: successors[i].in_america
+    datatype: yesnoradio
+    default: True
+    help: |
+      Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
   - Street address: successors[i].address.address
     address autocomplete: True
+    show if: successors[i].in_america
   - Address line 2: successors[i].address.unit
     required: False
+    show if: successors[i].in_america
   - City: successors[i].address.city
+    show if: successors[i].in_america
   - State: successors[i].address.state
+    show if: successors[i].in_america
     code: |
       states_list() 
   - ZIP code: successors[i].address.zip  
+    show if: successors[i].in_america
+  - Non-US address line 1 (street address, apartment number): successors[i].intl_address_1
+    show if: 
+      variable: successors[i].in_america
+      is: False
+  - Non-US address line 2 (city, province or state, postal code, country): successors[i].intl_address_2
+    show if: 
+      variable: successors[i].in_america
+      is: False
+---
+template: success_intl_address_help
+subject: |
+  **What if my successor agent does not have a United States address?**
+content: |
+  You are able to list someone outside of the United States as your successor agent. However, there may issues if a doctor or hospital is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
+  
+  For international addresses, there will be space for two lines to enter the address. You should enter the international address using the English alphabet.
 ---
 id: successor phone
 sets:
@@ -828,20 +881,74 @@ question: |
   What is ${witness.name.full(middle='full')}'s address?
 subquestion: |
   If you do not know their address, you can leave this blank.
+  
+  ${collapse_template(witness_intl_address_help)}
 fields:
+  - Does ${witness.name.full(middle='full')} have a United States address?: witness.in_america
+    datatype: yesnoradio
+    default: True
+    required: False
+    help: |
+      Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
   - Street address: witness.address.address
     address autocomplete: True
     required: False
+    show if: witness.in_america
   - Address line 2: witness.address.unit
     required: False
+    show if: witness.in_america
   - City: witness.address.city
+    show if: witness.in_america
     required: False
   - State: witness.address.state
+    show if: witness.in_america
     code: |
       states_list() 
     required: False
   - ZIP code: witness.address.zip
+    show if: witness.in_america
     required: False
+  - Non-US address line 1 (street address, apartment number): witness.intl_address_1
+    show if: 
+      variable: witness.in_america
+      is: False
+    required: False
+  - Non-US address line 2 (city, province or state, postal code, country): witness.intl_address_2
+    show if: 
+      variable: witness.in_america
+      is: False
+    required: False
+---
+template: witness_intl_address_help
+subject: |
+  **What if my witness does not have a United States address?**
+content: | 
+  You can list an address outside of the United States for your witness. For international addresses, there will be space for two lines to enter the address. You should enter the international address using the English alphabet.
+---
+depends on:
+  - witness_known
+  - witness.in_america
+  - witness.address.address
+  - witness.address.unit
+  - witness.address.city
+  - witness.address.state
+  - witness.address.zip
+  - witness.intl_address_1
+  - witness.intl_address_2
+code: |
+  if witness_known == True:
+    if witness.in_america == True:
+      if witness.address.address != "":
+        witness.address_string = witness.address.on_one_line(bare=True)
+      else:
+        witness.address_string = ""
+    else:
+      if witness.intl_address_1 != "":
+        witness.address_string = witness.intl_address_1 + ", " + witness.intl_address_2
+      else:
+        witness.address_string = ""
+  else:
+    witness.address_string = ""
 ---
 #depends on:
   #-successors[i].name.first
@@ -860,6 +967,10 @@ depends on:
   - successors[i].address.state
   - successors[i].address.zip
   - successors[i].phone_number
+  - any_successors
+  - successors[i].intl_address_1
+  - successors[i].intl_address_2
+  - successors[i].in_america
 code: |
   if successors.number_gathered() > 0:
     #for person in successors:
@@ -874,6 +985,7 @@ code: |
   list_successors = True
 ---
 depends on:
+  - any_successors
   - successors[i].name.first
   - successors[i].name.middle
   - successors[i].name.last
@@ -883,8 +995,15 @@ depends on:
   - successors[i].address.state
   - successors[i].address.zip
   - successors[i].phone_number
+  - successors[i].in_america
+  - successors[i].intl_address_1
+  - successors[i].intl_address_2
 code: |
-  success_strings[i] = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
+  success_strings[i] = successors[i].name.full(middle='full') + ", " 
+  if successors[i].in_america == True:
+    success_strings[i] += successors[i].address.on_one_line(bare=True)
+  else:
+    success_strings[i] += successors[i].intl_address_1 + ", " + successors[i].intl_address_2
   if successors[i].phone_number != "":
     success_strings[i] += ", " + str(phone_number_formatted(successors[i].phone_number))
 
@@ -976,6 +1095,15 @@ attachment:
     filename: instructions_for_poa_health_care
     docx template file: power_of_attorney_for_health_care_instructions.docx
 ---
+# creates a single string variable for international address
+depends on:
+  - agent.intl_address_1
+  - agent.intl_address_2
+code: |
+  agent.intl_address_full = agent.intl_address_1
+  agent.intl_address_full += ", "
+  agent.intl_address_full += agent.intl_address_2
+---
 attachment:
   - name: Power of Attorney for Health Care
     variable name: poa_health_care[i]
@@ -987,7 +1115,7 @@ attachment:
       - "principal_name": ${ principal.name.full(middle='full') }
       - "principal_address": ${ principal.address.on_one_line(bare=True)}
       - "agent_name": ${ agent.name.full(middle='full')}
-      - "agent_address": ${ agent.address.on_one_line(bare=True)}
+      - "agent_address": ${ agent.address.on_one_line(bare=True) if agent.in_america == True else agent.intl_address_full}
       - "agent_phone": ${ phone_number_formatted(agent.phone_number) }
       - "agent_is_guardian": ${is_guardian}
       - "later_no_records": ${True if when_authorize == 'only' and health_records == False else False}
@@ -997,7 +1125,7 @@ attachment:
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_instructions}
       - "witness_name": ${witness.name.full(middle='full') if witness_known == True else ""}
-      - "witness_address": ${witness.address.on_one_line(bare=True) if witness_known == True and witness.address.address != ""  else ""}
+      - "witness_address": ${witness.address_string}
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
       - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
@@ -1048,10 +1176,14 @@ review:
     button: |
       **The agent's name:**
       ${agent.name.full(middle='full')}
-  - Edit: agent.address.address
+  - Edit: agent.in_america
     button: |
       **${agent.name.full(middle='full')}'s address:**
+      % if agent.in_america == True:
       ${agent.address.on_one_line(bare=True)}
+      % else:
+      ${agent.intl_address_1}, ${agent.intl_address_2}
+      % endif
   - Edit: agent.phone_number
     button: |
       **${agent.name.full(middle='full')}'s phone number:**
@@ -1198,10 +1330,14 @@ review:
       **The witness's name:**
       ${witness.name.full(middle='full')}
     show if: witness_known
-  - Edit: witness.address.address
+  - Edit: witness.in_america
     button: |
       **${witness.name.full(middle='full')}'s address:**
+      % if witness.in_america == True:
       ${witness.address.on_one_line(bare=True)}
+      % else:
+      ${witness.intl_address_1}, ${witness.intl_address_2}
+      % endif
     show if: witness_known
 ---
 id: successors edit
@@ -1225,10 +1361,14 @@ review:
     button: |
       **Successor name:**
       ${ x.name.full(middle="full")  }
-  - Edit: x.address.address
+  - Edit: x.in_america
     button: |
       **${ x.name.full(middle="full") }'s address:**
+      % if x.in_america == True:
       ${ x.address.on_one_line(bare=True) }
+      % else:
+      ${x.intl_address_1}, ${x.intl_address_2}
+      % endif
   - Edit: x.phone_number
     button: |
       **${ x.name.full(middle="full") }'s phone number:**
@@ -1306,10 +1446,14 @@ review:
     button: |
       **The agent's name:**
       ${agent.name.full(middle='full')}
-  - Edit: agent.address.address
+  - Edit: agent.in_america
     button: |
       **${agent.name.full(middle='full')}'s address:**
+      % if agent.in_america == True:
       ${agent.address.on_one_line(bare=True)}
+      % else:
+      ${agent.intl_address_1}, ${agent.intl_address_2}
+      % endif
   - Edit: agent.phone_number
     button: |
       **${agent.name.full(middle='full')}'s phone number:**
@@ -1472,8 +1616,12 @@ review:
       **The witness's name:**
       ${witness.name.full(middle='full')}
     show if: witness_known
-  - Edit: witness.address.address
+  - Edit: witness.in_america
     button: |
       **${witness.name.full(middle='full')}'s address:**
+      % if witness.in_america == True:
       ${witness.address.on_one_line(bare=True)}
+      % else:
+      ${witness.intl_address_1}, ${witness.intl_address_2}
+      % endif
     show if: witness_known
