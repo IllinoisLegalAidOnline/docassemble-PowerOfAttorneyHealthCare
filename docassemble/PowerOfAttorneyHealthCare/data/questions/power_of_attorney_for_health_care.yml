@@ -1379,7 +1379,7 @@ review:
       % endif
     show if: witness_known
 ---
-id: successors edit
+id: successors review screen
 continue button field: successors.revisit
 question: |
   Edit the successors
@@ -1390,7 +1390,7 @@ subquestion: |
   ${ successors.add_action() }
   % endif
 ---
-id: successor review
+id: successor review screen
 continue button field: x.review_successor
 generic object: ALIndividual
 question: |
@@ -1442,7 +1442,7 @@ confirm: True
 #confirm: True
 ---
 section: Principal
-id: section_principal
+id: principal review screen
 event: section_principal
 question: |
   About the principal
@@ -1475,6 +1475,7 @@ review:
       ${principal.address.on_one_line(bare=True)}
 ---
 section: Agent and powers
+id: agent review screen
 event: section_agent
 question: |
   About the agent
@@ -1616,6 +1617,7 @@ review:
       ${word(yesno(delayed_revocation))}
 ---
 section: Successor agents
+id: successors review screen
 event: section_successors
 question: |
   About the successor agents
@@ -1636,6 +1638,7 @@ review:
     show if: any_successors
 ---
 section: Witness
+id: witness review screen
 event: section_witness
 question: |
   About the witness
