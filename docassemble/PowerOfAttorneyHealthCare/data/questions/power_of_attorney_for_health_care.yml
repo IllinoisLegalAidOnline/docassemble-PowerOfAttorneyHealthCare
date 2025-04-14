@@ -222,6 +222,51 @@ subquestion: |
 
   To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
+depends on: 
+  - for_yourself
+  - principal.name.first
+  - principal.name.middle
+  - principal.name.last
+  - principal.name.suffix
+code: |
+  if for_yourself:
+    my_their = "my"
+    my_subject = "my"
+    your_their = "your"
+    your_subject = "your"
+    do_does = "do"
+    you_subject = "you"
+    i_subject = "I"
+    myself_their_self = "myself"
+    yourself_their_self = "yourself"
+    am_is = "am"
+    have_has = "have"
+    i_they = "I"
+    me_subject = "me"
+    me_them = "me"
+    am_are = "am"
+    you_they = "you"
+  else:
+    my_their = "their"
+    my_subject = principal.name.full(middle='full')
+    my_subject += "'s"
+    your_subject = principal.name.full(middle='full')
+    your_subject += "'s"
+    your_their = "their"
+    you_subject = principal.name.full(middle='full')
+    i_subject = principal.name.full(middle='full')
+    do_does = " does"
+    myself_their_self = "their self"
+    yourself_their_self = "their self"
+    am_is = "is"
+    have_has = "has"
+    i_they = "they"
+    me_subject = principal.name.full(middle='full')
+    me_them = "them"
+    am_are = "are"
+    you_they = "they"
+  grammar_code = True
+---
 id: for yourself
 question: |
   Are you making these forms for yourself?
@@ -470,7 +515,7 @@ subquestion: |
   ${principal.name.full(middle='full')} can still change their mind and **{revoke}** the Power of Attorney after they sign it, as long as they have the required **{legal capacity}**.
 field: when_principal_authorize
 choices:
-  - Only when ${principal.name.full(middle='full')} decisions for their self.: only
+  - Only when ${principal.name.full(middle='full')} cannot make decisions for their self.: only
     help: |
       A doctor will determine when they are unable to make decisions. When they do, the doctor will make a written statement that ${principal.name.full(middle='full')} cannot make their own decisions.
   - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the power of attorney is in effect: now
