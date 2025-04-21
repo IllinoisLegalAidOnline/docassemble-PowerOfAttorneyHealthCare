@@ -216,11 +216,17 @@ subquestion: |
 
   You can select successor agents as backup if the first agent becomes unable to make these decisions.
 
-  [YOUTUBE -1pMMIe4hb4]
+  ${collapse_template(video_who_agent)}
 
    **Note:** If you can communicate your choices, you are the decision maker.
 
   To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+---
+template: video_who_agent
+subject: |
+  **Video: Who should I select as my agent?**
+content: |
+  [YOUTUBE -1pMMIe4hb4]
 ---
 depends on: 
   - for_yourself
@@ -279,9 +285,9 @@ fields:
     datatype: yesnoradio
 terms:
   - principal: |
-       The principal is the person who chooses someone they trust to make decisions about their health care. If this is your document, you are the principal. 
+       The **principal** is the person who chooses someone they trust to make decisions about their health care. If this is your document, you are the principal. 
   - agent: |
-       The agent is the person the principal trusts and chooses to make health care decisions for them, if the principal ever needs help. If this is your document, you are giving the agent power to make health care decisions for you, if you ever need help.
+       The **agent** is the person the principal trusts and chooses to make health care decisions for them, if the principal ever needs help. If this is your document, you are giving the agent power to make health care decisions for you, if you ever need help.
 ---
 id: other principal notice
 continue button field: other_principal
@@ -373,7 +379,7 @@ question: |
   Who does ${principal.name.full(middle='full')} want to name as their agent?
   % endif
 subquestion: |
-  [YOUTUBE -1pMMIe4hb4]
+  ${collapse_template(video_who_agent)}
   
   % if for_yourself == False:
   The agent is the person ${principal.name.full(middle='full')} trusts to make health care decisions for them. It is very important they talk to their agent about their wishes and feelings about health care, including end-of-life decisions. Meaningful conversations will guide the agent's judgment and make sure they are both on the same page.
@@ -385,11 +391,21 @@ subquestion: |
 
   An agent has a lot of power, and it is possible that they could abuse that power. You should choose someone you trust with your health and well-being.
   % endif  
+
+  ${collapse_template(agent_require)}
 fields:
   - First: agent.name.first
   - Middle: agent.name.middle
     required: False
   - Last: agent.name.last
+---
+template: agent_require
+subject: |
+  **Requirements for agents and successors**
+content: |
+  The agent must be at least 18 years old. The agent does not have to be a family member but it should be someone you trust. The agent does not need to be a United States citizen. 
+
+  You can select successor agents as backup if the first agent becomes unable to make these decisions.
 ---
 id: agent address
 question: |
@@ -470,14 +486,20 @@ fields:
   - no label: is_guardian
     datatype: yesnoradio
 ---
+template: video_agent_when
+subject: |
+  **Video: When do you want to activate your Power of Attorney?**
+content: |
+  [YOUTUBE -1pMMIe4hb4]
+---
 #Add "When can Agent name make health care decisions for you?" video
 id: agent authorization you
 question: |
   When can ${agent.name.full(middle='full')} make health care decisions for you?
 subquestion: |
-  [YOUTUBE -1pMMIe4hb4]
- 
   This Power of Attorney will go into effect once you cannot make decisions for yourself unless you state it should take effect at an earlier time.
+
+  ${collapse_template(video_agent_when)}
 
   You will still have the authority to make decisions. ${agent.name.full(middle='full')} will be able to make decisions for you when you are unable to.
 
@@ -495,9 +517,9 @@ fields:
           If you do not make a choice before signing, the power of attorney will default to the first choice. If that happens, your agent will not make decisions for you until a doctor makes a written statement that you cannot make your own decisions.
 terms:
   revoke: |
-    Undo, destroy, or void
+    To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the legal capacity to revoke a Power of Attorney for Property if 
+    You have the **legal capacity** to revoke a Power of Attorney for Property if 
     
        * You understand what revoking the Power of Attorney will do, and 
        * You know your income and property.
@@ -506,9 +528,9 @@ id: agent authorization principal
 question: |
   When can ${agent.name.full(middle='full')} make health care decisions for  ${principal.name.full(middle='full')}?
 subquestion: |
-  [YOUTUBE -1pMMIe4hb4]
- 
   This Power of Attorney will go into effect once ${principal.name.full(middle='full')} cannot make decisions for their self unless they state it should take effect at an earlier time.
+
+  ${collapse_template(video_agent_when)}
 
   ${principal.name.full(middle='full')} will still have the authority to make decisions. ${agent.name.full(middle='full')} will be able to make decisions for them when they are unable to.
 
@@ -524,9 +546,9 @@ choices:
       If they do not make a choice before signing, the power of attorney will default to the first choice. If that happens, their agent will not make decisions for them until a doctor makes a written statement that they cannot make their own decisions.
 terms:
   revoke: |
-    Undo, destroy, or void
+    To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the legal capacity to revoke a Power of Attorney for Property if 
+    You have the **legal capacity** to revoke a Power of Attorney for Property if 
     
        * You understand what revoking the Power of Attorney will do, and 
        * You know your income and property.
@@ -593,12 +615,20 @@ fields:
   - no label: health_records
     datatype: yesnoradio
 ---
+template: video_life_quality
+subject: |
+  **Video: Quality of life and length of life**
+content: |
+  [YOUTUBE -1pMMIe4hb4]
+---
 #Add video "Quality of life and length of life"
 id: quality of life you
 question: |
   What life sustaining treatment instructions do you want ${agent.name.full(middle='full')} to follow?
 subquestion: |
-  [YOUTUBE -1pMMIe4hb4]
+  These instructions will tell ${agent.name.full(middle='full')} what to do if you are unconscious and your doctor believes you will never wake up.
+  
+  ${collapse_template(video_life_quality)}
 field: quality_of_life_you
 choices:
   - The quality of my life is more important than the length of my life.: quality
@@ -628,7 +658,9 @@ id: quality of life principal
 question: |
   What life sustaining treatment instructions does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to follow?
 subquestion: |
-  [YOUTUBE -1pMMIe4hb4]
+  These instructions will tell ${agent.name.full(middle='full')} what to do if ${principal.name.full(middle='full')} is unconscious and their doctor believes they will never wake up.
+  
+  ${collapse_template(video_life_quality)}
 field: quality_of_life_principal
 choices:
   - The quality of their life is more important than the length of their life.: quality
@@ -717,12 +749,14 @@ fields:
     choices: 
     - I would prefer a burial for my remains.
     - I would prefer my remains be cremated.
-    - I would like to type a specific preference.
+    - I have a specific preference. (Explain below): specific
     - I do not have a preference.
   - Specific preference: self_specific_burial_preference
+    input type: area
+    maxlength: 250
     show if: 
       variable: self_remains_preference
-      is: "I would like to type a specific preference." 
+      is: "specific" 
 ---
 id: other remains disposal
 question: |
@@ -737,14 +771,16 @@ fields:
     choices: 
     - They would prefer a burial for their remains.
     - They would prefer their remains be cremated.
-    - They have a specific preference.
+    - They have a specific preference. (Explain below): specific
     - They do not have a preference.
   - Specific preference: other_specific_burial_preference
+    input type: area
+    maxlength: 250
     help: |
       This answer should be written in the first person. For example, "I would prefer a natural burial for my remains."
     show if: 
       variable: other_remains_preference
-      is: "They have a specific preference." 
+      is: "specific" 
 ---
 id: self organ donor
 question: |
@@ -764,7 +800,12 @@ choices:
   - No
   - They would like their agent to decide this.
 ---
-reconsider: True
+depends on: 
+  - for_yourself
+  - principal.name.first
+  - principal.name.middle
+  - principal.name.last
+  - principal.name.suffix
 code: |
   if for_yourself:
     my_their = "my"
@@ -797,12 +838,15 @@ fields:
   - What treatments ${do_does_subject} not want to start?: no_start_text
     input type: area
     show if: limit_checkboxes['no_start']
+    maxlength: 250
   - What treatments ${do_does_subject} not want to end?: no_end_text
     input type: area
     show if: limit_checkboxes['no_end']
+    maxlength: 250
   - Other limits: other_limits
     input type: area
     show if: limit_checkboxes['other']
+    maxlength: 250
 ---
 id: revocation info
 continue button field: revocation_info
@@ -837,15 +881,21 @@ subquestion: |
   If you select **No** and ${principal.name.full(middle='full')} revokes the power of attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
   % endif
 
-  [YOUTUBE -1pMMIe4hb4]
+  ${collapse_template(video_cooling)}
 fields:
   - no label: delayed_revocation
     datatype: yesnoradio
 terms:
   revoke: |
-    Undo, destroy, or void
+    To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the legal capacity to revoke a Power of Attorney for Health Care if you understand what you are signing and what it means for your future.
+    You have the **legal capacity** to revoke a Power of Attorney for Health Care if you understand what you are signing and what it means for your future.
+---
+template: video_cooling
+subject: |
+  **Video: What is this 30-day cooling off period?**
+content: |
+  [YOUTUBE -1pMMIe4hb4]
 ---
 depends on:
   - limit_checkboxes
@@ -864,10 +914,10 @@ code: |
   agent_instructions = ""
   if for_yourself == True:
     if self_remains_preference != "I do not have a preference.":
-      if self_remains_preference != "I would like to type a specific preference.":
+      if self_remains_preference != "specific":
         agent_instructions += self_remains_preference
         agent_instructions += " "
-      elif self_remains_preference == "I would like to type a specific preference.":
+      elif self_remains_preference == "specific":
         agent_instructions += self_specific_burial_preference
     if self_organ_donor == "I would like my agent to decide this.":
       agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
@@ -892,13 +942,13 @@ code: |
       
   else:
     if other_remains_preference != "They do not have a preference.":
-      if other_remains_preference != "They have a specific preference.":
+      if other_remains_preference != "specific":
         if other_remains_preference == "They would prefer a burial for their remains.":
           agent_instructions += "I would prefer a burial for my remains."
         elif other_remains_preference == "They would prefer their remains be cremated.":
           agent_instructions += "I would prefer my remains be cremated."
 
-      elif other_remains_preference == "They have a specific preference.":
+      elif other_remains_preference == "specific":
         agent_instructions += other_specific_burial_preference
     if other_organ_donor == "They would like their agent to decide this.":
       agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
@@ -943,9 +993,9 @@ fields:
     datatype: yesnoradio
 terms:
   incompetent: |
-    Incompetent means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
+    **Incompetent** means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
   successor agent: |
-    A successor agent is a back-up agent who will act as your agent if your first agent is unavailable, passes away, or stops being your agent.
+    A **successor agent** is a back-up agent who will act as your agent if your first agent is unavailable, passes away, or stops being your agent.
 ---
 #mandatory: True
 #continue button field: show_successors
@@ -1548,7 +1598,7 @@ review:
   - Edit: self_remains_preference
     button: |
       **Your disposition of remains instructions:**
-      % if self_remains_preference != 'I would like to type a specific preference.':
+      % if self_remains_preference != "specific":
       ${self_remains_preference}
       % else:
       ${self_specific_burial_preference}
@@ -1557,7 +1607,7 @@ review:
   - Edit: other_remains_preference
     button: |
       **${principal.name.full(middle='full')}'s disposition of remains instructions:**
-      % if other_remains_preference != 'They have a specific preference.':
+      % if other_remains_preference != "specific":
       ${other_remains_preference}
       % else:
       ${other_specific_burial_preference}
@@ -1834,7 +1884,7 @@ review:
   - Edit: self_remains_preference
     button: |
       **Your disposition of remains instructions:**
-      % if self_remains_preference != 'I would like to type a specific preference.':
+      % if self_remains_preference != "specific":
       ${self_remains_preference}
       % else:
       ${self_specific_burial_preference}
@@ -1843,7 +1893,7 @@ review:
   - Edit: other_remains_preference
     button: |
       **${principal.name.full(middle='full')}'s disposition of remains instructions:**
-      % if other_remains_preference != 'They have a specific preference.':
+      % if other_remains_preference != "specific":
       ${other_remains_preference}
       % else:
       ${other_specific_burial_preference}
