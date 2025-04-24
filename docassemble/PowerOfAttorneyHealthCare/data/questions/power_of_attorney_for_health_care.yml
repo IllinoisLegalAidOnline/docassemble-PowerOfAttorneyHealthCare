@@ -8,7 +8,6 @@ metadata:
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
-  - docassemble.ALToolbox:phone-number-validation.yml
   - docassemble.ILAO:ilao-interview-framework.yml
   - docassemble.ILAO:shared-basic-questions.yml
 ---
@@ -271,7 +270,6 @@ code: |
     me_them = "them"
     am_are = "are"
     you_they = "they"
-  grammar_code = True
 ---
 id: for yourself
 question: |
@@ -624,7 +622,7 @@ content: |
 #Add video "Quality of life and length of life"
 id: quality of life you
 question: |
-  What life sustaining treatment instructions do you want ${agent.name.full(middle='full')} to follow?
+  What life-sustaining treatment instructions do you want ${agent.name.full(middle='full')} to follow?
 subquestion: |
   These instructions will tell ${agent.name.full(middle='full')} what to do if you are unconscious and your doctor believes you will never wake up.
   
@@ -656,7 +654,7 @@ content: |
 ---
 id: quality of life principal
 question: |
-  What life sustaining treatment instructions does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to follow?
+  What life-sustaining treatment instructions does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to follow?
 subquestion: |
   These instructions will tell ${agent.name.full(middle='full')} what to do if ${principal.name.full(middle='full')} is unconscious and their doctor believes they will never wake up.
   
@@ -753,6 +751,7 @@ fields:
     - I do not have a preference.
   - Specific preference: self_specific_burial_preference
     input type: area
+    rows: 7
     maxlength: 250
     show if: 
       variable: self_remains_preference
@@ -776,6 +775,7 @@ fields:
   - Specific preference: other_specific_burial_preference
     input type: area
     maxlength: 250
+    rows: 7
     help: |
       This answer should be written in the first person. For example, "I would prefer a natural burial for my remains."
     show if: 
@@ -837,14 +837,17 @@ fields:
       - Other limits: other
   - What treatments ${do_does_subject} not want to start?: no_start_text
     input type: area
+    rows: 7
     show if: limit_checkboxes['no_start']
     maxlength: 250
   - What treatments ${do_does_subject} not want to end?: no_end_text
     input type: area
+    rows: 7
     show if: limit_checkboxes['no_end']
     maxlength: 250
   - Other limits: other_limits
     input type: area
+    rows: 7
     show if: limit_checkboxes['other']
     maxlength: 250
 ---
