@@ -18,7 +18,7 @@ objects:
         object_type=ALIndividual,
         complete_attribute='complete',
         there_are_any=True)
-  - witness: ALIndividual
+  - witnesses: ALPeopleList
   - success_strings: DAList
 ---
 code: |
@@ -37,7 +37,7 @@ sections:
   - section_principal: Principal
   - section_agent: Agent and powers
   - section_successors: Successor agents
-  - section_witness: Witness
+  - section_witness: Witnesses
   - section_download: Download
 ---
 # interview order block
@@ -92,8 +92,11 @@ code: |
   set_progress(80)
   witness_info
   if witness_known == True:
-    witness.name.first
-    witness.address_string
+    witnesses[0].name.first
+    witnesses[0].address_string
+    if second_witness_known:
+      witnesses[1].name.first
+      witnesses[1].address_string
   nav.set_section('section_download')
   if when_authorize == "do_not" or quality_of_life == "do_not":
     completion_reminder
@@ -136,13 +139,13 @@ code: |
 ---
 id: welcome
 question: |
-  Power of attorney for health care
+  Power of Attorney for Health Care
 subquestion: |
   Welcome to Illinois Legal Aid Online's **Power of attorney for health care** Easy Form.
 
-  This program helps you create documents to give someone you trust power of attorney for your health care if you ever need help making decisions. This means they can make choices about your health care when you cannot.
+  This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
   
-  To learn more, read ILAO's article about [**setting up a power of attorney for health care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**power of attorney for health care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
 ---
 id: instructions
@@ -180,11 +183,11 @@ question: |
 subquestion: |
     After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. 
     
-    You do not need to have two witnesses and get the document notarized, but it is best to do so. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
+    You may want to have a second witness and get the document notarized. However, you are not required to do so in Illinois. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
     
-    To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
+    To learn more, read ILAO's article about [**power of attorney for health care basics**](https://www.illinoislegalaid.org/legal-information/how-set-power-attorney-healthcare).  
 ---
 # Add <Video: Why I decided to make a POA-HC>
 id: about power of attorney
@@ -219,7 +222,7 @@ subquestion: |
 
    **Note:** If you can communicate your choices, you are the decision maker.
 
-  To learn more, read ILAO's article about [**setting up a Power of Attorney for Health Care**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**power of attorney for health care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
 template: video_who_agent
 subject: |
@@ -455,9 +458,9 @@ question: |
   What is ${agent.name.full(middle='full')}'s phone number?
 subquestion: |
   % if for_yourself:
-  A valid phone number is required so your agent can be contacted.
+  A valid phone number is required so doctors or medical staff can contact your agent.
   % else:
-  A valid phone number is required so ${principal.name.full(middle='full')}'s agent can be contacted.
+  A valid phone number is required so doctors or medical staff can contact ${principal.name.full(middle='full')}'s agent.
   % endif
 fields:
   - Phone number: agent.phone_number
@@ -738,7 +741,7 @@ id: self remains disposal
 question: |
   When you pass away, what would you like ${agent.name.full(middle='full')} to do with your remains?
 subquestion: |
-  If you have a prepaid burial plan or cemetery plot, you should select **I would like to type a specific preference" and enter information regarding the plan or plot.
+  If you have a prepaid burial plan or cemetery plot, you should select **I have a specific preference** and enter information regarding the plan or plot.
   
   If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with your remains.
 fields: 
@@ -923,11 +926,11 @@ code: |
       elif self_remains_preference == "specific":
         agent_instructions += self_specific_burial_preference
     if self_organ_donor == "I would like my agent to decide this.":
-      agent_instructions += " My agent is authorized to make a gift of my organs at their discretion. "
+      agent_instructions += " My agent is authorized to donate my organs at their discretion. "
     elif self_organ_donor == "No":
-      agent_instructions += " My agent is not authorized to make a gift of my organs. "
+      agent_instructions += " My agent is not authorized to donate my organs. "
     elif self_organ_donor == "Yes":
-      agent_instructions += " My agent should make a gift of my organs. "
+      agent_instructions += " My agent should donate my organs. "
     if agent_limitation == True:
       if limit_checkboxes["no_autopsy"]:
         agent_instructions += " I do not authorize an autopsy."
@@ -1110,10 +1113,10 @@ question: |
   What is ${successors[i].name.full(middle='full')}'s phone number?
 subquestion: |
   % if for_yourself:
-   A valid phone number is required so your successor agent can be contacted.
+  A valid phone number is required so doctors or medical staff can contact your successor agent.
   % else:
-   A valid phone number is required so ${principal.name.full(middle='full')}'s successor agent can be contacted.
-   % endif
+  A valid phone number is required so doctors or medical staff can contact ${principal.name.full(middle='full')}'s successor agent.
+  % endif
 fields:
   - Phone number: successors[i].phone_number
     datatype: al_international_phone
@@ -1124,7 +1127,7 @@ question: |
   About witnesses
 subquestion: |
   % if for_yourself == True:
-  When you sign the Power of Attorney, you will need witnesses to watch you sign it and then sign the document themselves.
+  When you sign the Power of Attorney, you will need a witness to watch you sign it and then sign the document themselves.
 
   The witness must be 18 or older and:
  
@@ -1177,6 +1180,19 @@ fields:
   - no label: witness_known
     datatype: yesnoradio
 ---
+id: second witness known
+question: |
+  % if for_yourself:
+  Do you want to include a second witness on the Power of Attorney for Health Care?
+  % else:
+  Does ${principal.name.full(middle='full')} want to include a second witness on the Power of Attorney for Health Care?
+  % endif
+subquestion: |
+    You do not need a second witness in Illinois. However, other states may not recognize Power of Attorney forms with only one witness.
+fields:
+  - no label: second_witness_known
+    datatype: yesnoradio
+---
 template: do_not_know
 subject: |
   % if for_yourself == True:
@@ -1193,53 +1209,57 @@ content: |
 ---
 id: witness name
 question: |
+  % if i == 0:
   What is the witness's name?
+  % else:
+  What is the second witness's name?
+  % endif
 fields:
-  - First: witness.name.first
-  - Middle: witness.name.middle
+  - First: witnesses[i].name.first
+  - Middle: witnesses[i].name.middle
     required: False
-  - Last: witness.name.last
+  - Last: witnesses[i].name.last
 ---
 id: witness address
 question: |
-  What is ${witness.name.full(middle='full')}'s address?
+  What is ${witnesses[i].name.full(middle='full')}'s address?
 subquestion: |
   If you do not know their address, you can leave this blank.
   
   ${collapse_template(witness_intl_address_help)}
 fields:
-  - Does ${witness.name.full(middle='full')} have a United States address?: witness.in_america
+  - Does ${witnesses[i].name.full(middle='full')} have a United States address?: witnesses[i].in_america
     datatype: yesnoradio
     default: True
     required: False
     help: |
       Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
-  - Street address: witness.address.address
+  - Street address: witnesses[i].address.address
     address autocomplete: True
     required: False
-    show if: witness.in_america
-  - Address line 2: witness.address.unit
+    show if: witnesses[i].in_america
+  - Address line 2: witnesses[i].address.unit
     required: False
-    show if: witness.in_america
-  - City: witness.address.city
-    show if: witness.in_america
+    show if: witnesses[i].in_america
+  - City: witnesses[i].address.city
+    show if: witnesses[i].in_america
     required: False
-  - State: witness.address.state
-    show if: witness.in_america
+  - State: witnesses[i].address.state
+    show if: witnesses[i].in_america
     code: |
       states_list() 
     required: False
-  - ZIP code: witness.address.zip
-    show if: witness.in_america
+  - ZIP code: witnesses[i].address.zip
+    show if: witnesses[i].in_america
     required: False
-  - Non-US address line 1 (street address, apartment number): witness.intl_address_1
+  - Non-US address line 1 (street address, apartment number): witnesses[i].intl_address_1
     show if: 
-      variable: witness.in_america
+      variable: witnesses[i].in_america
       is: False
     required: False
-  - Non-US address line 2 (city, province or state, postal code, country): witness.intl_address_2
+  - Non-US address line 2 (city, province or state, postal code, country): witnesses[i].intl_address_2
     show if: 
-      variable: witness.in_america
+      variable: witnesses[i].in_america
       is: False
     required: False
 ---
@@ -1251,28 +1271,48 @@ content: |
 ---
 depends on:
   - witness_known
-  - witness.in_america
-  - witness.address.address
-  - witness.address.unit
-  - witness.address.city
-  - witness.address.state
-  - witness.address.zip
-  - witness.intl_address_1
-  - witness.intl_address_2
+  - second_witness_known
+  - witnesses[0].in_america
+  - witnesses[0].address.address
+  - witnesses[0].address.unit
+  - witnesses[0].address.city
+  - witnesses[0].address.state
+  - witnesses[0].address.zip
+  - witnesses[0].intl_address_1
+  - witnesses[0].intl_address_2
+  - witnesses[1].in_america
+  - witnesses[1].address.address
+  - witnesses[1].address.unit
+  - witnesses[1].address.city
+  - witnesses[1].address.state
+  - witnesses[1].address.zip
+  - witnesses[1].intl_address_1
+  - witnesses[1].intl_address_2
 code: |
   if witness_known == True:
-    if witness.in_america == True:
-      if witness.address.address != "":
-        witness.address_string = witness.address.on_one_line(bare=True)
+    if witnesses[0].in_america == True:
+      if witnesses[0].address.address != "":
+        witnesses[0].address_string = witnesses[0].address.on_one_line(bare=True)
       else:
-        witness.address_string = ""
+        witnesses[0].address_string = ""
     else:
-      if witness.intl_address_1 != "":
-        witness.address_string = witness.intl_address_1 + ", " + witness.intl_address_2
+      if witnesses[0].intl_address_1 != "":
+        witnesses[0].address_string = witnesses[0].intl_address_1 + ", " + witnesses[0].intl_address_2
       else:
-        witness.address_string = ""
+        witnesses[0].address_string = ""
+    if second_witness_known:
+      if witnesses[1].in_america == True:
+        if witnesses[1].address.address != "":
+          witnesses[1].address_string = witnesses[1].address.on_one_line(bare=True)
+        else:
+          witnesses[1].address_string = ""
+      else:
+        if witnesses[1].intl_address_1 != "":
+          witnesses[1].address_string = witnesses[1].intl_address_1 + ", " + witnesses[1].intl_address_2
+        else:
+          witnesses[1].address_string = ""
   else:
-    witness.address_string = ""
+    witnesses[0].address_string = ""
 ---
 #depends on:
   #-successors[i].name.first
@@ -1462,8 +1502,32 @@ attachment:
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_instructions}
-      - "witness_name": ${witness.name.full(middle='full') if witness_known == True else ""}
-      - "witness_address": ${witness.address_string}
+      - "witness_name": ${witnesses[0].name.full(middle='full') if witness_known == True else ""}
+      - "witness_address": ${witnesses[0].address_string if witness_known else ""}
+      - "witness_printed_name": |
+          % if witness_known and second_witness_known:
+          Witness printed name:
+          % endif
+      - "witness_2_name": |
+          % if witness_known and second_witness_known:
+          ${witnesses[1].name.full(middle='full')}
+          % endif
+      - "witness_address_text": |
+          % if witness_known and second_witness_known:
+          Witness address:
+          % endif
+      - "witness_2_address": |
+          % if witness_known and second_witness_known:
+          ${witnesses[1].address_string}
+          % endif
+      - "witness_2_sign_line": |
+          % if witness_known and second_witness_known:
+          Witness signature: ___________________________________________________________
+          % endif
+      - "witness_2_date_line": |
+          % if witness_known and second_witness_known:
+          Today's date: ____________________
+          % endif
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
       - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
@@ -1678,20 +1742,38 @@ review:
       **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
       % endif
       ${word(yesno(witness_known))}
-  - Edit: witness.name.first
+  - Edit: witnesses[0].name.first
     button: |
       **The witness's name:**
-      ${witness.name.full(middle='full')}
+      ${witnesses[0].name.full(middle='full')}
     show if: witness_known
-  - Edit: witness.in_america
+  - Edit: witnesses[0].in_america
     button: |
-      **${witness.name.full(middle='full')}'s address:**
-      % if witness.in_america == True:
-      ${witness.address.on_one_line(bare=True)}
+      **${witnesses[0].name.full(middle='full')}'s address:**
+      % if witnesses[0].in_america == True:
+      ${witnesses[0].address.on_one_line(bare=True)}
       % else:
-      ${witness.intl_address_1}, ${witness.intl_address_2}
+      ${witnesses[0].intl_address_1}, ${witnesses[0].intl_address_2}
       % endif
     show if: witness_known
+  - Edit: second_witness_known
+    button: |
+      **Do you want to include a second witness?**
+      ${word(yesno(second_witness_known))}
+  - Edit: witnesses[1].name.first
+    button: |
+      **The witness's name:**
+      ${witnesses[1].name.full(middle='full')}
+    show if: witness_known and second_witness_known
+  - Edit: witnesses[1].in_america
+    button: |
+      **${witnesses[1].name.full(middle='full')}'s address:**
+      % if witnesses[1].in_america == True:
+      ${witnesses[1].address.on_one_line(bare=True)}
+      % else:
+      ${witnesses[1].intl_address_1}, ${witnesses[1].intl_address_2}
+      % endif
+    show if: witness_known and second_witness_known
 ---
 id: successors review screen
 continue button field: successors.revisit
@@ -1982,17 +2064,35 @@ review:
       **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
       % endif
       ${word(yesno(witness_known))}
-  - Edit: witness.name.first
+  - Edit: witnesses[0].name.first
     button: |
       **The witness's name:**
-      ${witness.name.full(middle='full')}
+      ${witnesses[0].name.full(middle='full')}
     show if: witness_known
-  - Edit: witness.in_america
+  - Edit: witnesses[0].in_america
     button: |
-      **${witness.name.full(middle='full')}'s address:**
-      % if witness.in_america == True:
-      ${witness.address.on_one_line(bare=True)}
+      **${witnesses[0].name.full(middle='full')}'s address:**
+      % if witnesses[0].in_america == True:
+      ${witnesses[0].address.on_one_line(bare=True)}
       % else:
-      ${witness.intl_address_1}, ${witness.intl_address_2}
+      ${witnesses[0].intl_address_1}, ${witnesses[0].intl_address_2}
       % endif
     show if: witness_known
+  - Edit: second_witness_known
+    button: |
+      **Do you want to include a second witness?**
+      ${word(yesno(second_witness_known))}
+  - Edit: witnesses[1].name.first
+    button: |
+      **The witness's name:**
+      ${witnesses[1].name.full(middle='full')}
+    show if: witness_known and second_witness_known
+  - Edit: witnesses[1].in_america
+    button: |
+      **${witnesses[1].name.full(middle='full')}'s address:**
+      % if witnesses[1].in_america == True:
+      ${witnesses[1].address.on_one_line(bare=True)}
+      % else:
+      ${witnesses[1].intl_address_1}, ${witnesses[1].intl_address_2}
+      % endif
+    show if: witness_known and second_witness_known
