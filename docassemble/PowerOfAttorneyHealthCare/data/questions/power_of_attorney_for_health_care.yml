@@ -145,7 +145,7 @@ subquestion: |
 
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
   
-  To learn more, read ILAO's article about [**power of attorney for health care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
 ---
 id: instructions
@@ -222,7 +222,7 @@ subquestion: |
 
    **Note:** If you can communicate your choices, you are the decision maker.
 
-  To learn more, read ILAO's article about [**power of attorney for health care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
+  To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
 template: video_who_agent
 subject: |
@@ -293,7 +293,7 @@ terms:
 id: other principal notice
 continue button field: other_principal
 question: |
-  Making a power of attorney for someone else
+  Making a Power of Attorney for someone else
 subquestion: |
   You can use this program for someone other than yourself, but:
   
@@ -512,10 +512,10 @@ fields:
       - Only when I cannot make decisions for myself.: only
         help: |
           A doctor will determine when you are unable to make decisions. When they do, the doctor will make a written statement that you cannot make your own decisions.
-      - Now and continuing after I am no longer able to make decisions for myself. If I can communicate choices, I will be the decision maker even if the power of attorney is in effect: now
+      - Now and continuing after I am no longer able to make decisions for myself. If I can communicate choices, I will be the decision maker even if the Power of Attorney is in effect: now
       - I do not want to decide this now.: do_not
         help: |
-          If you do not make a choice before signing, the power of attorney will default to the first choice. If that happens, your agent will not make decisions for you until a doctor makes a written statement that you cannot make your own decisions.
+          If you do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, your agent will not make decisions for you until a doctor makes a written statement that you cannot make your own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -541,10 +541,10 @@ choices:
   - Only when ${principal.name.full(middle='full')} cannot make decisions for their self.: only
     help: |
       A doctor will determine when they are unable to make decisions. When they do, the doctor will make a written statement that ${principal.name.full(middle='full')} cannot make their own decisions.
-  - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the power of attorney is in effect: now
+  - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the Power of Attorney is in effect: now
   - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
     help: |
-      If they do not make a choice before signing, the power of attorney will default to the first choice. If that happens, their agent will not make decisions for them until a doctor makes a written statement that they cannot make their own decisions.
+      If they do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, their agent will not make decisions for them until a doctor makes a written statement that they cannot make their own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -857,34 +857,34 @@ fields:
 id: revocation info
 continue button field: revocation_info
 question: |
-  About ending a power of attorney
+  About ending a Power of Attorney
 subquestion: |
   % if for_yourself == True:
-  You can change your mind and end your power of attorney for health care at any time. This is called revocation.
+  You can change your mind and end your Power of Attorney for health care at any time. This is called revocation.
 
-  Revocation means that you stop allowing ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation means that you stop allowing ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   % else:
-  ${principal.name.full(middle='full')} can change their mind and end their power of attorney for health care at any time. This is called revocation.
+  ${principal.name.full(middle='full')} can change their mind and end their Power of Attorney for health care at any time. This is called revocation.
 
-  Revocation means that ${principal.name.full(middle='full')} stops allowing ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a power of attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0). 
+  Revocation means that ${principal.name.full(middle='full')} stops allowing ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0). 
   % endif
 ---
 id: delayed revocation
 question: |
   % if for_yourself == True:
-  Do you want to delay future revocation of this power of attorney?
+  Do you want to delay future revocation of this Power of Attorney?
   % else:
-  Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?
+  Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?
   % endif
 subquestion: |
   % if for_yourself == True:
-    If you select **Yes** and revoke your power of attorney in the future, you will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revoke the power of attorney. You can use the 30 days to reflect on your decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
+    If you select **Yes** and revoke your Power of Attorney in the future, you will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revoke the Power of Attorney. You can use the 30 days to reflect on your decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
-  If you select **No** and revoke your power of attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
+  If you select **No** and revoke your Power of Attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
   % else:
-  If you select **Yes** and ${principal.name.full(middle='full')} revokes the power of attorney in the future, they will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after ${principal.name.full(middle='full')}  revoke their power of attorney. They can use the 30 days to reflect on their decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
+  If you select **Yes** and ${principal.name.full(middle='full')} revokes the Power of Attorney in the future, they will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after ${principal.name.full(middle='full')}  revoke their Power of Attorney. They can use the 30 days to reflect on their decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
-  If you select **No** and ${principal.name.full(middle='full')} revokes the power of attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+  If you select **No** and ${principal.name.full(middle='full')} revokes the Power of Attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
   % endif
 
   ${collapse_template(video_cooling)}
@@ -1504,38 +1504,28 @@ attachment:
       - "agent_limits": ${agent_instructions}
       - "witness_name": ${witnesses[0].name.full(middle='full') if witness_known == True else ""}
       - "witness_address": ${witnesses[0].address_string if witness_known else ""}
+      - "second_witness_optional": |
+          SECOND WITNESS (OPTIONAL)
       - "witness_printed_name": |
-          % if witness_known and second_witness_known:
           Witness printed name:
-          % endif
       - "witness_2_name": |
           % if witness_known and second_witness_known:
           ${witnesses[1].name.full(middle='full')}
           % endif
       - "witness_2_name_underline": |
-          % if witness_known and second_witness_known:
-          ______________________________________________________________________________________________
-          % endif
+          ____________________________________________________________________________________________
       - "witness_address_text": |
-          % if witness_known and second_witness_known:
           Witness address:
-          % endif
       - "witness_2_address_underline": |
-          % if witness_known and second_witness_known:
-          ______________________________________________________________________________________________
-          % endif
+          ________________________________________________________________________________________________
       - "witness_2_address": |
           % if witness_known and second_witness_known:
           ${witnesses[1].address_string}
           % endif
       - "witness_2_sign_line": |
-          % if witness_known and second_witness_known:
           Witness signature: ___________________________________________________________
-          % endif
       - "witness_2_date_line": |
-          % if witness_known and second_witness_known:
           Today's date: ____________________
-          % endif
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
       - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
@@ -1725,9 +1715,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this power of attorney by 30 days?**
+      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
       % else:
-      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      **Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?**
       % endif
       ${word(yesno(delayed_revocation))}
   - Edit: any_successors
@@ -1745,9 +1735,9 @@ review:
   - Edit: witness_known
     button: |
       % if for_yourself == True:
-      **Do you know who will witness you signing the power of attorney?**
+      **Do you know who will witness you signing the Power of Attorney?**
       % else:
-      **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
+      **Does ${principal.name.full(middle='full')} know who will witness them signing the Power of Attorney?**
       % endif
       ${word(yesno(witness_known))}
   - Edit: witnesses[0].name.first
@@ -2029,9 +2019,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this power of attorney by 30 days?**
+      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
       % else:
-      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      **Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?**
       % endif
       ${word(yesno(delayed_revocation))}
 ---
@@ -2067,9 +2057,9 @@ review:
   - Edit: witness_known
     button: |
       % if for_yourself == True:
-      **Do you know who will witness you signing the power of attorney?**
+      **Do you know who will witness you signing the Power of Attorney?**
       % else:
-      **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
+      **Does ${principal.name.full(middle='full')} know who will witness them signing the Power of Attorney?**
       % endif
       ${word(yesno(witness_known))}
   - Edit: witnesses[0].name.first
