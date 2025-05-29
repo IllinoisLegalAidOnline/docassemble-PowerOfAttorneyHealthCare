@@ -520,10 +520,10 @@ terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the **legal capacity** to revoke a Power of Attorney for Property if 
+    You have the **legal capacity** to revoke a Power of Attorney if 
     
        * You understand what revoking the Power of Attorney will do, and 
-       * You know your income and property.
+       * You know about your health and medical care.
 ---
 id: agent authorization principal
 question: |
@@ -549,10 +549,10 @@ terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the **legal capacity** to revoke a Power of Attorney for Property if 
+    ${principal.name.full(middle='full')} has the **legal capacity** to revoke a Power of Attorney if 
     
-       * You understand what revoking the Power of Attorney will do, and 
-       * You know your income and property.
+       * They understand what revoking the Power of Attorney will do, and 
+       * They know about their health and medical care.
 ---
 id: when authorize warning
 question: |
@@ -860,11 +860,11 @@ question: |
   About ending a Power of Attorney
 subquestion: |
   % if for_yourself == True:
-  You can change your mind and end your Power of Attorney for health care at any time. This is called revocation.
+  You can change your mind and end your Power of Attorney for Health Care at any time. This is called revocation.
 
   Revocation means that you stop allowing ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   % else:
-  ${principal.name.full(middle='full')} can change their mind and end their Power of Attorney for health care at any time. This is called revocation.
+  ${principal.name.full(middle='full')} can change their mind and end their Power of Attorney for Health Care at any time. This is called revocation.
 
   Revocation means that ${principal.name.full(middle='full')} stops allowing ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0). 
   % endif
