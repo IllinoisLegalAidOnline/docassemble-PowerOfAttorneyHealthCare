@@ -57,6 +57,8 @@ code: |
     other_principal
   set_progress(20)
   principal.name.first
+  if also_known_as:
+    formerly_or_also
   if in_illinois == False:
     illinois_kickout
   principal.address.address
@@ -325,11 +327,11 @@ subquestion: |
   % if for_yourself == False:
   The principal is the person who chooses an agent to make decisions about the principal's medical treatment.
 
-  You should use the legal name on their identification. If they go by a name other than their legal one, you should click the checkbox by next to "They have another name." This will let you list two names.
+  You should use the legal name on their government-issued identification. If they go by a name other than their legal one, you should click the checkbox by next to "They have another name." This will let you list two names.
 
-  If they have changed their name, you should click the checkbox by next to "They have another name." This will let you list your old name.
+  If they have changed their name, you should click the checkbox by next to "They have another name." This will let you list their old name.
   % else:
-  You should use the legal name on your identification. If you go by a name other than your legal one, you should click the checkbox by next to "I have another name." This will let you list two names.
+  You should use the legal name on your government-issued identification. If you go by a name other than your legal one, you should click the checkbox by next to "I have another name." This will let you list two names.
 
   If you have changed your name, you should click the checkbox by next to "I have another name." This will let you list your old name.
   % endif
@@ -343,6 +345,13 @@ fields:
   - Additional name: principal.aka_name
     js show if:
       val('also_known_as') === true
+---
+id: formerly or also
+question: |
+  Is ${principal.aka_name} a former legal name?
+fields:
+  - no label: formerly_or_also
+    datatype: yesnoradio
 ---
 id: in illinois
 question: |
@@ -1512,7 +1521,11 @@ attachment:
     fields:
       - "principal_name": |
           % if also_known_as:
+          % if formerly_or_also:
+          ${ principal.name.full(middle='full') }, formerly known as ${principal.aka_name}
+          % else:
           ${ principal.name.full(middle='full') }, also known as ${principal.aka_name}
+          % endif
           % else:
           ${ principal.name.full(middle='full') }
           % endif
@@ -1560,9 +1573,15 @@ attachment:
       - "notary_title": |
           NOTARY (OPTIONAL)
       - "notary_block": |
-          The undersigned, a notary public in and for the above county and state, certifies that ___________________________________________________________, known to me to be the same person whose name is subscribed as principal to the foregoing power of attorney, appeared before me and the witness(es) ___________________________________________________________ (and ___________________________________________________________) in person and acknowledged signing and delivering the instrument as the free and voluntary act of the principal, for the uses and purposes therein set forth, and certified to the correctness of the signature(s) of the agent(s)). 
+          State of ____________________________
+                                                  SS. 
+          County of __________________________
+
+          The undersigned, a notary public in and for the above county and state, certifies that __________________________________________, known to me to be the same person whose name is subscribed as principal to the foregoing power of attorney, appeared before me and the witness(es) __________________________________________ (and __________________________________________) in person and acknowledged signing and delivering the instrument as the free and voluntary act of the principal, for the uses and purposes therein set forth, and certified to the correctness of the signature(s) of the agent(s)). 
  
-Dated: _________________ 	 Signature ________________________________ 
+          Dated: _________________ 	 Signature: ________________________________ 
+                                                                                                                    Notary Public
+          My commission expires: _____________________________________________ 
 
 ---
 objects:
@@ -1595,7 +1614,20 @@ review:
       % else:
       **The principal's name:**
       % endif
-      ${principal.name.full(middle="full")}
+      % if also_known_as:
+      % if formerly_or_also:
+      ${ principal.name.full(middle='full') }, formerly known as ${principal.aka_name}
+      % else:
+      ${ principal.name.full(middle='full') }, also known as ${principal.aka_name}
+      % endif
+      % else:
+      ${ principal.name.full(middle='full') }
+      % endif
+  - Edit: formerly_or_also
+    button: |
+      **Is ${principal.aka_name} a former legal name?**
+      ${word(yesno(formerly_or_also))}
+    show if: also_known_as
   - Edit: principal.address.address
     button: |
       % if for_yourself == True:
@@ -1890,7 +1922,20 @@ review:
       % else:
       **The principal's name:**
       % endif
-      ${principal.name.full(middle="full")}
+      % if also_known_as:
+      % if formerly_or_also:
+      ${ principal.name.full(middle='full') }, formerly known as ${principal.aka_name}
+      % else:
+      ${ principal.name.full(middle='full') }, also known as ${principal.aka_name}
+      % endif
+      % else:
+      ${ principal.name.full(middle='full') }
+      % endif
+  - Edit: formerly_or_also
+    button: |
+      **Is ${principal.aka_name} a former legal name?**
+      ${word(yesno(formerly_or_also))}
+    show if: also_known_as
   - Edit: principal.address.address
     button: |
       % if for_yourself == True:
