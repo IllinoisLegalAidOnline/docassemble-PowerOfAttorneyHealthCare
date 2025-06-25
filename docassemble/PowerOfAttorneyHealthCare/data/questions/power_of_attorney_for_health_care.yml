@@ -147,6 +147,8 @@ subquestion: |
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
 
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
+
+  This program has videos with information about making a Power of Attorney for Health Care. You do not have to watch them, but you may find them helpful.
   
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
@@ -184,11 +186,9 @@ continue button field: next_steps
 question: |
   Your next steps
 subquestion: |
-    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. 
+    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. You do not need to know who the witness to use this program.
     
-    You may want to have a second witness and get the document notarized. However, you are not required to do so in Illinois. If only one witness signs, the power of attorney may not be recognized outside of Illinois. 
-    
-    After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. 
+    After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. Your forms will include instructions with more information.
     
     To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).  
 ---
@@ -208,6 +208,8 @@ subquestion: |
   * Whether to admit you to a hospital,
   * End-of-life decisions, and
   * What happens to your body when you die.
+
+  **Note:** If you can communicate and understand your choices, you are the decision maker.
 ---
 #Add video Who should I pick as my agent?"
 id: about agents
@@ -223,7 +225,7 @@ subquestion: |
 
   ${collapse_template(video_who_agent)}
 
-   **Note:** If you can communicate your choices, you are the decision maker.
+   **Note:** If you can communicate and understand your choices, you are the decision maker.
 
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 ---
@@ -232,6 +234,38 @@ subject: |
   **Video: Who should I select as my agent?**
 content: |
   [YOUTUBE -1pMMIe4hb4]
+---
+id: accept terms
+question: |
+  Terms of use
+subquestion: |
+  This program does not provide legal advice. It does not take the place of advice from a lawyer.
+
+  Using this program does not create an attorney-client relationship between you and Illinois Legal Aid Online or its employees.
+
+  The videos in this program give information regarding common concerns in the advance planning process. These videos provide information only, not legal advice. They do not create an attorney-client relationship between you and the Center for Disability and Elder Law.
+
+  ${ collapse_template(get_legal_help) }  
+
+fields:
+  - To continue, you must accept the [**terms of use**](https://www.illinoislegalaid.org/about/terms-of-use) and [**privacy policy**](https://www.illinoislegalaid.org/about/privacy-policy).: accept
+    datatype: checkboxes
+    none of the above: False
+    minlength: 1
+    choices:
+      - I accept the terms of use and privacy policy.
+    validation messages:
+      minlength: |
+        You cannot continue unless you agree to the terms of use and privacy policy.
+continue button field: accept_terms
+---
+template: get_legal_help
+subject: |
+  **What if I need legal advice?**
+content: |  
+  If you have questions or concerns about your legal problem and want legal advice, you should talk to a lawyer.
+  
+  Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
 ---
 depends on: 
   - for_yourself
