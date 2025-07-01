@@ -249,7 +249,7 @@ question: |
   % if for_yourself == True:
   Are you a resident of Illinois?
   % else:
-  Is ${principal.name.full(middle='full')} a resident of Illinois?
+  Is ${principal.name_full()} a resident of Illinois?
   % endif
 fields:
   - no label: in_illinois
@@ -263,7 +263,7 @@ subquestion: |
   % if for_yourself == True:
   You must be an Illinois resident to use this form.
   % else:
-  ${principal.name.full(middle='full')} must be an Illinois resident to use this form.
+  ${principal.name_full()} must be an Illinois resident to use this form.
   % endif
   
   If you do not live in Illinois, use [**the Legal Services Corporation website**](https://www.lsc.gov/about-lsc/what-legal-aid/get-legal-help) to find a legal aid organization near you.
@@ -276,7 +276,7 @@ question: |
   % if for_yourself == True:
   What is your address?
   % else:
-  What is ${principal.name.full(middle='full')}'s address?
+  What is ${principal.name_full()}'s address?
   % endif
 fields:
   - Street address: principal.address.address
@@ -294,11 +294,11 @@ question: |
   % if for_yourself == True:
   Who do you want to name as your agent?
   % else:
-  Who does ${principal.name.full(middle='full')} want to name as their agent?
+  Who does ${principal.name_full()} want to name as their agent?
   % endif
 subquestion: |
   % if for_yourself == False:
-  The agent is the person who will make medical decisions for ${principal.name.full(middle='full')} if ${principal.name.full(middle='full')} is too ill to make or communicate their own choices.
+  The agent is the person who will make medical decisions for ${principal.name_full()} if ${principal.name_full()} is too ill to make or communicate their own choices.
   % endif
 fields:
   - First: agent.name.first
@@ -308,7 +308,7 @@ fields:
 ---
 id: agent address
 question: |
-  What is ${agent.name.full(middle='full')}'s address?
+  What is ${agent.name_full()}'s address?
 fields:
   - Street address: agent.address.address
     address autocomplete: True
@@ -326,7 +326,7 @@ fields:
 ---
 id: agent phone
 question: |
-  What is ${agent.name.full(middle='full')}'s phone number?
+  What is ${agent.name_full()}'s phone number?
 subquestion: |
   If you do not know this, leave this blank.
 fields:
@@ -337,25 +337,25 @@ fields:
 id: agent as guardian
 question: |
   % if for_yourself == True:
-  Do you want ${agent.name.full(middle='full')} appointed as your legal guardian, if needed?
+  Do you want ${agent.name_full()} appointed as your legal guardian, if needed?
   % else:
-  Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} appointed as their legal guardian, if needed?
+  Does ${principal.name_full()} want ${agent.name_full()} appointed as their legal guardian, if needed?
   % endif
 subquestion: |
   % if for_yourself == True:
   A court may find it necessary to appoint a legal guardian to manage your health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over you similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % else:
-  A court may find it necessary to appoint a legal guardian to manage ${principal.name.full(middle='full')}'s health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over ${principal.name.full(middle='full')} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
+  A court may find it necessary to appoint a legal guardian to manage ${principal.name_full()}'s health and well-being. A guardian is able to make decisions on matters other than health care and would typically have rights, powers, and duties over ${principal.name_full()} similar to the ones parents have over their minor children. A guardian has more power than someone who only has power of attorney.
   % endif
   
-  If you click **No**, then a court may appoint someone other than ${agent.name.full(middle='full')} to be guardian if needed.
+  If you click **No**, then a court may appoint someone other than ${agent.name_full()} to be guardian if needed.
 fields:
   - no label: is_guardian
     datatype: yesnoradio
 ---
 id: agent authorization you
 question: |
-  When do you want ${agent.name.full(middle='full')} to start making decisions for you?
+  When do you want ${agent.name_full()} to start making decisions for you?
 field: when_you_authorize
 choices:
   - Only when I cannot make decisions for myself.: only
@@ -368,14 +368,14 @@ choices:
 ---
 id: agent authorization principal
 question: |
-  When does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to start making decisions for them?
+  When does ${principal.name_full()} want ${agent.name_full()} to start making decisions for them?
 field: when_principal_authorize
 choices:
-  - Only when ${principal.name.full(middle='full')} cannot make their own decisions.: only
+  - Only when ${principal.name_full()} cannot make their own decisions.: only
     help: |
       A doctor will determine when they are unable to make decisions.
-  - Now and continuing after ${principal.name.full(middle='full')} is no longer able to make their own decisions.: now
-  - ${principal.name.full(middle='full')} does not want to decide this now.: do_not
+  - Now and continuing after ${principal.name_full()} is no longer able to make their own decisions.: now
+  - ${principal.name_full()} does not want to decide this now.: do_not
     help: |
       If they do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, their agent will not make decisions for them until they cannot make their own decisions.
 ---
@@ -384,11 +384,11 @@ question: |
   Warning about authorization
 subquestion: |
   % if for_yourself == True:
-  If you do not decide when you want ${agent.name.full(middle='full')} to start making choices for you, they will not be able to until you are unable to make choices for yourself.
+  If you do not decide when you want ${agent.name_full()} to start making choices for you, they will not be able to until you are unable to make choices for yourself.
   
   A doctor will determine when you are unable to make decisions.
   % else:
-  If ${principal.name.full(middle='full')} does not decide when they want ${agent.name.full(middle='full')} to start making choices for them, ${agent.name.full(middle='full')} will not be able to until they are unable to make choices of their own.
+  If ${principal.name_full()} does not decide when they want ${agent.name_full()} to start making choices for them, ${agent.name_full()} will not be able to until they are unable to make choices of their own.
   
   A doctor will determine when they are unable to make decisions.
   % endif
@@ -426,17 +426,17 @@ subquestion: |
   This information will help figure out when the Power of Attorney should begin.
   
   % if for_yourself == True:
-  If you click **Yes**, ${agent.name.full(middle='full')} may use your medical records for the purpose of helping you with your health care plans and decisions.
+  If you click **Yes**, ${agent.name_full()} may use your medical records for the purpose of helping you with your health care plans and decisions.
   
-  ${agent.name.full(middle='full')} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers. This includes the ability to demand an opinion as to whether you are able to make your own decisions.
+  ${agent.name_full()} would have the authority to share your records with others as needed (such as your doctors) and would be able to communicate with your doctor and other health care providers. This includes the ability to demand an opinion as to whether you are able to make your own decisions.
   
-  If you become incapacitated, ${agent.name.full(middle='full')} will have access to your medical records even if you select **No** here.
+  If you become incapacitated, ${agent.name_full()} will have access to your medical records even if you select **No** here.
   % else:
-  If you click **Yes**, ${agent.name.full(middle='full')} may use ${principal.name.full(middle='full')}'s medical records for the purpose of helping them with their health care plans and decisions.
+  If you click **Yes**, ${agent.name_full()} may use ${principal.name_full()}'s medical records for the purpose of helping them with their health care plans and decisions.
   
-  ${agent.name.full(middle='full')} would have the authority to share their records with others as needed (such as their doctors) and would be able to communicate with their doctor and other health care providers. This includes the ability to demand an opinion as to whether ${principal.name.full(middle='full')} is able to make their own decisions.
+  ${agent.name_full()} would have the authority to share their records with others as needed (such as their doctors) and would be able to communicate with their doctor and other health care providers. This includes the ability to demand an opinion as to whether ${principal.name_full()} is able to make their own decisions.
   
-  If ${principal.name.full(middle='full')} become incapacitated, ${agent.name.full(middle='full')} will have access to their medical records even if you select **No** here.
+  If ${principal.name_full()} become incapacitated, ${agent.name_full()} will have access to their medical records even if you select **No** here.
   % endif
 fields:
   - no label: health_records
@@ -444,15 +444,15 @@ fields:
 ---
 id: quality of life you
 question: |
-  What life sustaining treatment instructions do you want ${agent.name.full(middle='full')} to follow?
+  What life sustaining treatment instructions do you want ${agent.name_full()} to follow?
 field: quality_of_life_you
 choices:
   - The quality of my life is more important than the length of my life.: quality
     help: |
-      This means that if you are unconscious and your doctor believes you will never wake up or experience your surroundings, ${agent.name.full(middle='full')} will not request treatments to prolong your life. However, they will still request pain relief treatment.
+      This means that if you are unconscious and your doctor believes you will never wake up or experience your surroundings, ${agent.name_full()} will not request treatments to prolong your life. However, they will still request pain relief treatment.
   - I want my life to be prolonged to the greatest extent possible.: longevity
     help: |
-      This means that ${agent.name.full(middle='full')} will make choices to keep you alive as long as reasonably possible, even if you are suffering, brain-dead, or unable to recover.
+      This means that ${agent.name_full()} will make choices to keep you alive as long as reasonably possible, even if you are suffering, brain-dead, or unable to recover.
   - I do not want to decide this now.: do_not
     help: |
       If you sign the form without deciding this, your agent will have to make this choice.
@@ -472,15 +472,15 @@ content: |
 ---
 id: quality of life principal
 question: |
-  What life sustaining treatment instructions does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to follow?
+  What life sustaining treatment instructions does ${principal.name_full()} want ${agent.name_full()} to follow?
 field: quality_of_life_principal
 choices:
   - The quality of their life is more important than the length of their life.: quality
     help: |
-      This means that if ${principal.name.full(middle='full')} is unconscious and their doctor believes they will never wake up or experience their surroundings, ${agent.name.full(middle='full')} will not request treatments to prolong their life. However, they will still request pain relief treatment.
+      This means that if ${principal.name_full()} is unconscious and their doctor believes they will never wake up or experience their surroundings, ${agent.name_full()} will not request treatments to prolong their life. However, they will still request pain relief treatment.
   - They want their life to be prolonged to the greatest extent possible.: longevity
     help: |
-      This means that ${agent.name.full(middle='full')} will make choices to keep ${principal.name.full(middle='full')} alive as long as reasonably possible, even if they are suffering, brain-dead, or unable to recover.
+      This means that ${agent.name_full()} will make choices to keep ${principal.name_full()} alive as long as reasonably possible, even if they are suffering, brain-dead, or unable to recover.
   - They do not want to decide this now.: do_not
     help: |
       If they sign the form without deciding this, their agent will have to make this choice.
@@ -493,19 +493,19 @@ subject: |
 
 content: |  
   **The quality of their life is more important than the length of their life.**
-  If ${principal.name.full(middle='full')} is unconscious and their doctor (relying on accepted medical standards) believes that they will not wake up or recover their ability to think, communicate with their family and friends, and experience their surroundings, ${principal.name.full(middle='full')} does not want treatments to prolong my life or delay my death. However, ${principal.name.full(middle='full')} does want treatment or care to make them comfortable and to relieve them of pain.
+  If ${principal.name_full()} is unconscious and their doctor (relying on accepted medical standards) believes that they will not wake up or recover their ability to think, communicate with their family and friends, and experience their surroundings, ${principal.name_full()} does not want treatments to prolong my life or delay my death. However, ${principal.name_full()} does want treatment or care to make them comfortable and to relieve them of pain.
 
   **They want their life to be prolonged to the greatest extent possible.**
-  Staying alive is more important to ${principal.name.full(middle='full')}, no matter how sick they are, how much they are suffering, the cost of the procedures, or how unlikely their chances for recovery. ${principal.name.full(middle='full')} wants their life to be prolonged to the greatest extent possible allowed by reasonable medical standards.
+  Staying alive is more important to ${principal.name_full()}, no matter how sick they are, how much they are suffering, the cost of the procedures, or how unlikely their chances for recovery. ${principal.name_full()} wants their life to be prolonged to the greatest extent possible allowed by reasonable medical standards.
 ---
 id: quality of life warning
 question: |
   Warning about care preference
 subquestion: |
   % if for_yourself == True:
-  If you do not decide whether ${agent.name.full(middle='full')} should focus on your quality of life or the length of your life, they will have to make that choice.
+  If you do not decide whether ${agent.name_full()} should focus on your quality of life or the length of your life, they will have to make that choice.
   % else:
-  If ${principal.name.full(middle='full')} does not decide whether ${agent.name.full(middle='full')} should focus on their quality of life or the length of their life, ${agent.name.full(middle='full')} will have to make that choice.
+  If ${principal.name_full()} does not decide whether ${agent.name_full()} should focus on their quality of life or the length of their life, ${agent.name_full()} will have to make that choice.
   % endif
 continue button field: quality_warning
 ---
@@ -522,9 +522,9 @@ code: |
 id: agent limitation
 question: |
   % if for_yourself == True:
-  Do you want to limit ${agent.name.full(middle='full')}'s powers?
+  Do you want to limit ${agent.name_full()}'s powers?
   % else:
-  Does ${principal.name.full(middle='full')} want to limit ${agent.name.full(middle='full')}'s powers?
+  Does ${principal.name_full()} want to limit ${agent.name_full()}'s powers?
   % endif
 subquestion: |
   % if for_yourself == True:
@@ -534,7 +534,7 @@ subquestion: |
   * Stopping a specific treatment, or
   * Authorizing an autopsy.
   % else:
-  ${principal.name.full(middle='full')}'s agent will have the authority to make any decision ${principal.name.full(middle='full')} could make to obtain or terminate any type of health care. ${principal.name.full(middle='full')} may limit what they can decide. Common restrictions include:
+  ${principal.name_full()}'s agent will have the authority to make any decision ${principal.name_full()} could make to obtain or terminate any type of health care. ${principal.name_full()} may limit what they can decide. Common restrictions include:
   
   * Starting a specific treatment,
   * Stopping a specific treatment, or
@@ -546,11 +546,11 @@ fields:
 ---
 id: self remains disposal
 question: |
-  If you pass away, what would you like ${agent.name.full(middle='full')} to do with your remains?
+  If you pass away, what would you like ${agent.name_full()} to do with your remains?
 subquestion: |
   If you have a prepaid burial plan or cemetery plot, you should select **I would like to type a specific preference" and enter information regarding the plan or plot.
   
-  If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with your remains.
+  If you select **I do not have a preference**, ${agent.name_full()} will decide what to do with your remains.
 fields: 
   - Preference: self_remains_preference
     input type: radio
@@ -566,11 +566,11 @@ fields:
 ---
 id: other remains disposal
 question: |
-  If ${principal.name.full(middle='full')} passes away, what would they like ${agent.name.full(middle='full')} to do with their remains?
+  If ${principal.name_full()} passes away, what would they like ${agent.name_full()} to do with their remains?
 subquestion: |
-  If ${principal.name.full(middle='full')} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference** and enter information regarding the plan or plot.
+  If ${principal.name_full()} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference** and enter information regarding the plan or plot.
   
-  If you select **I do not have a preference**, ${agent.name.full(middle='full')} will decide what to do with ${principal.name.full(middle='full')} remains.
+  If you select **I do not have a preference**, ${agent.name_full()} will decide what to do with ${principal.name_full()} remains.
 fields: 
   - Preference: other_remains_preference
     input type: radio
@@ -595,7 +595,7 @@ choices:
 ---
 id: other organ donor
 question: |
-  Does ${principal.name.full(middle='full')} want to donate their organs?
+  Does ${principal.name_full()} want to donate their organs?
 field: other_organ_donor
 choices: 
   - Yes
@@ -607,7 +607,7 @@ question: |
   % if for_yourself == True:
   What limits or special rules do you want to include?
   % else:
-  What limits or special rules does ${principal.name.full(middle='full')} want to include?
+  What limits or special rules does ${principal.name_full()} want to include?
   % endif
 subquestion: |
   For example: "The Agent may not donate any of my remains to science."
@@ -620,21 +620,21 @@ question: |
   % if for_yourself == True:
   Do you want to delay future revocation of this Power of Attorney?
   % else:
-  Does ${principal.name.full(middle='full')} want to delay future revocation of this Power of Attorney by 30 days?
+  Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?
   % endif
 subquestion: |
   % if for_yourself == True:
-  Revocation is when you end the Power of Attorney and no longer allow ${agent.name.full(middle='full')} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when you end the Power of Attorney and no longer allow ${agent.name_full()} to make decisions for you. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and later revoke your Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revocation.
+  If you select **Yes** and later revoke your Power of Attorney, ${agent.name_full()} will still be able to make decisions for you until 30 days after your revocation.
   
-  If you select **No** and later revoke your power of attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
+  If you select **No** and later revoke your power of attorney, ${agent.name_full()} will immediately be unable to make decisions for you.
   % else:
-  Revocation is when ${principal.name.full(middle='full')} ends the Power of Attorney and no longer allows ${agent.name.full(middle='full')} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
+  Revocation is when ${principal.name_full()} ends the Power of Attorney and no longer allows ${agent.name_full()} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0).
   
-  If you select **Yes** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after their revocation.
+  If you select **Yes** and ${principal.name_full()} later revokes the Power of Attorney, ${agent.name_full()} will still be able to make decisions for them until 30 days after their revocation.
   
-  If you select **No** and ${principal.name.full(middle='full')} later revokes the Power of Attorney, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+  If you select **No** and ${principal.name_full()} later revokes the Power of Attorney, ${agent.name_full()} will immediately be unable to make decisions for them.
   % endif
 fields:
   - no label: delayed_revocation
@@ -688,17 +688,17 @@ question: |
   % if for_yourself == True:
   Do you want to name successor agents?
   % else:
-  Does ${principal.name.full(middle='full')} want to name successor agents?
+  Does ${principal.name_full()} want to name successor agents?
   % endif
 subquestion: |
   % if for_yourself == True:
-  The person named as a successor agent will have power of attorney for health care for you if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  The person named as a successor agent will have power of attorney for health care for you if ${agent.name_full()} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
   
-  If you list more than one successor agent, you should list them in order of preference. A successor agent will only have power of attorney if ${agent.name.full(middle='full')} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
+  If you list more than one successor agent, you should list them in order of preference. A successor agent will only have power of attorney if ${agent.name_full()} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
   % else:
-  The person named as a successor agent will have power of attorney for health care for ${principal.name.full(middle='full')} if ${agent.name.full(middle='full')} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
+  The person named as a successor agent will have power of attorney for health care for ${principal.name_full()} if ${agent.name_full()} dies, becomes **{incompetent}**, quits, or refuses to accept the office of agent.
   
-  If ${principal.name.full(middle='full')} lists more than one successor agent, they should list them in order of preference. A successor agent will only have power of attorney if ${agent.name.full(middle='full')} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
+  If ${principal.name_full()} lists more than one successor agent, they should list them in order of preference. A successor agent will only have power of attorney if ${agent.name_full()} and all successor agents listed ahead of them die, become **{incompetent}**, quit, or refuse to accept the office of agent.
   % endif
 fields:
   - no label: any_successors
@@ -734,7 +734,7 @@ question: |
   % if for_yourself == True:
   Do you want to name another successor agent?
   % else:
-  Does ${principal.name.full(middle='full')} want to name another successor agent?
+  Does ${principal.name_full()} want to name another successor agent?
   % endif
 subquestion: |
   So far you have told us about ${comma_and_list(successors.complete_elements().full_names())}.
@@ -765,7 +765,7 @@ id: successor address
 sets:
   - successors[i].address.address
 question: |
-  What is ${successors[i].name.full(middle='full')}'s address?
+  What is ${successors[i].name_full()}'s address?
 fields:
   - Street address: successors[i].address.address
     address autocomplete: True
@@ -781,7 +781,7 @@ id: successor phone
 sets:
   - successors[i].phone_number
 question: |
-  What is ${successors[i].name.full(middle='full')}'s phone number?
+  What is ${successors[i].name_full()}'s phone number?
 subquestion: |
   If you do not know this, leave this blank.
 fields:
@@ -794,16 +794,16 @@ question: |
   % if for_yourself == True:
   Do you know who will witness the signing of the Power of Attorney for Health Care?
   % else:
-  Does ${principal.name.full(middle='full')} know who will witness the signing of the Power of Attorney for Health Care?
+  Does ${principal.name_full()} know who will witness the signing of the Power of Attorney for Health Care?
   % endif
 subquestion: |
   % if for_yourself == True:
   The witness must be 18 or older and:
  
   % if any_successors == True: 
-  * Cannot be related by blood or marriage to you, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
+  * Cannot be related by blood or marriage to you, to the agent (${agent.name_full()}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
   % else:
-  * Cannot be related by blood or marriage to you or to the agent (${agent.name.full(middle='full')}),
+  * Cannot be related by blood or marriage to you or to the agent (${agent.name_full()}),
   % endif
   * Cannot be named as the agent or a successor agent with power of attorney, and
   * Cannot be providing you with medical treatment (such as your doctor or nurse) or related to anyone providing you with medical treatment.
@@ -811,12 +811,12 @@ subquestion: |
   The witness must be 18 or older and:
 
   % if any_successors == True: 
-  * Cannot be related by blood or marriage to ${principal.name.full(middle='full')}, to the agent (${agent.name.full(middle='full')}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
+  * Cannot be related by blood or marriage to ${principal.name_full()}, to the agent (${agent.name_full()}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
   % else:
-  * Cannot be related by blood or marriage to ${principal.name.full(middle='full')} or to the agent (${agent.name.full(middle='full')}),
+  * Cannot be related by blood or marriage to ${principal.name_full()} or to the agent (${agent.name_full()}),
   % endif
   * Cannot be named as the agent or a successor agent with power of attorney, and
-  * Cannot be providing ${principal.name.full(middle='full')} with medical treatment (such as their doctor or nurse) or related to anyone providing them with medical treatment.
+  * Cannot be providing ${principal.name_full()} with medical treatment (such as their doctor or nurse) or related to anyone providing them with medical treatment.
   % endif
   
   ${ collapse_template(do_not_know) } 
@@ -829,13 +829,13 @@ subject: |
   % if for_yourself == True:
   **What if I don't know this now?**
   % else:
-  **What if ${principal.name.full(middle='full')} does not know this now?**
+  **What if ${principal.name_full()} does not know this now?**
   % endif
 content: | 
   % if for_yourself == True:
   You can leave the witness section of the form blank for now and complete it later when you know who will be your witness.
   % else:
-  ${principal.name.full(middle='full')} can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
+  ${principal.name_full()} can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
   % endif
 ---
 id: witness name
@@ -849,7 +849,7 @@ fields:
 ---
 id: witness address
 question: |
-  What is ${witness.name.full(middle='full')}'s address?
+  What is ${witness.name_full()}'s address?
 subquestion: |
   If you do not know their address, you can leave this blank.
 fields:
@@ -908,7 +908,7 @@ depends on:
   - successors[i].address.zip
   - successors[i].phone_number
 code: |
-  success_strings[i] = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
+  success_strings[i] = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True)
   if successors[i].phone_number != "":
     success_strings[i] += ", " + str(phone_number_formatted(successors[i].phone_number))
 
@@ -918,11 +918,11 @@ code: |
 #  else:
 #    successors[i].proper_number = ""
 #  if defined('successors[i].phone_number') == False:
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
+#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True)
 #  elif successors[i].proper_number != "None": 
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True) + ", " + successors[i].proper_number
+#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True) + ", " + successors[i].proper_number
 #  else:
-#    success_strings[i].text_block = successors[i].name.full(middle='full') + ", " + successors[i].address.on_one_line(bare=True)
+#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True)
 ---
 id: completion reminder
 question: |
@@ -933,23 +933,23 @@ subquestion: |
   % if when_authorize == "do_not":
   You have left some decisions to be made later. You may want to review your Power of Attorney form and make those choices before signing it.
   % else:
-  You have not decided whether you want ${agent.name.full(middle='full')} to prioritize your quality of life or the length of your life. You may want to review your Power of Attorney form and make that choice before signing it.
+  You have not decided whether you want ${agent.name_full()} to prioritize your quality of life or the length of your life. You may want to review your Power of Attorney form and make that choice before signing it.
   % endif
   % else:
   % if when_authorize == "do_not":
-  You have not decided when you want ${agent.name.full(middle='full')} to start making decisions for you. You may want to review your Power of Attorney form and make that choice before signing it.
+  You have not decided when you want ${agent.name_full()} to start making decisions for you. You may want to review your Power of Attorney form and make that choice before signing it.
   % endif
   % endif
   % else:
   % if quality_of_life == "do_not":
   % if when_authorize == "do_not":
-  ${principal.name.full(middle='full')} has left some decisions to be made later. They may want to review their Power of Attorney form and make those choices before signing it.
+  ${principal.name_full()} has left some decisions to be made later. They may want to review their Power of Attorney form and make those choices before signing it.
   % else:
-  ${principal.name.full(middle='full')} has not decided whether they want ${agent.name.full(middle='full')} to prioritize their quality of life or the length of their life. They may want to review your Power of Attorney form and make that choice before signing it.
+  ${principal.name_full()} has not decided whether they want ${agent.name_full()} to prioritize their quality of life or the length of their life. They may want to review your Power of Attorney form and make that choice before signing it.
   % endif
   % else:
   % if when_authorize == "do_not":
-  ${principal.name.full(middle='full')} has not decided when they want ${agent.name.full(middle='full')} to start making decisions for them. They may want to review their Power of Attorney form and make that choice before signing it.
+  ${principal.name_full()} has not decided when they want ${agent.name_full()} to start making decisions for them. They may want to review their Power of Attorney form and make that choice before signing it.
   % endif
   % endif
   % endif
@@ -1008,9 +1008,9 @@ attachment:
     skip undefined: True
     editable: False
     fields:
-      - "principal_name": ${ principal.name.full(middle='full') }
+      - "principal_name": ${ principal.name_full() }
       - "principal_address": ${ principal.address.on_one_line(bare=True)}
-      - "agent_name": ${ agent.name.full(middle='full')}
+      - "agent_name": ${ agent.name_full()}
       - "agent_address": ${ agent.address.on_one_line(bare=True)}
       - "agent_phone": ${ phone_number_formatted(agent.phone_number) }
       - "agent_is_guardian": ${is_guardian}
@@ -1020,7 +1020,7 @@ attachment:
       - "quality_of_life": ${True if quality_of_life == 'quality' else False}
       - "stay_alive": ${True if quality_of_life == 'longevity' else False}
       - "agent_limits": ${agent_instructions}
-      - "witness_name": ${witness.name.full(middle='full') if witness_known == True else ""}
+      - "witness_name": ${witness.name_full() if witness_known == True else ""}
       - "witness_address": ${witness.address.on_one_line(bare=True) if witness_known == True and witness.address.address != ""  else ""}
       - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
       - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
@@ -1059,26 +1059,26 @@ review:
       % else:
       **The principal's name:**
       % endif
-      ${principal.name.full(middle="full")}
+      ${principal.name_full()}
   - Edit: principal.address.address
     button: |
       % if for_yourself == True:
       **Your address:**
       % else:
-      **${principal.name.full(middle='full')}'s address:**
+      **${principal.name_full()}'s address:**
       % endif
       ${principal.address.on_one_line(bare=True)}
   - Edit: agent.name.first
     button: |
       **The agent's name:**
-      ${agent.name.full(middle='full')}
+      ${agent.name_full()}
   - Edit: agent.address.address
     button: |
-      **${agent.name.full(middle='full')}'s address:**
+      **${agent.name_full()}'s address:**
       ${agent.address.on_one_line(bare=True)}
   - Edit: agent.phone_number
     button: |
-      **${agent.name.full(middle='full')}'s phone number:**
+      **${agent.name_full()}'s phone number:**
       % if agent.phone_number != "":
       ${phone_number_formatted(agent.phone_number)}
       % else:
@@ -1087,14 +1087,14 @@ review:
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
-      **Do you want ${agent.name.full(middle='full')} to serve as your legal guardian?**
+      **Do you want ${agent.name_full()} to serve as your legal guardian?**
       % else:
-      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as their legal guardian?**
+      **Does ${principal.name_full()} want ${agent.name_full()} to serve as their legal guardian?**
       % endif
       ${word(yesno(is_guardian))}
   - Edit: when_you_authorize
     button: |
-      **${agent.name.full(middle='full')} is authorized to make decisions:**
+      **${agent.name_full()} is authorized to make decisions:**
       % if when_authorize == 'only':
       Only when I cannot make decisions for myself.
       % endif
@@ -1107,23 +1107,23 @@ review:
     show if: for_yourself
   - Edit: when_principal_authorize
     button: |
-      **${agent.name.full(middle='full')} is authorized to make decisions:**
+      **${agent.name_full()} is authorized to make decisions:**
       % if when_authorize == 'only':
-      Only when ${principal.name.full(middle='full')} cannot make decisions for their self.
+      Only when ${principal.name_full()} cannot make decisions for their self.
       % endif
       % if when_authorize == 'now':
-      Now and continuing after ${principal.name.full(middle='full')} is no longer able to make decisions for their self.
+      Now and continuing after ${principal.name_full()} is no longer able to make decisions for their self.
       % endif
       % if when_authorize == 'do_not':
-      ${principal.name.full(middle='full')} does not want to decide this now.
+      ${principal.name_full()} does not want to decide this now.
       % endif
     show if: for_yourself == False
   - Edit: health_records
     button: |
       % if for_yourself == True:
-      **Will ${agent.name.full(middle='full')} have access to your medical records?**
+      **Will ${agent.name_full()} have access to your medical records?**
       % else:
-      **Will ${agent.name.full(middle='full')} have access to ${principal.name.full(middle='full')}'s medical records?**
+      **Will ${agent.name_full()} have access to ${principal.name_full()}'s medical records?**
       % endif
       ${word(yesno(health_records))}
   - Edit: quality_of_life_you
@@ -1141,7 +1141,7 @@ review:
     show if: for_yourself
   - Edit: quality_of_life_principal
     button: |
-      **${principal.name.full(middle='full')}'s treatment instructions:**
+      **${principal.name_full()}'s treatment instructions:**
       % if quality_of_life == 'quality':
       The quality of their life is more important than the length of their life.
       % endif
@@ -1163,7 +1163,7 @@ review:
     show if: for_yourself
   - Edit: other_remains_preference
     button: |
-      **${principal.name.full(middle='full')}'s disposition of remains instructions:**
+      **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != 'They have a specific preference.':
       ${other_remains_preference}
       % else:
@@ -1177,16 +1177,16 @@ review:
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
-      **Would ${principal.name.full(middle='full')} like to donate their organs?**
+      **Would ${principal.name_full()} like to donate their organs?**
       ${self_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
-      **Is ${agent.name.full(middle='full')}'s power limited?**
+      **Is ${agent.name_full()}'s power limited?**
       ${word(yesno(agent_limitation))}
   - Edit: agent_limits
     button: |
-      **Limits for ${agent.name.full(middle='full')}:**
+      **Limits for ${agent.name_full()}:**
       ${agent_limits}
     show if: agent_limitation
   - Edit: delayed_revocation
@@ -1194,7 +1194,7 @@ review:
       % if for_yourself == True:
       **Do you want to delay future revocation of this power of attorney by 30 days?**
       % else:
-      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      **Does ${principal.name_full()} want to delay future revocation of this power of attorney by 30 days?**
       % endif
       ${word(yesno(delayed_revocation))}
   - Edit: any_successors
@@ -1206,7 +1206,7 @@ review:
       **Successor agents: (Edit to change names, addresses, and phone numbers)**
 
       % for my_var in successors:
-        * ${ my_var.name.full(middle="full") }
+        * ${ my_var.name_full() }
       % endfor    
     show if: any_successors
   - Edit: witness_known
@@ -1214,17 +1214,17 @@ review:
       % if for_yourself == True:
       **Do you know who will witness you signing the power of attorney?**
       % else:
-      **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
+      **Does ${principal.name_full()} know who will witness them signing the power of attorney?**
       % endif
       ${word(yesno(witness_known))}
   - Edit: witness.name.first
     button: |
       **The witness's name:**
-      ${witness.name.full(middle='full')}
+      ${witness.name_full()}
     show if: witness_known
   - Edit: witness.address.address
     button: |
-      **${witness.name.full(middle='full')}'s address:**
+      **${witness.name_full()}'s address:**
       ${witness.address.on_one_line(bare=True)}
     show if: witness_known
 ---
@@ -1243,19 +1243,19 @@ id: successor review
 continue button field: x.review_successor
 generic object: ALIndividual
 question: |
-  Edit ${ x.name.full(middle="full") }'s information
+  Edit ${ x.name_full() }'s information
 review: 
   - Edit: x.name.first
     button: |
       **Successor name:**
-      ${ x.name.full(middle="full")  }
+      ${ x.name_full()  }
   - Edit: x.address.address
     button: |
-      **${ x.name.full(middle="full") }'s address:**
+      **${ x.name_full() }'s address:**
       ${ x.address.on_one_line(bare=True) }
   - Edit: x.phone_number
     button: |
-      **${ x.name.full(middle="full") }'s phone number:**
+      **${ x.name_full() }'s phone number:**
       ${ phone_number_formatted(x.phone_number) }
 ---
 id: successors table
@@ -1263,7 +1263,7 @@ table: successors.table
 rows: successors
 columns:
   - Name: |
-      row_item.name.full(middle="full") if defined("row_item.name.first") else ""
+      row_item.name_full() if defined("row_item.name.first") else ""
   - Successor, address, and phone number: |
       action_button_html(url_action(row_item.attr_name("review_successor")), label="Edit", icon="pencil-alt")
 delete buttons: True
@@ -1274,7 +1274,7 @@ confirm: True
 #rows: successors
 #columns:
 #  - Name: |
-#      row_item.name.full(middle="full") if defined("row_item.name.first") else ""
+#      row_item.name_full() if defined("row_item.name.first") else ""
 #  - Address: |
 #      row_item.address.on_one_line(bare=True) if defined("row_item.address.address") else ""
 #  - Phone: |
@@ -1308,13 +1308,13 @@ review:
       % else:
       **The principal's name:**
       % endif
-      ${principal.name.full(middle="full")}
+      ${principal.name_full()}
   - Edit: principal.address.address
     button: |
       % if for_yourself == True:
       **Your address:**
       % else:
-      **${principal.name.full(middle='full')}'s address:**
+      **${principal.name_full()}'s address:**
       % endif
       ${principal.address.on_one_line(bare=True)}
 ---
@@ -1327,14 +1327,14 @@ review:
   - Edit: agent.name.first
     button: |
       **The agent's name:**
-      ${agent.name.full(middle='full')}
+      ${agent.name_full()}
   - Edit: agent.address.address
     button: |
-      **${agent.name.full(middle='full')}'s address:**
+      **${agent.name_full()}'s address:**
       ${agent.address.on_one_line(bare=True)}
   - Edit: agent.phone_number
     button: |
-      **${agent.name.full(middle='full')}'s phone number:**
+      **${agent.name_full()}'s phone number:**
       % if agent.phone_number != "":
       ${phone_number_formatted(agent.phone_number)}
       % else:
@@ -1343,14 +1343,14 @@ review:
   - Edit: is_guardian
     button: |
       % if for_yourself == True:
-      **Do you want ${agent.name.full(middle='full')} to serve as your legal guardian?**
+      **Do you want ${agent.name_full()} to serve as your legal guardian?**
       % else:
-      **Does ${principal.name.full(middle='full')} want ${agent.name.full(middle='full')} to serve as their legal guardian?**
+      **Does ${principal.name_full()} want ${agent.name_full()} to serve as their legal guardian?**
       % endif
       ${word(yesno(is_guardian))}
   - Edit: when_you_authorize
     button: |
-      **${agent.name.full(middle='full')} is authorized to make decisions:**
+      **${agent.name_full()} is authorized to make decisions:**
       % if when_authorize == 'only':
       Only when I cannot make decisions for myself.
       % endif
@@ -1363,23 +1363,23 @@ review:
     show if: for_yourself
   - Edit: when_principal_authorize
     button: |
-      **${agent.name.full(middle='full')} is authorized to make decisions:**
+      **${agent.name_full()} is authorized to make decisions:**
       % if when_authorize == 'only':
-      Only when ${principal.name.full(middle='full')} cannot make decisions for their self.
+      Only when ${principal.name_full()} cannot make decisions for their self.
       % endif
       % if when_authorize == 'now':
-      Now and continuing after ${principal.name.full(middle='full')} is no longer able to make decisions for their self.
+      Now and continuing after ${principal.name_full()} is no longer able to make decisions for their self.
       % endif
       % if when_authorize == 'do_not':
-      ${principal.name.full(middle='full')} does not want to decide this now.
+      ${principal.name_full()} does not want to decide this now.
       % endif
     show if: for_yourself == False
   - Edit: health_records
     button: |
       % if for_yourself == True:
-      **Will ${agent.name.full(middle='full')} have access to your medical records?**
+      **Will ${agent.name_full()} have access to your medical records?**
       % else:
-      **Will ${agent.name.full(middle='full')} have access to ${principal.name.full(middle='full')}'s medical records?**
+      **Will ${agent.name_full()} have access to ${principal.name_full()}'s medical records?**
       % endif
       ${word(yesno(health_records))}
   - Edit: quality_of_life_you
@@ -1397,7 +1397,7 @@ review:
     show if: for_yourself
   - Edit: quality_of_life_principal
     button: |
-      **${principal.name.full(middle='full')}'s treatment instructions:**
+      **${principal.name_full()}'s treatment instructions:**
       % if quality_of_life == 'quality':
       The quality of their life is more important than the length of their life.
       % endif
@@ -1419,7 +1419,7 @@ review:
     show if: for_yourself
   - Edit: other_remains_preference
     button: |
-      **${principal.name.full(middle='full')}'s disposition of remains instructions:**
+      **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != 'They have a specific preference.':
       ${other_remains_preference}
       % else:
@@ -1433,16 +1433,16 @@ review:
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
-      **Would ${principal.name.full(middle='full')} like to donate their organs?**
+      **Would ${principal.name_full()} like to donate their organs?**
       ${self_organ_donor}
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
-      **Is ${agent.name.full(middle='full')}'s power limited?**
+      **Is ${agent.name_full()}'s power limited?**
       ${word(yesno(agent_limitation))}
   - Edit: agent_limits
     button: |
-      **Limits for ${agent.name.full(middle='full')}:**
+      **Limits for ${agent.name_full()}:**
       ${agent_limits}
     show if: agent_limitation
   - Edit: delayed_revocation
@@ -1450,7 +1450,7 @@ review:
       % if for_yourself == True:
       **Do you want to delay future revocation of this power of attorney by 30 days?**
       % else:
-      **Does ${principal.name.full(middle='full')} want to delay future revocation of this power of attorney by 30 days?**
+      **Does ${principal.name_full()} want to delay future revocation of this power of attorney by 30 days?**
       % endif
       ${word(yesno(delayed_revocation))}
 ---
@@ -1469,7 +1469,7 @@ review:
       **Successor agents: (Edit to change names, addresses, and phone numbers)**
 
       % for my_var in successors:
-        * ${ my_var.name.full(middle="full") }
+        * ${ my_var.name_full() }
       % endfor    
     show if: any_successors
 ---
@@ -1484,16 +1484,16 @@ review:
       % if for_yourself == True:
       **Do you know who will witness you signing the power of attorney?**
       % else:
-      **Does ${principal.name.full(middle='full')} know who will witness them signing the power of attorney?**
+      **Does ${principal.name_full()} know who will witness them signing the power of attorney?**
       % endif
       ${word(yesno(witness_known))}
   - Edit: witness.name.first
     button: |
       **The witness's name:**
-      ${witness.name.full(middle='full')}
+      ${witness.name_full()}
     show if: witness_known
   - Edit: witness.address.address
     button: |
-      **${witness.name.full(middle='full')}'s address:**
+      **${witness.name_full()}'s address:**
       ${witness.address.on_one_line(bare=True)}
     show if: witness_known
