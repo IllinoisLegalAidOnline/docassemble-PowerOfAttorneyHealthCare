@@ -932,10 +932,14 @@ subquestion: |
     If you select **Yes** and revoke your Power of Attorney in the future, you will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for you until 30 days after your revoke the Power of Attorney. You can use the 30 days to reflect on your decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
   If you select **No** and revoke your Power of Attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for you.
+
+  **Note**: You can revoke a Power of Attorney for Health Care even if you do not have **{legal capacity}**, but you would need legal capacity to make a new one.
   % else:
   If you select **Yes** and ${principal.name.full(middle='full')} revokes the Power of Attorney in the future, they will have a "cooling off period." ${agent.name.full(middle='full')} will still be able to make decisions for them until 30 days after ${principal.name.full(middle='full')}  revoke their Power of Attorney. They can use the 30 days to reflect on their decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
   If you select **No** and ${principal.name.full(middle='full')} revokes the Power of Attorney in the future, ${agent.name.full(middle='full')} will immediately be unable to make decisions for them.
+
+  **Note**: ${principal.name.full(middle='full')} can revoke a Power of Attorney for Health Care even if they do not have **{legal capacity}**, but they would need legal capacity to make a new one.
   % endif
 
   ${collapse_template(video_cooling)}
@@ -1224,7 +1228,7 @@ continue button field: notary_info
 question: |
   About notarization
 subquestion: |
-  Illinois does not require a Power of Attorney for Health Care to be notarized, but some other states do require notarization. You may want to get your Power of Attorney notarized. You can find a Notary Public at a bank or currency exchange, and in some libraries.
+  Illinois does not require a Power of Attorney for Health Care to be notarized, but some other states do require notarization. You may want to get your Power of Attorney notarized. You can find a notary public at a bank or currency exchange, and in some libraries.
   
   If you ever travel to another state, it would be helpful for your Power of Attorney to be notarized with two witness signatures.
   
@@ -1238,7 +1242,12 @@ question: |
   Does ${principal.name.full(middle='full')} know who will witness the signing of the Power of Attorney for Health Care?
   % endif
 subquestion: |
-  ${ collapse_template(do_not_know) } 
+  % if for_yourself == True:
+  You do not need to know this now. You can leave the witness section of the form blank for now and complete it later when you know who will be your witness.
+
+  % else:
+  ${principal.name.full(middle='full')} does not need to know this know. They can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
+  % endif
 fields:
   - no label: witness_known
     datatype: yesnoradio
