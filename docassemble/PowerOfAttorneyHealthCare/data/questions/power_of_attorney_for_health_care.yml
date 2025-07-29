@@ -361,11 +361,9 @@ subquestion: |
   % if for_yourself == False:
   The principal is the person who chooses an agent to make decisions about the their medical treatment.
 
-  They should enter the legal name on their government-issued identification.
-
-  If they have legally changed their name, you should click **They have another name** and list their old legal name in the **Additional name** field. This will list both names on the form. You can also do this if they go by a different name in addition to their legal name.
+  If their current name is not on their government-issued identification, you may want to click **They have another name.** You can then enter the name on their ID in the **Additional Name** field. There may be problems if the name on their ID is not on their Power of Attorney form.
   % else:
-  If your current name is not on your government-issued identification, you should click **I have another name.** You can enter the name on your ID in the **Additional name** field.
+  If your current name is not on your government-issued identification, you may want to click **I have another name.** You can then enter the name on your ID in the **Additional Name** field. There may be problems if the name on your ID is not on your Power of Attorney form.
 
   ${collapse_template(changed_name)}
   % endif
@@ -379,7 +377,7 @@ fields:
   - Additional name: principal.aka_name
     js show if:
       val('also_known_as') === true
-  - Is the additional name a old legal name?: formerly_or_also
+  - Is the additional name an old legal name?: formerly_or_also
     datatype: yesnoradio
     js show if:
       val('also_known_as') === true
