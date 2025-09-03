@@ -93,12 +93,12 @@ code: |
   nav.set_section('section_witness')
   set_progress(80)
   witness_info
-  if witness_known == True:
-    witnesses[0].name.first
-    witnesses[0].address_string
-    if second_witness_known:
-      witnesses[1].name.first
-      witnesses[1].address_string
+  #if witness_known == True:
+  #  witnesses[0].name.first
+  #  witnesses[0].address_string
+  #  if second_witness_known:
+  #    witnesses[1].name.first
+  #    witnesses[1].address_string
   notary_info
   nav.set_section('section_download')
   if when_authorize == "do_not" or quality_of_life == "do_not":
@@ -160,16 +160,16 @@ question: |
 subquestion: |  
   To use this program you will need to know:
 
-  * The name, location, and phone number of someone you trust to make health care decisions for you to be your agent,
-  * The names, location, and phone numbers of any successor agents,
-  * When you want to authorize your agent to start making decisions for you, and
-  * What you want your agent to do and not do regarding life-sustaining treatments and other health care issues.
+  * The name, location, and phone number of someone you trust to make health care decisions for you to be your agent, and
+  * The names, location, and phone numbers of any **{successor agents}**.
     
   Set aside 10 to 15 minutes to finish this program, and more time if you watch the videos. You can log in and save your work to return to later. 
   
   ${ collapse_template(help_example) }  
 
   Click on **{green words}** to learn what they mean. Some questions have a question mark in a circle ${ fa_icon("question-circle", color_css="#0DCAF0" ) } that also gives help.
+successor agents: |
+    A **successor agent** is a back-up agent. They would have power of attorney if the first dies, becomes incompetent, quits, or refuses to act as your power of attorney agent.
 ---
 template: help_example
 
@@ -186,7 +186,7 @@ continue button field: next_steps
 question: |
   Your next steps
 subquestion: |
-    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. You do not need to know who the witness to use this program.
+    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. You do not need to know who the witness will be to use this program.
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. Your forms will include instructions with more information.
     
@@ -359,11 +359,13 @@ question: |
   % endif
 subquestion: |
   % if for_yourself == False:
-  The principal is the person who chooses an agent to make decisions about the their medical treatment.
+  The principal is the person who chooses an agent to make decisions about their medical treatment.
+  
+  You should enter their legal name on their government-issued identification. If they go by a name other than their legal name, or if they have legally changed they name, click **They have another name.** You can then enter that name in the **Additional name** field.
 
-  If their current name is not on their government-issued identification, you may want to click **They have another name.** You can then enter the name on their ID in the **Additional Name** field. There may be problems if the name on their ID is not on their Power of Attorney form.
+  ${collapse_template(changed_name)}
   % else:
-  If your current name is not on your government-issued identification, you may want to click **I have another name.** You can then enter the name on your ID in the **Additional Name** field. There may be problems if the name on your ID is not on your Power of Attorney form.
+  You should enter your legal name on your government-issued identification. If you go by a name other than your legal name, or if you have legally changed your name, click **I have another name.** You can then enter that name in the **Additional name** field.
 
   ${collapse_template(changed_name)}
   % endif
@@ -582,11 +584,11 @@ fields:
     choices:
       - Only when I cannot make decisions for myself.: only
         help: |
-          A doctor will determine when you are unable to make decisions. When they do, the doctor will make a written statement that you cannot make your own decisions.
+          A doctor will determine when you are unable to make decisions.
       - Now and continuing after I am no longer able to make decisions for myself. If I can communicate choices, I will be the decision maker even if the Power of Attorney is in effect: now
       - I do not want to decide this now.: do_not
         help: |
-          If you do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, your agent will not make decisions for you until a doctor makes a written statement that you cannot make your own decisions.
+          If you do not make a choice before signing, the Power of Attorney will default to the first choice. That means, your agent will not make decisions for you until a doctor determines that you cannot make your own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -606,11 +608,11 @@ field: when_principal_authorize
 choices:
   - Only when ${principal.name_full()} cannot make decisions for their self.: only
     help: |
-      A doctor will determine when they are unable to make decisions. When they do, the doctor will make a written statement that ${principal.name_full()} cannot make their own decisions.
+      A doctor will determine when they are unable to make decisions.
   - Now and continuing after ${principal.name_full()} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the Power of Attorney is in effect: now
   - ${principal.name_full()} does not want to decide this now.: do_not
     help: |
-      If they do not make a choice before signing, the Power of Attorney will default to the first choice. If that happens, their agent will not make decisions for them until a doctor makes a written statement that they cannot make their own decisions.
+      If they do not make a choice before signing, the Power of Attorney will default to the first choice. That means their agent will not make decisions for them until a doctor determines that they cannot make their own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -620,13 +622,9 @@ question: |
   Warning about authorization
 subquestion: |
   % if for_yourself == True:
-  If you do not decide when you want ${agent.name_full()} to start making choices for you, they will not be able to until you are unable to make choices for yourself.
-  
-  A doctor will determine when you are unable to make decisions.
+  If you do not decide when you want the Power of Attorney to begin, ${agent.name_full()} would not be able to help you until a doctor determines you are unable make your own decisions.
   % else:
-  If ${principal.name_full()} does not decide when they want ${agent.name_full()} to start making choices for them, ${agent.name_full()} will not be able to until they are unable to make choices of their own.
-  
-  A doctor will determine when they are unable to make decisions.
+  If ${principal.name_full()} does not decide when they want the Power of Attorney to begin, ${agent.name_full()} to start making choices for them, ${agent.name_full()} would not be able to help them until a doctor determines they are unable make their own decisions.
   % endif
 continue button field: authorization_warning
 ---
@@ -700,8 +698,6 @@ choices:
     help: |
       This means that ${agent.name_full()} will make choices to keep you alive as long as reasonably possible, even if you are suffering, brain-dead, or unable to recover.
   - I do not want to decide this now. My agent can make this decision in the future.: do_not
-    help: |
-      If you sign the form without deciding this, your agent will have to make this choice.
 ---
 template: quality_explain_you
 
@@ -732,8 +728,6 @@ choices:
     help: |
       This means that ${agent.name_full()} will make choices to keep ${principal.name_full()} alive as long as reasonably possible, even if they are suffering, brain-dead, or unable to recover.
   - They do not want to decide this now.: do_not
-    help: |
-      If they sign the form without deciding this, their agent will have to make this choice.
 ---
 template: quality_explain_principal
 
@@ -753,9 +747,9 @@ question: |
   Warning about care preference
 subquestion: |
   % if for_yourself == True:
-  If you do not decide whether ${agent.name_full()} should focus on your quality of life or the length of your life, they will have to make that choice.
+  If you do not decide whether ${agent.name_full()} should focus on your quality of life or the length of your life, they would have to make that choice after talking with the doctor.
   % else:
-  If ${principal.name_full()} does not decide whether ${agent.name_full()} should focus on their quality of life or the length of their life, ${agent.name_full()} will have to make that choice.
+  If ${principal.name_full()} does not decide whether ${agent.name_full()} should focus on their quality of life or the length of their life, ${agent.name_full()} would have to make that choice after talking with the doctor.
   % endif
 continue button field: quality_warning
 ---
@@ -939,17 +933,17 @@ question: |
   % endif
 subquestion: |
   % if for_yourself == True:
-    If you select **Yes** and revoke your Power of Attorney in the future, you will have a "cooling off period." ${agent.name_full()} will still be able to make decisions for you until 30 days after your revoke the Power of Attorney. You can use the 30 days to reflect on your decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
+    If you select **Yes** and **{revoke}** your Power of Attorney in the future, you will have a "cooling off period." ${agent.name_full()} will still be able to make decisions for you until 30 days after your revoke the Power of Attorney. You can use the 30 days to reflect on your decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
   If you select **No** and revoke your Power of Attorney in the future, ${agent.name_full()} will immediately be unable to make decisions for you.
 
-  **Note**: You can revoke a Power of Attorney for Health Care even if you do not have **{legal capacity}**, but you would need legal capacity to make a new one.
+  **Note**: You can **{revoke}** a Power of Attorney for Health Care even if you do not have **{legal capacity}**, but you would need legal capacity to make a new one.
   % else:
-  If you select **Yes** and ${principal.name_full()} revokes the Power of Attorney in the future, they will have a "cooling off period." ${agent.name_full()} will still be able to make decisions for them until 30 days after ${principal.name_full()}  revoke their Power of Attorney. They can use the 30 days to reflect on their decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
+  If you select **Yes** and ${principal.name_full()} **{revoke}**s the Power of Attorney in the future, they will have a "cooling off period." ${agent.name_full()} will still be able to make decisions for them until 30 days after ${principal.name_full()}  revoke their Power of Attorney. They can use the 30 days to reflect on their decision. This can be helpful when decisions are made during a health crisis, a mental health episode, or while experiencing confusion or memory loss.
   
   If you select **No** and ${principal.name_full()} revokes the Power of Attorney in the future, ${agent.name_full()} will immediately be unable to make decisions for them.
 
-  **Note**: ${principal.name_full()} can revoke a Power of Attorney for Health Care even if they do not have **{legal capacity}**, but they would need legal capacity to make a new one.
+  **Note**: ${principal.name_full()} can **{revoke}** a Power of Attorney for Health Care even if they do not have **{legal capacity}**, but they would need legal capacity to make a new one.
   % endif
 
   ${collapse_template(video_cooling)}
@@ -1066,7 +1060,7 @@ terms:
   incompetent: |
     **Incompetent** means unable to handle one's own affairs due to illness, disability, or age. A person can be declared incompetent or legally disabled by a court. A person may be certified by a doctor as unable to make decisions or handle business affairs.
   successor agent: |
-    A **successor agent** is a back-up agent who will act as your agent if your first agent is unavailable, passes away, or stops being your agent.
+    A **successor agent** is a back-up agent to your first choice agent. They would act as your agent if your first agent is unavailable, passes away, or stops being your agent.
 ---
 #mandatory: True
 #continue button field: show_successors
@@ -1195,13 +1189,13 @@ subquestion: |
   When you sign the Power of Attorney, you will need a witness to watch you sign it and then sign the document themselves.
 
   The witness must be 18 or older and:
- 
+  
+  * Cannot be your agent or your successor agent in this power of attorney document,  
   % if any_successors == True: 
-  * Cannot be related by blood or marriage to you, to the agent (${agent.name_full()}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
+  * Cannot be related to you by blood or marriage, to the agent (${agent.name_full()}), or to the successor agents (${comma_list(successors.complete_elements().full_names())}),
   % else:
-  * Cannot be related by blood or marriage to you or to the agent (${agent.name_full()}),
+  * Cannot be related to you by blood or marriage or to the agent (${agent.name_full()}),
   % endif
-  * Cannot be named as the agent or a successor agent with power of attorney, 
   * Cannot be a paid caregiver, and
   * Cannot be providing you with medical treatment (such as your doctor or nurse) or related to anyone providing you with medical treatment.
   % else:
@@ -1229,8 +1223,6 @@ subject: |
   **How can ${principal.name_full()} find a witness?**
   % endif
 content: | 
-  A witness should be someone you trust and who can be reached by phone to verify that the Power of Attorney is legitimate.
-
   Neighbors, friends, acquaintances, members of a religious or social group, and social workers all could serve as a witness.
 ---
 id: notary info
