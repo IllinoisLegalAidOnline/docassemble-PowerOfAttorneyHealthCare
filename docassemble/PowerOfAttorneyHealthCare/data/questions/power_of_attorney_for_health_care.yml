@@ -93,12 +93,12 @@ code: |
   nav.set_section('section_witness')
   set_progress(80)
   witness_info
-  #if witness_known == True:
-  #  witnesses[0].name.first
-  #  witnesses[0].address_string
-  #  if second_witness_known:
-  #    witnesses[1].name.first
-  #    witnesses[1].address_string
+  if witness_known == True:
+    witnesses[0].name.first
+    witnesses[0].address_string
+    if second_witness_known:
+      witnesses[1].name.first
+      witnesses[1].address_string
   notary_info
   nav.set_section('section_download')
   if when_authorize == "do_not" or quality_of_life == "do_not":
@@ -161,7 +161,12 @@ subquestion: |
   To use this program you will need to know:
 
   * The name, location, and phone number of someone you trust to make health care decisions for you to be your agent, and
-  * The names, location, and phone numbers of any **{successor agents}**.
+  * The names, location, and phone numbers of any **{successor agents.
+
+  The program will ask you:
+  
+  * When you want your agent to start making decisions, and
+  * What you want your agent to do regarding your health care.
     
   Set aside 10 to 15 minutes to finish this program, and more time if you watch the videos. You can log in and save your work to return to later. 
   
@@ -361,11 +366,25 @@ subquestion: |
   % if for_yourself == False:
   The principal is the person who chooses an agent to make decisions about their medical treatment.
   
-  You should enter their legal name on their government-issued identification. If they go by a name other than their legal name, or if they have legally changed they name, click **They have another name.** You can then enter that name in the **Additional name** field.
+  You should enter their legal name on their government-issued identification. 
+
+  You may want to click **They have another name** if:
+
+  * They go by a name other than their legal name, or
+  * They have changed their name and also have an old legal name that is not on their identification.
+  
+  You can then enter that name in the **Additional name** field.
 
   ${collapse_template(changed_name)}
   % else:
-  You should enter your legal name on your government-issued identification. If you go by a name other than your legal name, or if you have legally changed your name, click **I have another name.** You can then enter that name in the **Additional name** field.
+  You should enter your legal name on your government-issued identification. 
+
+  You may want to click **I have another name** if:
+
+  * You go by a name other than your legal name, or
+  * You have changed your name and also have an old legal name that is not on your identification.
+  
+  You can then enter that name in the **Additional name** field.
 
   ${collapse_template(changed_name)}
   % endif
@@ -588,7 +607,7 @@ fields:
       - Now and continuing after I am no longer able to make decisions for myself. If I can communicate choices, I will be the decision maker even if the Power of Attorney is in effect: now
       - I do not want to decide this now.: do_not
         help: |
-          If you do not make a choice before signing, the Power of Attorney will default to the first choice. That means, your agent will not make decisions for you until a doctor determines that you cannot make your own decisions.
+          If you do not make a choice before signing, the Power of Attorney will default to the first choice. That means your agent will not make decisions for you until a doctor determines that you cannot make your own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -624,7 +643,7 @@ subquestion: |
   % if for_yourself == True:
   If you do not decide when you want the Power of Attorney to begin, ${agent.name_full()} would not be able to help you until a doctor determines you are unable make your own decisions.
   % else:
-  If ${principal.name_full()} does not decide when they want the Power of Attorney to begin, ${agent.name_full()} to start making choices for them, ${agent.name_full()} would not be able to help them until a doctor determines they are unable make their own decisions.
+  If ${principal.name_full()} does not decide when they want the Power of Attorney to begin, ${agent.name_full()} would not be able to help them until a doctor determines they are unable make their own decisions.
   % endif
 continue button field: authorization_warning
 ---
@@ -1239,16 +1258,16 @@ subquestion: |
 id: witness known
 question: |
   % if for_yourself == True:
-  Do you know who will witness the signing of the Power of Attorney for Health Care?
+  Do you want to name a witness to the signing of the Power of Attorney now?
   % else:
-  Does ${principal.name_full()} know who will witness the signing of the Power of Attorney for Health Care?
+  Does ${principal.name_full()} want to name a witness to the signing of the Power of Attorney now?
   % endif
 subquestion: |
   % if for_yourself == True:
-  You do not need to know this now. You can leave the witness section of the form blank for now and complete it later when you know who will be your witness.
+  This is optional. You do not need to know this now. You can leave the witness section of the form blank for now and complete it later when you know who will be your witness.
 
   % else:
-  ${principal.name_full()} does not need to know this know. They can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
+  This is optional. ${principal.name_full()} does not need to know this now. They can leave the witness section of the form blank for now and complete it later when they know who will be their witness.
   % endif
 fields:
   - no label: witness_known
