@@ -1564,7 +1564,7 @@ attachment:
   - name: Instructions
     variable name: instructions[i]
     filename: instructions_for_poa_health_care
-    docx template file: power_of_attorney_for_health_care_instructions.docx
+    docx template file: POA-Healthcare_Easy_Form_Instructions.docx
 ---
 # creates a single string variable for international address
 depends on:
@@ -1574,6 +1574,16 @@ code: |
   agent.intl_address_full = agent.intl_address_1
   agent.intl_address_full += ", "
   agent.intl_address_full += agent.intl_address_2
+---
+attachment:
+  - name: Power of Planning
+    variable name: planning[i]
+    filename: planning
+    pdf template file: power_of_planning.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${}
 ---
 attachment:
   - name: Power of Attorney for Health Care
@@ -1651,10 +1661,11 @@ attachment:
 objects:
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
+  - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
-  - al_court_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, planning, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
 event: review_answers
