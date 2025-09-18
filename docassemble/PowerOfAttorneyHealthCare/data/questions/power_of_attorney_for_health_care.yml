@@ -20,6 +20,7 @@ objects:
         there_are_any=True)
   - witnesses: ALPeopleList
   - success_strings: DAList
+  - preview: DAStaticFile.using(filename="power_of_planning.pdf")
 ---
 code: |
   ilao_easy_form_title = "Power of Attorney for Health Care"
@@ -195,7 +196,9 @@ subquestion: |
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. Your forms will include instructions with more information.
     
-    To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).  
+    To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare). 
+    
+    If you would like to know more about planning for disability or end of life care, you can review ILAO and CDEL's guide to the [**Power of Planning**](${ preview.url_for() }).
 ---
 # Add <Video: Why I decided to make a POA-HC>
 id: about power of attorney
@@ -1576,16 +1579,6 @@ code: |
   agent.intl_address_full += agent.intl_address_2
 ---
 attachment:
-  - name: Power of Planning
-    variable name: planning[i]
-    filename: planning
-    pdf template file: power_of_planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${}
----
-attachment:
   - name: Power of Attorney for Health Care
     variable name: poa_health_care[i]
     filename: poa_health_care
@@ -1664,7 +1657,7 @@ objects:
   - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, planning, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
