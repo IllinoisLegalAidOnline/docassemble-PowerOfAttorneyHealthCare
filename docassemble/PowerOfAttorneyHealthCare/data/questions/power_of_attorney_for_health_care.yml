@@ -1567,7 +1567,11 @@ attachment:
   - name: Instructions
     variable name: instructions[i]
     filename: instructions_for_poa_health_care
-    docx template file: POA-Healthcare_Easy_Form_Instructions.docx
+    pdf template file: cdel_poa_health_instructions.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
 ---
 # creates a single string variable for international address
 depends on:
