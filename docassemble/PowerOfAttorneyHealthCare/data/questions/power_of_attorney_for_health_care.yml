@@ -141,6 +141,21 @@ code: |
   reconsider('snapshot_interview_state')
   snapshot_forms = True
 ---
+imports:
+  - random
+---
+code: |
+  if 'from' in url_args:
+    user_path = url_args['from']
+  else:
+    random_path = random.randint(1, 3)
+    if random_path == 1:
+      user_path = "Frederico"
+    elif random_path == 2:
+      user_path = "Lisa"
+    else:
+      user_path = "Shirley"
+---
 id: welcome
 question: |
   Power of Attorney for Health Care
@@ -150,6 +165,14 @@ subquestion: |
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
 
   This program has videos with information about making a Power of Attorney for Health Care. You do not have to watch them, but you may find them helpful.
+
+  % if user_path == "Shirley":
+  [YOUTUBE 7qy101TRdiI]
+  % elif user_path == "Frederico":
+  [YOUTUBE GR9t6ygX13g]
+  % elif user_path == "Lisa":
+  [YOUTUBE h2ZGl568xHo]
+  % endif
   
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
@@ -162,7 +185,7 @@ subquestion: |
   To use this program you will need to know:
 
   * The name, location, and phone number of someone you trust to make health care decisions for you to be your agent, and
-  * The names, location, and phone numbers of any **{successor agents.
+  * The names, location, and phone numbers of any **{successor agents}.
 
   The program will ask you:
   
@@ -208,7 +231,13 @@ question: |
 subquestion: |
   A Power of Attorney for Health Care is a form that lets you choose a person you trust to make health care decisions for you. The person you choose will be able to make health care decisions for you when you can't make decisions for yourself. This written form is often called an "advance directive."
 
-  [YOUTUBE -1pMMIe4hb4]
+  % if user_path == "Shirley":
+  [YOUTUBE T5bWcRNKZIc]
+  % elif user_path == "Frederico":
+  [YOUTUBE r8r3V8gFqo4]
+  % elif user_path == "Lisa":
+  [YOUTUBE Xs7brWqOcK8]
+  % endif
   
   The person you choose could make decisions like:
   
@@ -219,7 +248,7 @@ subquestion: |
 
   **Note:** If you can communicate and understand your choices, you are the decision maker.
 ---
-#Add video Who should I pick as my agent?"
+#re add collapse template with video Who should I pick as my agent?"
 id: about agents
 continue button field: about_agents
 question: |
@@ -231,8 +260,6 @@ subquestion: |
 
   You can select successor agents as backup if the first agent becomes unable to make these decisions.
 
-  ${collapse_template(video_who_agent)}
-
    **Note:** If you can communicate and understand your choices, you are the decision maker.
 
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
@@ -241,7 +268,13 @@ template: video_who_agent
 subject: |
   **Video: Who should I select as my agent?**
 content: |
+  % if user_path == "Shirley":
   [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Frederico":
+  [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Lisa":
+  [YOUTUBE -1pMMIe4hb4]
+  % endif
 ---
 id: accept terms
 question: |
@@ -586,16 +619,20 @@ template: video_agent_when
 subject: |
   **Video: When do you want to start your Power of Attorney?**
 content: |
+  % if user_path == "Shirley":
   [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Frederico":
+  [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Lisa":
+  [YOUTUBE -1pMMIe4hb4]
+  % endif
 ---
-#Add "When can Agent name make health care decisions for you?" video
+#Re add collapse template with "When do you want to start your Power of Attorney?" video
 id: agent authorization you
 question: |
   When can ${agent.name_full()} make health care decisions for you?
 subquestion: |
   This Power of Attorney will go into effect once you cannot make decisions for yourself unless you state it should take effect at an earlier time.
-
-  ${collapse_template(video_agent_when)}
 
   You will still have the authority to make decisions. ${agent.name_full()} will be able to make decisions for you when you are unable to.
 
@@ -615,13 +652,12 @@ terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
 ---
+#Re add collapse template with "When do you want to start your Power of Attorney?" video
 id: agent authorization principal
 question: |
   When can ${agent.name_full()} make health care decisions for  ${principal.name_full()}?
 subquestion: |
   This Power of Attorney will go into effect once ${principal.name_full()} cannot make decisions for their self unless they state it should take effect at an earlier time.
-
-  ${collapse_template(video_agent_when)}
 
   ${principal.name_full()} will still have the authority to make decisions. ${agent.name_full()} will be able to make decisions for them when they are unable to.
 
@@ -701,16 +737,20 @@ template: video_life_quality
 subject: |
   **Video: Quality of life and length of life**
 content: |
+  % if user_path == "Shirley":
   [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Frederico":
+  [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Lisa":
+  [YOUTUBE -1pMMIe4hb4]
+  % endif
 ---
-#Add video "Quality of life and length of life"
+#Re Add collapse video "Quality of life and length of life"
 id: quality of life you
 question: |
   What life-sustaining treatment instructions do you want ${agent.name_full()} to follow?
 subquestion: |
   These instructions will tell ${agent.name_full()} what to do if you are unconscious and your doctor believes you will never wake up.
-  
-  ${collapse_template(video_life_quality)}
 field: quality_of_life_you
 choices:
   - The quality of my life is more important than the length of my life.: quality
@@ -946,6 +986,7 @@ subquestion: |
   Revocation means that ${principal.name_full()} stops allowing ${agent.name_full()} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0). 
   % endif
 ---
+#Re add collapse template "What is this 30-day cooling off period?" video
 id: delayed revocation
 question: |
   % if for_yourself == True:
@@ -967,8 +1008,6 @@ subquestion: |
 
   **Note**: ${principal.name_full()} can **{revoke}** a Power of Attorney for Health Care even if they do not have **{legal capacity}**, but they would need legal capacity to make a new one.
   % endif
-
-  ${collapse_template(video_cooling)}
 fields:
   - no label: delayed_revocation
     datatype: yesnoradio
@@ -982,7 +1021,13 @@ template: video_cooling
 subject: |
   **Video: What is this 30-day cooling off period?**
 content: |
+  % if user_path == "Shirley":
   [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Frederico":
+  [YOUTUBE -1pMMIe4hb4]
+  % elif user_path == "Lisa":
+  [YOUTUBE -1pMMIe4hb4]
+  % endif
 ---
 depends on:
   - limit_checkboxes
@@ -1529,7 +1574,13 @@ question: |
 subquestion: |
   Your forms are ready. View and download your forms below. Click **Make changes** to fix any mistakes.
 
-  [YOUTUBE -1pMMIe4hb4]
+  % if user_path == "Shirley":
+  [YOUTUBE NE0faXuz5v4]
+  % elif user_path == "Frederico":
+  [YOUTUBE g5Vdv0hWJ6g]
+  % elif user_path == "Lisa":
+  [YOUTUBE F2QbdrhcZ0g]
+  % endif
   
   Read the instructions to learn what to do next.
   
@@ -1568,6 +1619,57 @@ attachment:
     variable name: instructions[i]
     filename: instructions_for_poa_health_care
     pdf template file: cdel_poa_health_instructions.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+attachment:
+  - name: Power of Planning - Powers of Attorney
+    variable name: pop_powers[i]
+    filename: pop_powers
+    pdf template file: POP_-_Powers_of_Attorney.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+attachment:
+  - name: Power of Planning - Memory Loss
+    variable name: pop_memory[i]
+    filename: pop_memory
+    pdf template file: POP_-_Memory_Loss_&_Advance_Planning.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+attachment:
+  - name: Power of Planning - Caregivers
+    variable name: pop_caregivers[i]
+    filename: pop_caregivers
+    pdf template file: POP_-_Caregivers.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+
+attachment:
+  - name: Power of Planning - Other Advance Planning
+    variable name: pop_other[i]
+    filename: pop_other
+    pdf template file: POP_-_Other_Advance_Planning.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+attachment:
+  - name: Power of Planning - What is Advance Planning
+    variable name: pop_what[i]
+    filename: pop_what
+    pdf template file: POP_-_What_is_Advance_Planning.pdf
     skip undefined: True
     editable: False
     fields:
@@ -1659,9 +1761,17 @@ objects:
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
   - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
+  - pop_caregivers: ALDocument.using(title="Power of Planning - Caregivers", filename="pop_caregivers", enabled=True, has_addendum=False)
+  - pop_powers: ALDocument.using(title="Power of Planning - Powers of Attorney", filename="pop_powers", enabled=True, has_addendum=False)
+  - pop_memory: ALDocument.using(title="Power of Planning - Memory Loss & Advance Planning", filename="pop_memory", enabled=True, has_addendum=False)
+  - pop_what: ALDocument.using(title="Power of Planning - What is Advance Planning", filename="pop_what", enabled=True, has_addendum=False)
+  - pop_other: ALDocument.using(title="Power of Planning - Other Advance Planning", filename="pop_other", enabled=True, has_addendum=False)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - pop_bundle: ALDocumentBundle.using(elements=[pop_powers, pop_caregivers, pop_memory, pop_other], filename="power_of_planning_information", enabled=True, title= "Info sheets")
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_bundle], filename="power_of_attorney_health_care.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
