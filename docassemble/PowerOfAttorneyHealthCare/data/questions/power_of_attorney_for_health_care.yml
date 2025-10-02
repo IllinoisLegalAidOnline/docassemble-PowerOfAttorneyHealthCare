@@ -1762,7 +1762,7 @@ objects:
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
   - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
   - pop_caregivers: ALDocument.using(title="Power of Planning - Caregivers", filename="pop_caregivers", enabled=True, has_addendum=False)
-  - pop_powers: ALDocument.using(title="Power of Planning - Powers of Attorney", filename="pop_powers", enabled=True, has_addendum=False)
+  - pop_powers: ALDocument.using(title="Power of Attorney info sheet", filename="pop_powers", enabled=True, has_addendum=False)
   - pop_memory: ALDocument.using(title="Power of Planning - Memory Loss & Advance Planning", filename="pop_memory", enabled=True, has_addendum=False)
   - pop_what: ALDocument.using(title="Power of Planning - What is Advance Planning", filename="pop_what", enabled=True, has_addendum=False)
   - pop_other: ALDocument.using(title="Power of Planning - Other Advance Planning", filename="pop_other", enabled=True, has_addendum=False)
@@ -1771,7 +1771,7 @@ objects:
   - pop_bundle: ALDocumentBundle.using(elements=[pop_powers, pop_caregivers, pop_memory, pop_other], filename="power_of_planning_information", enabled=True, title= "Info sheets")
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_bundle], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers], filename="power_of_attorney_health_care.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
