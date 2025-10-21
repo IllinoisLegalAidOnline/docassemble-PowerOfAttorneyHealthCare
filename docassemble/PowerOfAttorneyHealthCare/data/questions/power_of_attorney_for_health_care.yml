@@ -248,7 +248,6 @@ subquestion: |
 
   **Note:** If you can communicate and understand your choices, you are the decision maker.
 ---
-#re add collapse template with video Who should I pick as my agent?"
 id: about agents
 continue button field: about_agents
 question: |
@@ -260,6 +259,8 @@ subquestion: |
 
   You can select successor agents as backup if the first agent becomes unable to make these decisions.
 
+  ${collapse_template(video_who_agent)}
+
    **Note:** If you can communicate and understand your choices, you are the decision maker.
 
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
@@ -269,11 +270,11 @@ subject: |
   **Video: Who should I select as my agent?**
 content: |
   % if user_path == "Shirley":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE s7aUF4HKIzk]
   % elif user_path == "Frederico":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE zpJhrzaSRGA]
   % elif user_path == "Lisa":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE RZm4KAS8CtY]
   % endif
 ---
 id: accept terms
@@ -620,19 +621,20 @@ subject: |
   **Video: When do you want to start your Power of Attorney?**
 content: |
   % if user_path == "Shirley":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE nKyck6-_OAM]
   % elif user_path == "Frederico":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE 65BgeawonKg]
   % elif user_path == "Lisa":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE kaobW4v0wnA]
   % endif
 ---
-#Re add collapse template with "When do you want to start your Power of Attorney?" video
 id: agent authorization you
 question: |
   When can ${agent.name_full()} make health care decisions for you?
 subquestion: |
   This Power of Attorney will go into effect once you cannot make decisions for yourself unless you state it should take effect at an earlier time.
+
+  ${collapse_template(video_agent_when)}
 
   You will still have the authority to make decisions. ${agent.name_full()} will be able to make decisions for you when you are unable to.
 
@@ -652,12 +654,13 @@ terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
 ---
-#Re add collapse template with "When do you want to start your Power of Attorney?" video
 id: agent authorization principal
 question: |
   When can ${agent.name_full()} make health care decisions for  ${principal.name_full()}?
 subquestion: |
   This Power of Attorney will go into effect once ${principal.name_full()} cannot make decisions for their self unless they state it should take effect at an earlier time.
+
+  ${collapse_template(video_agent_when)}
 
   ${principal.name_full()} will still have the authority to make decisions. ${agent.name_full()} will be able to make decisions for them when they are unable to.
 
@@ -738,19 +741,20 @@ subject: |
   **Video: Quality of life and length of life**
 content: |
   % if user_path == "Shirley":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE vb2lv4wQjho]
   % elif user_path == "Frederico":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE -TbZPQbf5GY]
   % elif user_path == "Lisa":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE LAW4i_wSREM]
   % endif
 ---
-#Re Add collapse video "Quality of life and length of life"
 id: quality of life you
 question: |
   What life-sustaining treatment instructions do you want ${agent.name_full()} to follow?
 subquestion: |
   These instructions will tell ${agent.name_full()} what to do if you are unconscious and your doctor believes you will never wake up.
+
+  ${collapse_template(video_life_quality)}
 field: quality_of_life_you
 choices:
   - The quality of my life is more important than the length of my life.: quality
@@ -986,7 +990,6 @@ subquestion: |
   Revocation means that ${principal.name_full()} stops allowing ${agent.name_full()} to make decisions for them. To learn more, read ILAO's article on [**ending a Power of Attorney**](https://www.illinoislegalaid.org/legal-information/ending-power-attorney-0). 
   % endif
 ---
-#Re add collapse template "What is this 30-day cooling off period?" video
 id: delayed revocation
 question: |
   % if for_yourself == True:
@@ -1008,6 +1011,8 @@ subquestion: |
 
   **Note**: ${principal.name_full()} can **{revoke}** a Power of Attorney for Health Care even if they do not have **{legal capacity}**, but they would need legal capacity to make a new one.
   % endif
+
+  ${collapse_template(video_cooling)}
 fields:
   - no label: delayed_revocation
     datatype: yesnoradio
@@ -1022,11 +1027,11 @@ subject: |
   **Video: What is this 30-day cooling off period?**
 content: |
   % if user_path == "Shirley":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE fY4qfjzhERM]
   % elif user_path == "Frederico":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE fY4qfjzhERM]
   % elif user_path == "Lisa":
-  [YOUTUBE -1pMMIe4hb4]
+  [YOUTUBE fY4qfjzhERM]
   % endif
 ---
 depends on:
