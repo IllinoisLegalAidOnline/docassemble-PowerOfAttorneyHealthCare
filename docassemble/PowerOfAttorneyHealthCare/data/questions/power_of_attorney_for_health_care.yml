@@ -127,6 +127,8 @@ code: |
   stuff_to_snapshot['downloaded_forms'] = showifdef('forms_assembling')
   
   stuff_to_snapshot['user_is_principal'] = showifdef('for_yourself') 
+
+  stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -147,7 +149,9 @@ imports:
 code: |
   if 'from' in url_args:
     user_path = url_args['from']
+    snapshot_path = url_args['from']
   else:
+    snapshot_path = "random"
     random_path = random.randint(1, 3)
     if random_path == 1:
       user_path = "Frederico"
