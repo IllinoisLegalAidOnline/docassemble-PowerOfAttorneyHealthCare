@@ -1168,7 +1168,7 @@ question: |
   Does ${principal.name_full()} want to name another successor agent?
   % endif
 subquestion: |
-  So far you have told us about ${successors.full_names()}.
+  So far you have told us about ${fix_punctuation(successors.full_names())}
 
   If you name another successor agent, they would only have power if both ${agent.name_full()} and the successors you've already entered are unavailable to act.
 fields:
