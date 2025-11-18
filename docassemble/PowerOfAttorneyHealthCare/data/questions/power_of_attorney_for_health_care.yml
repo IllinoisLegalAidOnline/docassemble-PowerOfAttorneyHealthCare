@@ -967,6 +967,8 @@ question: |
   % else:
   What limits or special rules does ${principal.name_full()} want to include?
   % endif
+subquestion: |
+  If you do not want to include these limits, click **Back** and change your earlier answer.
 fields:
   - no label: limit_checkboxes
     datatype: checkboxes
@@ -992,6 +994,9 @@ fields:
     rows: 7
     show if: limit_checkboxes['other']
     maxlength: 250
+validation code: |
+    if limit_checkboxes.all_false():
+      validation_error("You need to select at least one choice.", field="limit_checkboxes")
 ---
 id: revocation info
 continue button field: revocation_info
