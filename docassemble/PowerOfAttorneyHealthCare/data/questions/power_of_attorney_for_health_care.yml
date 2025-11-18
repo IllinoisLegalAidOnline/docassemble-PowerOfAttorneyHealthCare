@@ -105,8 +105,8 @@ code: |
   if when_authorize == "do_not" or quality_of_life == "do_not":
     completion_reminder
   set_progress(100)
-  undefine_successors
-  list_successors
+  if any_successors and successors.number_gathered() > 0:
+    successor_string(0)
   agent_instructions
   forms_assembling
   snapshot_forms
@@ -155,7 +155,7 @@ code: |
     snapshot_path = "random"
     random_path = random.randint(1, 3)
     if random_path == 1:
-      user_path = "Frederico"
+      user_path = "Federico"
     elif random_path == 2:
       user_path = "Lisa"
     else:
@@ -173,7 +173,7 @@ subquestion: |
 
   % if user_path == "Shirley":
   [YOUTUBE 7qy101TRdiI]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE GR9t6ygX13g]
   % elif user_path == "Lisa":
   [YOUTUBE h2ZGl568xHo]
@@ -241,7 +241,7 @@ subquestion: |
 
   % if user_path == "Shirley":
   [YOUTUBE T5bWcRNKZIc]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE r8r3V8gFqo4]
   % elif user_path == "Lisa":
   [YOUTUBE Xs7brWqOcK8]
@@ -279,7 +279,7 @@ subject: |
 content: |
   % if user_path == "Shirley":
   [YOUTUBE s7aUF4HKIzk]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE zpJhrzaSRGA]
   % elif user_path == "Lisa":
   [YOUTUBE RZm4KAS8CtY]
@@ -630,7 +630,7 @@ subject: |
 content: |
   % if user_path == "Shirley":
   [YOUTUBE nKyck6-_OAM]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE 65BgeawonKg]
   % elif user_path == "Lisa":
   [YOUTUBE kaobW4v0wnA]
@@ -673,15 +673,16 @@ subquestion: |
   ${principal.name_full()} will still have the authority to make decisions. ${agent.name_full()} will be able to make decisions for them when they are unable to.
 
   ${principal.name_full()} can still change their mind and **{revoke}** the Power of Attorney after they sign it.
-field: when_principal_authorize
-choices:
-  - Only when ${principal.name_full()} cannot make decisions for their self.: only
-    help: |
-      A doctor will determine when they are unable to make decisions.
-  - Now and continuing after ${principal.name_full()} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the Power of Attorney is in effect.: now
-  - ${principal.name_full()} does not want to decide this now.: do_not
-    help: |
-      If they do not make a choice before signing, the Power of Attorney will default to the first choice. That means their agent will not make decisions for them until a doctor determines that they cannot make their own decisions.
+fields: 
+  - no label: when_principal_authorize
+    choices:
+      - Only when ${principal.name_full()} cannot make decisions for their self.: only
+        help: |
+          A doctor will determine when they are unable to make decisions.
+      - Now and continuing after ${principal.name_full()} is no longer able to make decisions for their self.  If they can communicate choices, they will be the decision maker even if the Power of Attorney is in effect.: now
+      - ${principal.name_full()} does not want to decide this now.: do_not
+        help: |
+          If they do not make a choice before signing, the Power of Attorney will default to the first choice. That means their agent will not make decisions for them until a doctor determines that they cannot make their own decisions.
 terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
@@ -750,7 +751,7 @@ subject: |
 content: |
   % if user_path == "Shirley":
   [YOUTUBE vb2lv4wQjho]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE -TbZPQbf5GY]
   % elif user_path == "Lisa":
   [YOUTUBE LAW4i_wSREM]
@@ -921,20 +922,24 @@ fields:
 id: self organ donor
 question: |
   Do you want to donate your organs?
-field: self_organ_donor
-choices: 
-  - Yes
-  - No
-  - I would like my agent to decide this.
+fields: 
+  - no label: self_organ_donor
+    input type: radio
+    choices: 
+      - Yes
+      - No
+      - I would like my agent to decide this.
 ---
 id: other organ donor
 question: |
   Does ${principal.name_full()} want to donate their organs?
-field: other_organ_donor
-choices: 
-  - Yes
-  - No
-  - They would like their agent to decide this.
+fields: 
+  - no label: other_organ_donor
+    input type: radio
+    choices: 
+      - Yes
+      - No
+      - They would like their agent to decide this.
 ---
 depends on: 
   - for_yourself
@@ -1044,7 +1049,7 @@ subject: |
 content: |
   % if user_path == "Shirley":
   [YOUTUBE fY4qfjzhERM]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE fY4qfjzhERM]
   % elif user_path == "Lisa":
   [YOUTUBE fY4qfjzhERM]
@@ -1483,77 +1488,16 @@ code: |
     successors.there_is_another = False
   #cap_at_4 = True
 ---
-#depends on:
-#  - successors[i].name.first
-#  - successors[i].name.middle
-#  - successors[i].name.last
-#  - successors[i].address.address
-#  - successors[i].address.unit
-#  - successors[i].address.city
-#  - successors[i].address.state
-#  - successors[i].address.zip
-#  - successors[i].phone_number
-#  - any_successors
-#  - successors[i].intl_address_1
-#  - successors[i].intl_address_2
-#  - successors[i].in_america
-reconsider: True
 code: |
-  if successors.number_gathered() > 0:
-    #for person in successors:
-      #success_strings[person.index()].text_block
-    success_strings[0]
-  if successors.number_gathered() > 1:
-    success_strings[1]
-  if successors.number_gathered() > 2:
-    success_strings[2]
-  if successors.number_gathered() > 3:
-    success_strings[3]
-  list_successors = True
----
-reconsider: True
-code: |
-  undefine('success_strings[0]')
-  undefine('success_strings[1]')
-  undefine('success_strings[2]')
-  undefine('success_strings[3]')
-  undefine_successors = True
----
-#depends on:
-#  - any_successors
-#  - successors[i].name.first
-#  - successors[i].name.middle
-#  - successors[i].name.last
-#  - successors[i].address.address
-#  - successors[i].address.unit
-#  - successors[i].address.city
-#  - successors[i].address.state
-#  - successors[i].address.zip
-#  - successors[i].phone_number
-#  - successors[i].in_america
-#  - successors[i].intl_address_1
-#  - successors[i].intl_address_2
-reconsider: True
-code: |
-  success_strings[i] = successors[i].name_full() + ", " 
-  if successors[i].in_america == True:
-    success_strings[i] += successors[i].address.on_one_line(bare=True)
-  else:
-    success_strings[i] += successors[i].intl_address_1 + ", " + successors[i].intl_address_2
-  if successors[i].phone_number != "":
-    success_strings[i] += ", " + str(phone_number_formatted(successors[i].phone_number))
-
-
-#  if defined('successors[i].phone_number'):
-#    successors[i].proper_number = str(phone_number_formatted(successors[i].phone_number))
-#  else:
-#    successors[i].proper_number = ""
-#  if defined('successors[i].phone_number') == False:
-#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True)
-#  elif successors[i].proper_number != "None": 
-#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True) + ", " + successors[i].proper_number
-#  else:
-#    success_strings[i].text_block = successors[i].name_full() + ", " + successors[i].address.on_one_line(bare=True)
+  def successor_string(index_number):
+    if successors[index_number].in_america and successors[index_number].phone_number != "":
+      return successors[index_number].name_full() + ", " + successors[index_number].address.on_one_line(bare=True) + ", " + str(phone_number_formatted(successors[index_number].phone_number))
+    elif successors[index_number].in_america and successors[index_number].phone_number == "":
+      return successors[index_number].name_full() + ", " + successors[index_number].address.on_one_line(bare=True)
+    elif not successors[index_number].in_america and successors[index_number].phone_number != "":
+      return successors[index_number].name_full() + ", " + successors[index_number].intl_address_1 + ", " + successors[index_number].intl_address_2 + ", " + str(phone_number_formatted(successors[index_number].phone_number))
+    else:
+      return successors[index_number].name_full() + ", " + successors[index_number].intl_address_1 + ", " + successors[index_number].intl_address_2
 ---
 id: completion reminder
 question: |
@@ -1607,7 +1551,7 @@ subquestion: |
 
   % if user_path == "Shirley":
   [YOUTUBE NE0faXuz5v4]
-  % elif user_path == "Frederico":
+  % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE g5Vdv0hWJ6g]
   % elif user_path == "Lisa":
   [YOUTUBE F2QbdrhcZ0g]
@@ -1768,10 +1712,10 @@ attachment:
           Witness signature: _______________________________________________________________
       - "witness_2_date_line": |
           Today's date: ____________________
-      - "successor_one": ${success_strings[0] if successors.number_gathered() > 0 else ""}
-      - "successor_two": ${success_strings[1] if successors.number_gathered() > 1 else ""}
-      - "successor_three": ${success_strings[2] if successors.number_gathered() > 2 else ""}
-      - "successor_four": ${success_strings[3] if successors.number_gathered() > 3 else ""}
+      - "successor_one": ${successor_string(0) if successors.number_gathered() > 0 else ""}
+      - "successor_two": ${successor_string(1) if successors.number_gathered() > 1 else ""}
+      - "successor_three": ${successor_string(2) if successors.number_gathered() > 2 else ""}
+      - "successor_four": ${successor_string(3) if successors.number_gathered() > 3 else ""}
       - "yes_delay": ${True if delayed_revocation == True else False}
       - "no_delay": ${False if delayed_revocation == True else True}
       - "notary_title": |
