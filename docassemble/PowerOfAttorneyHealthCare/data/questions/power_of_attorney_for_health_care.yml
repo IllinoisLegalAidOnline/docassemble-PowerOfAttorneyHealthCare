@@ -675,6 +675,7 @@ subquestion: |
   ${principal.name_full()} can still change their mind and **{revoke}** the Power of Attorney after they sign it.
 fields: 
   - no label: when_principal_authorize
+    input type: radio
     choices:
       - Only when ${principal.name_full()} cannot make decisions for their self.: only
         help: |
