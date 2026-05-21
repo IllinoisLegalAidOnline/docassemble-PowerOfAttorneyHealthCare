@@ -1,3 +1,9 @@
+translations:
+  - poa_hc_es.xlsx
+---
+code: |
+  al_interview_languages = ["en", "es"]
+---
 metadata:
   title: Power of Attorney for Health Care
   short title: POA health care
@@ -27,24 +33,30 @@ code: |
   ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
   github_user = 'IllinoisLegalAidOnline'
   github_repo_name = 'docassemble-PowerOfAttorneyHealthCare'
-#---
-#sections:
-#  - review_answers: Review your answers
 ---
 # Road map
 sections:
   - section_intro: Start
-  #- section_qualify: Do you qualify?
   - section_principal: Principal
   - section_agent: Agent and powers
   - section_successors: Successor agents
   - section_witness: Witnesses
   - section_download: Download
 ---
+language: es
+sections:
+  - section_intro: Incio
+  - section_principal: Otorgante
+  - section_agent: Agente y poderes
+  - section_successors: Agentes sucesores
+  - section_witness: Testigos
+  - section_download: Descargar
+---
 # interview order block
 mandatory: True
 code: |
   nav.set_section('section_intro')
+  set_language(language_choice)
   sees_nav_bar
   snapshot_start
   set_progress(5)
@@ -160,6 +172,13 @@ code: |
       user_path = "Lisa"
     else:
       user_path = "Shirley"
+---
+question: |
+  What language do you speak?
+field: language_choice
+choices:
+  - "English": en
+  - "Español": es
 ---
 id: welcome
 question: |
