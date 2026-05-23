@@ -1,15 +1,20 @@
 translations:
   - poa_hc_es.xlsx
 ---
+initial: True
 code: |
   al_interview_languages = ["en", "es"]
 ---
 metadata:
-  title: Power of Attorney for Health Care
-  short title: POA health care
+  title: 
+    "en*": Power of Attorney for Health Care
+    "es": Poder Notarial para el Cuidado de la Salud
+  short title: 
+    "en*": POA health care
+    "es": POA health care
   comment: This program helps you create documents to give another person access or control of your health care decisions.
   authors:
-    - Vivian McNaughton
+    - Vivian McNaughtonPOA health care
     - Matt Newsted
 ---
 include:
@@ -56,7 +61,7 @@ sections:
 mandatory: True
 code: |
   nav.set_section('section_intro')
-  set_language(language_choice)
+  #set_language(language_choice)
   sees_nav_bar
   snapshot_start
   set_progress(5)
@@ -142,6 +147,8 @@ code: |
   stuff_to_snapshot['user_is_principal'] = showifdef('for_yourself') 
 
   stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
+
+  stuff_to_snapshot['language'] = showifdef('al_user_language')
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -185,7 +192,7 @@ question: |
   Power of Attorney for Health Care
 subquestion: |
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
-
+  
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
 
   This program has videos with information about making a Power of Attorney for Health Care. You do not have to watch them, but you may find them helpful.
@@ -228,13 +235,9 @@ terms:
     A **successor agent** is a back-up agent. They would have power of attorney if the first dies, becomes incompetent, quits, or refuses to act as your power of attorney agent.
 ---
 template: help_example
-
 subject: |
-
   **You can expand sections like this to show more information.**
-
 content: |  
-
   This is an example of help. Click again to hide.
 ---
 id: next steps
@@ -962,11 +965,26 @@ fields:
       - They would like their agent to decide this.
 ---
 depends on: 
+  - al_user_language
   - for_yourself
   - principal.name.first
   - principal.name.middle
   - principal.name.last
   - principal.name.suffix
+code: |
+  if for_yourself:
+    my_their = "my"
+    subject_do_does = "I do"
+    do_does_subject = "do you"
+  else:
+    my_their = "their"
+    subject_do_does = principal.name_full()
+    subject_do_does += " does"
+    do_does_subject = "does "
+    do_does_subject += principal.name_full()
+---
+language: es
+reconsider: True
 code: |
   if for_yourself:
     my_their = "my"
@@ -1039,7 +1057,7 @@ subquestion: |
 id: delayed revocation
 question: |
   % if for_yourself == True:
-  Do you want to delay future revocation of this Power of Attorney?
+  Do you want to delay future revocation of this Power of Attorney by 30 days?
   % else:
   Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?
   % endif
