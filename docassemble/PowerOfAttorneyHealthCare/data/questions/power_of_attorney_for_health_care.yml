@@ -148,7 +148,10 @@ code: |
 
   stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
 
-  stuff_to_snapshot['language'] = showifdef('session_local.attr("al_user_language")')
+  try:
+    stuff_to_snapshot['language'] = session_local.attr('al_user_language')
+  except:
+    pass
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
