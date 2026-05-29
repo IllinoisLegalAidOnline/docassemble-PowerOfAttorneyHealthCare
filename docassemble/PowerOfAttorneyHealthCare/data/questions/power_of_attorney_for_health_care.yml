@@ -465,6 +465,14 @@ code: |
   else:
     i_they = "they"
 ---
+language: es
+reconsider: True
+code: |
+  if for_yourself:
+    i_they = "yo"
+  else:
+    i_they = "ellos"
+---
 id: principal name
 question: |
   % if for_yourself == True:
@@ -565,6 +573,7 @@ question: |
 fields:
   - Street address: principal.address.address
     address autocomplete: True
+    hint: ${ word("Enter a location") }
   - Address line 2: principal.address.unit
     required: False
   - City: principal.address.city
@@ -624,6 +633,7 @@ fields:
   - Street address: agent.address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: agent.in_america
   - Address line 2: agent.address.unit
     required: False
@@ -1390,6 +1400,7 @@ fields:
   - Street address: successors[i].address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: successors[i].in_america
   - Address line 2: successors[i].address.unit
     required: False
@@ -1567,6 +1578,7 @@ fields:
   - Street address: witnesses[i].address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: witnesses[i].in_america
   - Address line 2: witnesses[i].address.unit
     required: False
