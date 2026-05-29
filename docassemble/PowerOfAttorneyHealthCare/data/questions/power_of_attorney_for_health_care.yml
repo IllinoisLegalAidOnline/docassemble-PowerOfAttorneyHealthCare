@@ -11,10 +11,10 @@ metadata:
     "es": Poder Notarial para el Cuidado de la Salud
   short title: 
     "en*": POA health care
-    "es": POA health care
+    "es": Poder médico
   comment: This program helps you create documents to give another person access or control of your health care decisions.
   authors:
-    - Vivian McNaughtonPOA health care
+    - Vivian McNaughton
     - Matt Newsted
 ---
 include:
@@ -148,7 +148,7 @@ code: |
 
   stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
 
-  stuff_to_snapshot['language'] = showifdef('al_user_language')
+  stuff_to_snapshot['language'] = showifdef('session_local.attr("al_user_language")')
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -382,6 +382,46 @@ code: |
     me_them = "them"
     am_are = "are"
     you_they = "they"
+---
+language: es
+reconsider: True
+code: |
+  if for_yourself:
+    my_their = "mi"
+    my_subject = "mi"
+    your_their = "tu"
+    your_subject = "tu"
+    do_does = "haces"
+    you_subject = "tú"
+    i_subject = "yo"
+    myself_their_self = "mí mismo"
+    yourself_their_self = "tú mismo"
+    am_is = "eres"
+    have_has = "tienes"
+    i_they = "yo"
+    me_subject = "mi"
+    me_them = "me"
+    am_are = "estás"
+    you_they = "tú"
+  else:
+    my_their = "su"
+    my_subject = principal.name_full()
+    my_subject += "'s"
+    your_subject = principal.name_full()
+    your_subject += "'s"
+    your_their = "su"
+    you_subject = principal.name_full()
+    i_subject = principal.name_full()
+    do_does = " haces"
+    myself_their_self = "sí mismo"
+    yourself_their_self = "tú mismo"
+    am_is = "eres"
+    have_has = "tienes"
+    i_they = "ellos"
+    me_subject = principal.name_full()
+    me_them = "ellos"
+    am_are = "están"
+    you_they = "ellos"
 ---
 id: for yourself
 question: |
@@ -650,12 +690,16 @@ template: video_agent_when
 subject: |
   **Video: When do you want to start your Power of Attorney?**
 content: |
+  % if session_local.attr("al_user_language") == "es":
+  [YOUTUBE ztiRHBkDYSg]
+  % else:
   % if user_path == "Shirley":
   [YOUTUBE nKyck6-_OAM]
   % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE 65BgeawonKg]
   % elif user_path == "Lisa":
   [YOUTUBE kaobW4v0wnA]
+  % endif
   % endif
 ---
 id: agent authorization you
@@ -772,12 +816,16 @@ template: video_life_quality
 subject: |
   **Video: Quality of life and length of life**
 content: |
+  % if session_local.attr("al_user_language") == "es":
+  [YOUTUBE 8ttJ_YzzCkc]
+  % else:  
   % if user_path == "Shirley":
   [YOUTUBE vb2lv4wQjho]
   % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE -TbZPQbf5GY]
   % elif user_path == "Lisa":
   [YOUTUBE LAW4i_wSREM]
+  % endif
   % endif
 ---
 id: quality of life you
@@ -987,14 +1035,14 @@ language: es
 reconsider: True
 code: |
   if for_yourself:
-    my_their = "my"
-    subject_do_does = "I do"
-    do_does_subject = "do you"
+    my_their = "mi"
+    subject_do_does = "Yo sí"
+    do_does_subject = "haces tú"
   else:
-    my_their = "their"
+    my_their = "su"
     subject_do_does = principal.name_full()
-    subject_do_does += " does"
-    do_does_subject = "does "
+    subject_do_does += " hacs"
+    do_does_subject = "haces "
     do_does_subject += principal.name_full()
 ---
 id: other agent limits
@@ -1034,6 +1082,75 @@ fields:
 validation code: |
     if limit_checkboxes.all_false():
       validation_error("You need to select at least one choice.", field="limit_checkboxes")
+---
+language: es
+id: other agent limits
+question: |
+  % if for_yourself == True:
+  ¿Qué límites o reglas especiales quieres incluir?
+  % else:
+  ¿Qué límites o reglas especiales quiere incluir ${principal.name_full()}?
+  % endif
+subquestion: |
+  Si no deseas incluir estos límites, haz clic en **Atrás** y cambia tu respuesta anterior.
+fields:
+  - no label: limit_checkboxes
+    datatype: checkboxes
+    none of the above: False
+    choices:
+      - "Yo no autorizo una autopsia.": no_autopsy
+      - "Yo no autorizo la donación de ${my_their} restos a la ciencia.": no_science
+      - "Yo no autorizo que se inicien ciertos tratamientos. (Explica abajo)": no_start
+      - "Yo no autorizo que se suspendan ciertos tratamientos. (Explica abajo)": no_end
+      - Otros límites: other
+    show if:
+      code: for_yourself      
+  - no label: limit_checkboxes
+    datatype: checkboxes
+    none of the above: False
+    choices:
+      - "${ principal.name_full() } no autoriza una autopsia.": no_autopsy
+      - "${ principal.name_full() } no autoriza la donación de ${my_their} restos a la ciencia.": no_science
+      - "${ principal.name_full() } no autoriza que se inicien ciertos tratamientos. (Explica abajo)": no_start
+      - "${ principal.name_full() } no autoriza que se suspendan ciertos tratamientos. (Explica abajo)": no_end
+      - Otros límites: other
+    show if:
+      code: not for_yourself
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Enter words in English</h6>
+        <p><strong>Important:</strong> The words you enter here must be in English to be used in Illinois. This Easy Form does not translate for you. It is very important that what you type in is clear and in English so institutions can follow what you want. If you type it in Spanish, or another non-English language, institutions may not follow your wishes.</p>
+      <p>Ask a person you trust to make sure the translation is accurate. Online or AI translations can make mistakes.</p>
+      </div>
+    js show if: |
+      val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Enter words in English</h6>
+        <p><strong>Important:</strong> The words you enter here must be in English to be used in Illinois. This Easy Form does not translate for you. It is very important that what you type in is clear and in English so institutions can follow what ${ principal.name_full() } wants. If you type it in Spanish, or another non-English language, institutions may not follow their wishes.</p>
+      <p>Ask a person you trust to make sure the translation is accurate. Online or AI translations can make mistakes.</p>
+      </div>
+    js show if: |
+      !val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )  
+  - ¿Qué tratamientos ${do_does_subject} no quiere iniciar?: no_start_text
+    input type: area
+    rows: 7
+    show if: limit_checkboxes['no_start']
+    maxlength: 250
+  - ¿Qué tratamientos ${do_does_subject} no quiere suspender?: no_end_text
+    input type: area
+    rows: 7
+    show if: limit_checkboxes['no_end']
+    maxlength: 250
+  - Otros límites: other_limits
+    input type: area
+    rows: 7
+    show if: limit_checkboxes['other']
+    maxlength: 250
+validation code: |
+    if limit_checkboxes.all_false():
+      validation_error("Debes seleccionar al menos una opción.", field="limit_checkboxes")
+
 ---
 id: revocation info
 continue button field: revocation_info
@@ -1957,21 +2074,41 @@ review:
       **Limits for ${agent.name_full()}:**
 
       % if limit_checkboxes['no_autopsy']:
-      * ${subject_do_does} not authorize an autopsy.
+      * I do not authorize an autopsy.
       % endif
       % if limit_checkboxes['no_science']:
-      * ${subject_do_does} not authorize donation of ${my_their} remains to science.
+      * I do not authorize donation of my remains to science.
       % endif
       % if limit_checkboxes['no_start']:
-      * ${subject_do_does} not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
       % if limit_checkboxes['no_end']:
-      * ${subject_do_does} not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
       % endif
-    show if: agent_limitation
+    show if: agent_limitation and for_yourself
+  - Edit: limit_checkboxes
+    button: |
+      **Limits for ${agent.name_full()}:**
+
+      % if limit_checkboxes['no_autopsy']:
+      * ${principal.name_full()} does not authorize an autopsy.
+      % endif
+      % if limit_checkboxes['no_science']:
+      * ${principal.name_full()} does not authorize donation of their remains to science.
+      % endif
+      % if limit_checkboxes['no_start']:
+      * ${principal.name_full()} does authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % endif
+      % if limit_checkboxes['no_end']:
+      * ${principal.name_full()} does authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % endif
+      % if limit_checkboxes['other']:
+      * ${fix_punctuation(other_limits)}
+      % endif
+    show if: agent_limitation and not for_yourself
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
@@ -2270,21 +2407,41 @@ review:
       **Limits for ${agent.name_full()}:**
 
       % if limit_checkboxes['no_autopsy']:
-      * ${subject_do_does} not authorize an autopsy.
+      * I do not authorize an autopsy.
       % endif
       % if limit_checkboxes['no_science']:
-      * ${subject_do_does} not authorize donation of ${my_their} remains to science.
+      * I do not authorize donation of my remains to science.
       % endif
       % if limit_checkboxes['no_start']:
-      * ${subject_do_does} not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
       % if limit_checkboxes['no_end']:
-      * ${subject_do_does} not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
       % endif
-    show if: agent_limitation
+    show if: agent_limitation and for_yourself
+  - Edit: limit_checkboxes
+    button: |
+      **Limits for ${agent.name_full()}:**
+
+      % if limit_checkboxes['no_autopsy']:
+      * ${principal.name_full()} does not authorize an autopsy.
+      % endif
+      % if limit_checkboxes['no_science']:
+      * ${principal.name_full()} does not authorize donation of their remains to science.
+      % endif
+      % if limit_checkboxes['no_start']:
+      * ${principal.name_full()} does authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % endif
+      % if limit_checkboxes['no_end']:
+      * ${principal.name_full()} does authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % endif
+      % if limit_checkboxes['other']:
+      * ${fix_punctuation(other_limits)}
+      % endif
+    show if: agent_limitation and not for_yourself
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
