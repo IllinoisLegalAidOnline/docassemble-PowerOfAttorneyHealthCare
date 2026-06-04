@@ -36,6 +36,8 @@ objects:
 code: |
   ilao_easy_form_title = "Power of Attorney for Health Care"
   ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
+  ilao_easy_form_title_es = "Poder Notarial para el Cuidado de la Salud"
+  ilao_easy_form_url_es = "https://es.illinoislegalaid.org/legal-information/power-attorney-health-care"
   github_user = 'IllinoisLegalAidOnline'
   github_repo_name = 'docassemble-PowerOfAttorneyHealthCare'
 ---
@@ -1731,17 +1733,15 @@ subquestion: |
   % elif user_path == "Lisa":
   [YOUTUBE F2QbdrhcZ0g]
   % endif
-  
+
   Read the instructions to learn what to do next.
-  
-  ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size="md") }
 
-  ${ al_user_bundle.download_list_html() }
- 
-  &nbsp;
+  ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size='md') }
 
-  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
-  
+  ${ al_user_bundle.download_list_html(view_label='View', download_label='Download', zip_label='Download all') }
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False, label='Send') }
+
   **Note:** The Power of Attorney needs to be signed in front of at least one witness to become official.
 
   Thank you for using ILAO Easy Forms!
