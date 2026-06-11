@@ -52,7 +52,7 @@ sections:
 ---
 language: es
 sections:
-  - section_intro: Incio
+  - section_intro: Inicio
   - section_principal: Otorgante
   - section_agent: Agente y poderes
   - section_successors: Agentes sucesores
@@ -495,7 +495,7 @@ subquestion: |
   
   You can then enter that name in the **Additional name** field.
 
-  ${collapse_template(changed_name)}
+  ${collapse_template(changed_name_other)}
   % else:
   You should enter your legal name on your government-issued identification. 
 
@@ -530,6 +530,32 @@ content: |
   If you have legally changed your name, you should click **I have another name** and list your old legal name in the **Additional name** field. This will list both names on your form.
 
   This is important to do if you have medical records or other documents that use your old name.
+---
+language: es
+template: changed_name
+subject: |
+  **¿Qué pasa si he cambiado legalmente mi nombre?**
+content: |
+  Si has cambiado legalmente tu nombre, debes hacer clic en **Tengo otro nombre** y escribir tu nombre legal anterior en el campo **Nombre adicional**. Esto hará que ambos nombres aparezcan en tu formulario.
+
+  Es importante hacerlo si tienes registros médicos u otros documentos que usan tu nombre anterior.
+---
+template: changed_name_other
+subject: |
+  **What if they have a legal name change?**
+content: |
+  If they have legally changed their name, you should click **They have another name** and list their old legal name in the **Additional name** field. This will list both names on the form.
+
+  This is important to do if they have medical records or other documents that use their old name.
+---
+language: es
+template: changed_name_other
+subject: |
+  **¿Qué pasa si el otorgante ha cambiado legalmente su nombre?**
+content: |
+  Si el otorgante ha cambiado legalmente su nombre, debes hacer clic en Tiene otro nombre y escribir su nombre legal anterior en el campo Nombre adicional. Esto hará que ambos nombres aparezcan en el formulario.
+
+  Es importante hacerlo si el otorgante tiene registros médicos u otros documentos que usan su nombre anterior.
 ---
 #id: formerly or also
 #question: |
@@ -980,6 +1006,40 @@ fields:
       variable: self_remains_preference
       is: "specific" 
 ---
+language: es
+id: self remains disposal
+question: |
+  Cuando fallezcas, ¿qué te gustaría que ${agent.name_full()} hiciera con tus restos?
+subquestion: |
+  Si tienes un plan funerario prepagado o una parcela (un lote) en un cementerio, debes seleccionar **Tengo una preferencia específica** e ingresar información sobre el plan o la parcela.
+
+  Si seleccionas **No tengo una preferencia**, ${agent.name_full()} decidirá qué hacer con tus restos.
+fields: 
+  - Preferencia: self_remains_preference
+    input type: radio
+    choices: 
+    - Prefiero que mis restos sean enterrados.: I would prefer a burial for my remains.
+    - Prefiero que mis restos sean cremados.: I would prefer my remains be cremated.
+    - Tengo una preferencia específica. (Explica abajo): specific
+    - No tengo una preferencia.: I do not have a preference.
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    show if:
+      variable: self_remains_preference
+      is: "specific"      
+  - Preferencia específica (En inglés): self_specific_burial_preference
+    input type: area
+    rows: 7
+    maxlength: 250
+    show if: 
+      variable: self_remains_preference
+      is: "specific" 
+
+---
 id: other remains disposal
 question: |
   If ${principal.name_full()} passes away, what would they like ${agent.name_full()} to do with their remains?
@@ -1004,6 +1064,42 @@ fields:
     show if: 
       variable: other_remains_preference
       is: "specific" 
+---
+language: es
+id: other remains disposal
+question: |
+  Si ${principal.name_full()} fallece, ¿qué le gustaría que ${agent.name_full()} hiciera con sus restos?
+subquestion: |
+  Si ${principal.name_full()} tiene un plan funerario prepagado o una parcela en un cementerio, debes seleccionar **Tiene una preferencia específica** e ingresar información sobre el plan o la parcela.
+
+  Si seleccionas **No tiene una preferencia**, ${agent.name_full()} decidirá qué hacer con los restos de ${principal.name_full()}.
+fields: 
+  - Preferencia: other_remains_preference
+    input type: radio
+    choices: 
+    - Preferiría que sus restos fueran enterrados.: They would prefer a burial for their remains.
+    - Preferiría que sus restos fueran cremados.: They would prefer their remains be cremated.
+    - Tiene una preferencia específica. (Explica abajo): specific
+    - No tiene una preferencia.: They do not have a preference.
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    show if: 
+      variable: other_remains_preference
+      is: "specific" 
+  - Preferencia específica (En inglés): other_specific_burial_preference
+    input type: area
+    maxlength: 250
+    rows: 7
+    help: |
+      Esta respuesta debe escribirse en primera persona. Por ejemplo: "I would prefer a natural burial for my remains."
+    show if: 
+      variable: other_remains_preference
+      is: "specific"
+
 ---
 id: self organ donor
 question: |
@@ -1133,31 +1229,31 @@ fields:
       code: not for_yourself
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
-        <h6 class="alert-heading">Enter words in English</h6>
-        <p><strong>Important:</strong> The words you enter here must be in English to be used in Illinois. This Easy Form does not translate for you. It is very important that what you type in is clear and in English so institutions can follow what you want. If you type it in Spanish, or another non-English language, institutions may not follow your wishes.</p>
-      <p>Ask a person you trust to make sure the translation is accurate. Online or AI translations can make mistakes.</p>
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
       val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
-        <h6 class="alert-heading">Enter words in English</h6>
-        <p><strong>Important:</strong> The words you enter here must be in English to be used in Illinois. This Easy Form does not translate for you. It is very important that what you type in is clear and in English so institutions can follow what ${ principal.name_full() } wants. If you type it in Spanish, or another non-English language, institutions may not follow their wishes.</p>
-      <p>Ask a person you trust to make sure the translation is accurate. Online or AI translations can make mistakes.</p>
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
       !val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )  
-  - ¿Qué tratamientos ${do_does_subject} no quiere iniciar?: no_start_text
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien? (En inglés)": no_start_text
     input type: area
     rows: 7
     show if: limit_checkboxes['no_start']
     maxlength: 250
-  - ¿Qué tratamientos ${do_does_subject} no quiere suspender?: no_end_text
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan? (En inglés)": no_end_text
     input type: area
     rows: 7
     show if: limit_checkboxes['no_end']
     maxlength: 250
-  - Otros límites: other_limits
+  - Otros límites (En inglés): other_limits
     input type: area
     rows: 7
     show if: limit_checkboxes['other']
@@ -1505,6 +1601,26 @@ subquestion: |
   
   It is still worth making a Power of Attorney even with just one witness signature.
 ---
+language: es
+id: notary info
+continue button field: notary_info
+question: |
+  Acerca de la notarización
+subquestion: |
+  % if for_yourself == True:
+  Illinois no exige que un Poder Notarial para el Cuidado de la Salud sea notarizado, pero algunos otros estados sí requieren notarización. Es posible que desees notarizar tu Poder Notarial. Puedes encontrar un notario público en un banco o casa de cambio, y en algunas bibliotecas.
+
+  Si alguna vez viajas a otro estado, puede ser útil que tu Poder Notarial esté notarizado y tenga dos firmas de testigos.
+
+  Aun así, vale la pena hacer un Poder Notarial incluso con la firma de un solo testigo.
+  % else:
+  Illinois no exige que un Poder Notarial para el Cuidado de la Salud sea notarizado, pero algunos otros estados sí requieren notarización. Es posible que el otorgante desee notarizar su Poder Notarial. Puedes encontrar un notario público en un banco o casa de cambio, y en algunas bibliotecas.
+
+  Si el otorgante alguna vez viaja a otro estado, puede ser útil que su Poder Notarial esté notarizado y tenga dos firmas de testigos.
+
+  Aun así, vale la pena hacer un Poder Notarial incluso con la firma de un solo testigo.
+  % endif  
+---
 id: witness known
 question: |
   % if for_yourself == True:
@@ -1715,6 +1831,18 @@ subquestion: |
   After you click **Next**, it may take a few moments to finish making your forms.
   
   ###### You do not need to refresh your screen. Hang in there!
+  
+  [NEWLINE]
+---
+language: es
+id: forms assembling
+continue button field: forms_assembling
+question: |
+  Casi listo
+subquestion: |
+  Después de hacer clic en **Siguiente**, el programa puede tardar unos momentos en terminar de preparar tus formularios.
+  
+  ###### No necesitas actualizar tu pantalla. ¡Ánimo!
   
   [NEWLINE]
 ---
