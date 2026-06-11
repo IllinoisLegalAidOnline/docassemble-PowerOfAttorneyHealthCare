@@ -1510,7 +1510,7 @@ code: |
     if person.in_america:
       return person.address.on_one_line(bare=True)
     else:
-      person.intl_address_1 + ", " + person.intl_address_2
+      return person.intl_address_1 + ", " + person.intl_address_2
 ---
 id: completion reminder
 question: |
