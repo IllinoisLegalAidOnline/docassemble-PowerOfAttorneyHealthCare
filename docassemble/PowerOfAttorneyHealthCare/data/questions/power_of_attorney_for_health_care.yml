@@ -1505,6 +1505,13 @@ code: |
     else:
       return successors[index_number].name_full() + ", " + successors[index_number].intl_address_1 + ", " + successors[index_number].intl_address_2
 ---
+code: |
+  def successor_address_string(person):
+    if person.in_america:
+      return person.address.on_one_line(bare=True)
+    else:
+      person.intl_address_1 + ", " + person.intl_address_2
+---
 id: completion reminder
 question: |
   Reminder about unanswered questions
@@ -1594,6 +1601,12 @@ content: |
   Thanks for using ILAO Easy Forms!
   
   [Illinois Legal Aid Online](https://www.illinoislegalaid.org)
+---
+attachment:
+  - name: bilingual_form
+    variable name: bilingual_form[i]
+    filename: bilingual_form
+    docx template file: poa_hc_bilingual.docx
 ---
 attachment:
   - name: Instructions
@@ -1739,6 +1752,7 @@ attachment:
 
 ---
 objects:
+  - bilingual_form: ALDocument.using(title="Test bilingual form", filename="bilingual_form", enabled=True, has_addendum=False)
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
   - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
@@ -1752,7 +1766,7 @@ objects:
   - pop_bundle: ALDocumentBundle.using(elements=[pop_powers, pop_caregivers, pop_memory, pop_other], filename="power_of_planning_information", enabled=True, title= "Info sheets")
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[bilingual_form, instructions, poa_health_care, pop_powers], filename="power_of_attorney_health_care.pdf", title="All forms")
   - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 ---
 id: review screen
