@@ -32,6 +32,7 @@ objects:
   - witnesses: ALPeopleList
   - success_strings: DAList
   - preview: DAStaticFile.using(filename="power_of_planning.pdf")
+  - preview_es: DAStaticFile.using(filename="power_of_planning_es.pdf")
 ---
 code: |
   ilao_easy_form_title = "Power of Attorney for Health Care"
@@ -523,6 +524,64 @@ fields:
     js show if:
       val('also_known_as') === true
 ---
+language: es
+id: principal name
+question: |
+  % if for_yourself == True:
+  ¿Cuál es tu nombre?
+  % else:
+  ¿Cómo se llama el otorgante?
+  % endif
+subquestion: |
+  % if for_yourself == False:
+  El otorgante es la persona que elige a un agente para tomar decisiones sobre su tratamiento médico.
+  
+  Debes ingresar su nombre legal tal como aparece en su identificación oficial emitida por el gobierno.
+  
+  Es posible que debas hacer clic en **Tiene otro nombre** si:
+  
+  * Usa un nombre distinto de su nombre legal, o
+  * Ha cambiado su nombre y también tiene un nombre legal anterior que no aparece en su identificación.
+  
+  Luego puedes ingresar ese nombre en el campo **Nombre adicional**.
+  
+  ${collapse_template(changed_name_other)}
+  % else:
+  Debes ingresar tu nombre legal tal como aparece en tu identificación oficial emitida por el gobierno.
+  
+  Es posible que debas hacer clic en **Tengo otro nombre** si:
+  
+  * Usas un nombre distinto a tu nombre legal, o
+  * Has cambiado tu nombre y también tienes un nombre legal anterior que no aparece en tu identificación.
+  
+  Luego puedes ingresar ese nombre en el campo **Nombre adicional**.
+  
+  ${collapse_template(changed_name)}
+  % endif
+fields:
+  - Nombre: principal.name.first
+  - Segundo nombre: principal.name.middle
+    required: False
+  - Apellido: principal.name.last
+  - "Tengo otro nombre.": also_known_as
+    datatype: yesnowide
+    show if:
+      code: |
+        for_yourself
+  - "Tiene otro nombre.": also_known_as
+    datatype: yesnowide
+    show if:
+      code: |
+        not for_yourself
+  - Nombre adicional: principal.aka_name
+    js show if:
+      val('also_known_as') === true
+  - ¿El nombre adicional corresponde a un nombre legal anterior?: formerly_or_also
+    datatype: yesnoradio
+    js show if:
+      val('also_known_as') === true
+
+---
 template: changed_name
 subject: |
   **What if I have gotten a legal name change?**
@@ -553,7 +612,7 @@ template: changed_name_other
 subject: |
   **¿Qué pasa si el otorgante ha cambiado legalmente su nombre?**
 content: |
-  Si el otorgante ha cambiado legalmente su nombre, debes hacer clic en Tiene otro nombre y escribir su nombre legal anterior en el campo Nombre adicional. Esto hará que ambos nombres aparezcan en el formulario.
+  Si el otorgante ha cambiado legalmente su nombre, debes hacer clic en **Tiene otro nombre** y escribir su nombre legal anterior en el campo **Nombre adicional**. Esto hará que ambos nombres aparezcan en el formulario.
 
   Es importante hacerlo si el otorgante tiene registros médicos u otros documentos que usan su nombre anterior.
 ---
@@ -1031,7 +1090,7 @@ fields:
     show if:
       variable: self_remains_preference
       is: "specific"      
-  - Preferencia específica (En inglés): self_specific_burial_preference
+  - Preferencia específica **(En inglés)**: self_specific_burial_preference
     input type: area
     rows: 7
     maxlength: 250
@@ -1090,7 +1149,7 @@ fields:
     show if: 
       variable: other_remains_preference
       is: "specific" 
-  - Preferencia específica (En inglés): other_specific_burial_preference
+  - Preferencia específica **(En inglés)**: other_specific_burial_preference
     input type: area
     maxlength: 250
     rows: 7
@@ -1243,17 +1302,17 @@ fields:
       </div>
     js show if: |
       !val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )  
-  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien? (En inglés)": no_start_text
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien? **(En inglés)**": no_start_text
     input type: area
     rows: 7
     show if: limit_checkboxes['no_start']
     maxlength: 250
-  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan? (En inglés)": no_end_text
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan? **(En inglés)**": no_end_text
     input type: area
     rows: 7
     show if: limit_checkboxes['no_end']
     maxlength: 250
-  - Otros límites (En inglés): other_limits
+  - Otros límites **(En inglés)**: other_limits
     input type: area
     rows: 7
     show if: limit_checkboxes['other']
@@ -1799,7 +1858,8 @@ code: |
     else:
       return person.intl_address_1 + ", " + person.intl_address_2
 ---
-id: completion reminder
+id: completion reminder new
+continue button field: completion_reminder
 question: |
   Reminder about unanswered questions
 subquestion: |
@@ -1828,7 +1888,38 @@ subquestion: |
   % endif
   % endif
   % endif
+---
+language: es
+id: completion reminder
 continue button field: completion_reminder
+question: |
+  Recordatorio sobre preguntas sin responder
+subquestion: |
+  % if for_yourself == True:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  Has dejado algunas decisiones para más adelante. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esas decisiones antes de firmarlo.
+  % else:
+  No has decidido si quieres que ${agent.name_full()} priorice la calidad de tu vida o la duración de tu vida. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  No has decidido cuándo quieres que ${agent.name_full()} comience a tomar decisiones por ti. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % endif
+  % else:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  ${principal.name_full()} ha dejado algunas decisiones para más adelante. Es posible que quiera revisar su formulario de Poder Notarial para el Cuidado de la Salud y tomar esas decisiones antes de firmarlo.
+  % else:
+  ${principal.name_full()} no ha decidido si quiere que ${agent.name_full()} priorice la calidad de su vida o la duración de su vida. Es posible que quiera revisar su formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  ${principal.name_full()} no ha decidido cuándo quiere que ${agent.name_full()} empiece a tomar decisiones en su nombre. Es posible que quiera revisar su Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % endif
+  % endif
 ---
 id: forms assembling
 continue button field: forms_assembling
@@ -1847,7 +1938,7 @@ continue button field: forms_assembling
 question: |
   Casi listo
 subquestion: |
-  Después de hacer clic en **Siguiente**, el programa puede tardar unos momentos en terminar de preparar tus formularios.
+  Después de hacer clic en **Continuar**, el programa puede tardar unos momentos en terminar de preparar tus formularios.
   
   ###### No necesitas actualizar tu pantalla. ¡Ánimo!
   
@@ -1938,6 +2029,8 @@ code: |
   pop_memory.enabled = False
   pop_what.enabled = False
   pop_other.enabled = False
+  instructions_es.enabled = False
+  poa_health_care_es.enabled = False
   planning_es.enabled = False
   pop_caregivers_es.enabled = False
   pop_powers_es.enabled = False
@@ -1973,7 +2066,6 @@ objects:
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title="All forms")
-  - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
 
 ---
 attachment:
@@ -1986,12 +2078,11 @@ attachment:
     fields:
       - "fake": ${""}
 ---
-# need Spanish version
 attachment:
   - name: Instrucciones
     variable name: instructions_es[i]
     filename: instructions_for_poa_health_care
-    pdf template file: cdel_poa_health_instructions.pdf
+    pdf template file: cdel_poa_health_instructions_es.pdf
     skip undefined: True
     editable: False
     fields:
