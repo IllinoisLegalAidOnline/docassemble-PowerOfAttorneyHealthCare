@@ -1084,13 +1084,13 @@ fields:
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
-    show if:
-      variable: self_remains_preference
-      is: "specific"      
-  - Preferencia específica **(En inglés)**: self_specific_burial_preference
+    show if: 
+      variable: other_remains_preference
+      is: "specific" 
+  - Preferencia específica[NEWLINE]**(En inglés)**: self_specific_burial_preference
     input type: area
     rows: 7
     maxlength: 250
@@ -1149,7 +1149,7 @@ fields:
     show if: 
       variable: other_remains_preference
       is: "specific" 
-  - Preferencia específica **(En inglés)**: other_specific_burial_preference
+  - Preferencia específica[NEWLINE]**(En inglés)**: other_specific_burial_preference
     input type: area
     maxlength: 250
     rows: 7
@@ -1182,13 +1182,7 @@ fields:
       - No
       - They would like their agent to decide this.
 ---
-depends on: 
-  - al_user_language
-  - for_yourself
-  - principal.name.first
-  - principal.name.middle
-  - principal.name.last
-  - principal.name.suffix
+reconsider: True
 code: |
   if for_yourself:
     my_their = "my"
@@ -1211,7 +1205,7 @@ code: |
   else:
     my_their = "su"
     subject_do_does = principal.name_full()
-    subject_do_does += " hacs"
+    subject_do_does += " haces"
     do_does_subject = "haces "
     do_does_subject += principal.name_full()
 ---
@@ -1233,7 +1227,7 @@ fields:
       - ${subject_do_does} not authorize donation of ${my_their} remains to science.: no_science
       - ${subject_do_does} not authorize starting certain treatments. (Explain below): no_start
       - ${subject_do_does} not authorize ending certain treatments. (Explain below): no_end
-      - Other limits: other
+      - Other limits (Explain below): other
   - What treatments ${do_does_subject} not want to start?: no_start_text
     input type: area
     rows: 7
@@ -1272,7 +1266,7 @@ fields:
       - "Yo no autorizo la donación de ${my_their} restos a la ciencia.": no_science
       - "Yo no autorizo que se inicien ciertos tratamientos. (Explica abajo)": no_start
       - "Yo no autorizo que se suspendan ciertos tratamientos. (Explica abajo)": no_end
-      - Otros límites: other
+      - Otros límites (Explica abajo): other
     show if:
       code: for_yourself      
   - no label: limit_checkboxes
@@ -1283,17 +1277,17 @@ fields:
       - "${ principal.name_full() } no autoriza la donación de ${my_their} restos a la ciencia.": no_science
       - "${ principal.name_full() } no autoriza que se inicien ciertos tratamientos. (Explica abajo)": no_start
       - "${ principal.name_full() } no autoriza que se suspendan ciertos tratamientos. (Explica abajo)": no_end
-      - Otros límites: other
+      - Otros límites (Explica abajo): other
     show if:
       code: not for_yourself
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
-      val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )
+      ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) }
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
@@ -1301,18 +1295,32 @@ fields:
       <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
-      !val('for_yourself') && ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") )  
-  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien? **(En inglés)**": no_start_text
+      ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) } === false
+  - "¿Qué tratamientos no quieres que se inicien?[NEWLINE]**(En inglés)**": no_start_text
     input type: area
     rows: 7
-    show if: limit_checkboxes['no_start']
     maxlength: 250
-  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan? **(En inglés)**": no_end_text
+    js show if: |
+      val("limit_checkboxes['no_start']") && ${ json.dumps(for_yourself) }      
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien?[NEWLINE]**(En inglés)**": no_start_text
     input type: area
     rows: 7
-    show if: limit_checkboxes['no_end']
     maxlength: 250
-  - Otros límites **(En inglés)**: other_limits
+    js show if: |
+      val("limit_checkboxes['no_start']") && ${ json.dumps(for_yourself) } === false
+  - "¿Qué tratamientos no quieres que se suspendan?[NEWLINE]**(En inglés)**": no_end_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_end']") && ${ json.dumps(for_yourself) }      
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan?[NEWLINE]**(En inglés)**": no_end_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_end']") && ${ json.dumps(for_yourself) } === false
+  - Otros límites[NEWLINE]**(En inglés)**: other_limits
     input type: area
     rows: 7
     show if: limit_checkboxes['other']
@@ -2512,43 +2520,35 @@ review:
   - Edit: limit_checkboxes
     button: |
       **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
+  
+      % if limit_checkboxes['no_autopsy'] and for_yourself:
       * I do not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
+      % if limit_checkboxes['no_science'] and for_yourself:
       * I do not authorize donation of my remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
+      % if limit_checkboxes['no_start'] and for_yourself:
       * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
+      % if limit_checkboxes['no_end'] and for_yourself:
       * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
-      % if limit_checkboxes['other']:
-      * ${fix_punctuation(other_limits)}
-      % endif
-    show if: agent_limitation and for_yourself
-  - Edit: limit_checkboxes
-    button: |
-      **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
+      % if limit_checkboxes['no_autopsy'] and not for_yourself:
       * ${principal.name_full()} does not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
+      % if limit_checkboxes['no_science'] and not for_yourself:
       * ${principal.name_full()} does not authorize donation of their remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
-      * ${principal.name_full()} does authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % if limit_checkboxes['no_start'] and not for_yourself:
+      * ${principal.name_full()} does not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
-      * ${principal.name_full()} does authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % if limit_checkboxes['no_end'] and not for_yourself:
+      * ${principal.name_full()} does not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
       % endif
-    show if: agent_limitation and not for_yourself
+    show if: agent_limitation
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
@@ -2845,43 +2845,35 @@ review:
   - Edit: limit_checkboxes
     button: |
       **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
+  
+      % if limit_checkboxes['no_autopsy'] and for_yourself:
       * I do not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
+      % if limit_checkboxes['no_science'] and for_yourself:
       * I do not authorize donation of my remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
+      % if limit_checkboxes['no_start'] and for_yourself:
       * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
+      % if limit_checkboxes['no_end'] and for_yourself:
       * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
-      % if limit_checkboxes['other']:
-      * ${fix_punctuation(other_limits)}
-      % endif
-    show if: agent_limitation and for_yourself
-  - Edit: limit_checkboxes
-    button: |
-      **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
+      % if limit_checkboxes['no_autopsy'] and not for_yourself:
       * ${principal.name_full()} does not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
+      % if limit_checkboxes['no_science'] and not for_yourself:
       * ${principal.name_full()} does not authorize donation of their remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
-      * ${principal.name_full()} does authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % if limit_checkboxes['no_start'] and not for_yourself:
+      * ${principal.name_full()} does not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
-      * ${principal.name_full()} does authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % if limit_checkboxes['no_end'] and not for_yourself:
+      * ${principal.name_full()} does not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
       % endif
-    show if: agent_limitation and not for_yourself
+    show if: agent_limitation
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
