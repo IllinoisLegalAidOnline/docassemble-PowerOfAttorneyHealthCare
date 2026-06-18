@@ -64,7 +64,6 @@ sections:
 mandatory: True
 code: |
   nav.set_section('section_intro')
-  #set_language(language_choice)
   sees_nav_bar
   snapshot_start
   set_progress(5)
@@ -186,17 +185,12 @@ code: |
     else:
       user_path = "Shirley"
 ---
-question: |
-  What language do you speak?
-field: language_choice
-choices:
-  - "English": en
-  - "Español": es
----
 id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
+  ${ get_language_list(lang_codes=al_interview_languages, current=al_user_language) }
+  
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
   
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
@@ -213,6 +207,12 @@ subquestion: |
   
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
+css: |
+  <style>
+    a {
+      font-weight:bold; 
+    }
+  </style>
 ---
 id: instructions
 continue button field: how_to_use
@@ -1088,7 +1088,7 @@ fields:
       <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     show if: 
-      variable: other_remains_preference
+      variable: self_remains_preference
       is: "specific" 
   - Preferencia específica[NEWLINE]**(En inglés)**: self_specific_burial_preference
     input type: area
@@ -1350,7 +1350,7 @@ subquestion: |
   % endif
 ---
 id: delayed revocation
-question: |
+question: |    
   % if for_yourself == True:
   Do you want to delay future revocation of this Power of Attorney by 30 days?
   % else:
@@ -1952,13 +1952,12 @@ subquestion: |
   
   [NEWLINE]
 ---
-#Add Power of Planning Information to templates
 id: get docs screen
 event: get_docs_screen
 question: |
   Download
 subquestion: |
-  Your forms are ready. View and download your forms below. Click **Make changes** to fix any mistakes.
+  Your forms are ready. View and download your forms below. Click **:edit: Make changes** to fix any mistakes.
 
   % if user_path == "Shirley":
   [YOUTUBE NE0faXuz5v4]
@@ -1971,6 +1970,8 @@ subquestion: |
   Read the instructions to learn what to do next.
 
   ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size='md') }
+
+  **Note:** These forms and instructions are in English. To get bilingual English and Spanish forms, select **Español** from the :globe: language picker in the menu.
 
   ${ al_user_bundle.download_list_html(view_label='View', download_label='Download', zip_label='Download all') }
 
@@ -1985,7 +1986,40 @@ under: |
   % endif
 
  
-  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: Was this program helpful?', color="#181c36", size="md", new_window=True) }
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=word(':comment: Was this program helpful?'), color="#181c36", size="md", new_window=True) }
+---
+language: es
+id: get docs screen
+event: get_docs_screen
+question: |
+  Descargar
+subquestion: |
+  Tus formularios están listos. Puedes verlos y descargarlos abajo. Haz clic en **:edit: Hacer cambios** para corregir cualquier error.
+
+  [YOUTUBE vuN6YBYEh6k]
+
+  Lee las instrucciones para saber qué hacer después.
+
+  ${ action_button_html(url_action('review_answers'), label=':edit: Hacer cambios', color='success', size="md") }
+
+  **Nota:** Estos son formularios e instrucciones bilingües en inglés y español. Para obtener formularios solo en inglés, seleccione **English** en el selector de idioma :globe: del menú.
+
+  ${ al_user_bundle.download_list_html() }
+
+  &nbsp;
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+  **Nota:** El Poder Notarial debe firmarse frente a al menos un testigo para que sea válido.
+
+  ¡Gracias por usar los Formularios Guiados de ILAO!
+under: |
+  % if not user_logged_in():
+  [${fa_icon("sign-in-alt", color="#0079d0", size="sm")} **Iniciar sesión**](${url_of('login', next=interview_url())}) o [**crear**](${url_of('register', next=interview_url())}) una cuenta de Formularios Guiados de ILAO para guardar tu progreso (opcional).
+  % endif
+
+
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: ¿Fue útil este programa?', color="#181c36", size="md", new_window=True) }
 ---
 generic object: ALDocumentBundle
 template: x.send_email_template
@@ -2011,70 +2045,32 @@ content: |
 
 ---
 objects:
-  - instructions: ALDocument.using(title="Instructions", filename="instructions", has_addendum=False)
+  - instructions: ALDocument.using(title="Instructions and next steps", filename="instructions", has_addendum=False)
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", has_addendum=False)
-  - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", has_addendum=False)
-  - pop_caregivers: ALDocument.using(title="Power of Planning - Caregivers", filename="pop_caregivers", has_addendum=False)
-  - pop_powers: ALDocument.using(title="Power of Attorney info sheet", filename="pop_powers", has_addendum=False)
-  - pop_memory: ALDocument.using(title="Power of Planning - Memory Loss & Advance Planning", filename="pop_memory", has_addendum=False)
-  - pop_what: ALDocument.using(title="Power of Planning - What is Advance Planning", filename="pop_what", has_addendum=False)
-  - pop_other: ALDocument.using(title="Power of Planning - Other Advance Planning", filename="pop_other", has_addendum=False)
-  - instructions_es: ALDocument.using(title="Instrucciones", filename="instructions_es", has_addendum=False)
+  - pop_powers: ALDocument.using(title="Information on Powers of Attorney", filename="pop_powers", has_addendum=False)
+  - instructions_es: ALDocument.using(title="Instrucciones y próximos pasos", filename="instructions_es", has_addendum=False)
   - poa_health_care_es: ALDocument.using(title="Poder Notarial para el Cuidado de la Salud", filename="poa_health_care_es", has_addendum=False)
-  - planning_es: ALDocument.using(title="Empodérate de tu futuro", filename="power_of_planning_es", has_addendum=False)
-  - pop_caregivers_es: ALDocument.using(title="Empodérate de tu futuro - Cuidadores", filename="pop_caregivers_es", has_addendum=False)
-  - pop_powers_es: ALDocument.using(title="Poder Notarial página de información", filename="pop_powers_es", has_addendum=False)
-  - pop_memory_es: ALDocument.using(title="Empodérate de tu futuro - Pérdida de memoria y planificación", filename="pop_memory_es", has_addendum=False)
-  - pop_what_es: ALDocument.using(title="Empodérate de tu futuro - ¿Qué es la planificación anticipada?", filename="pop_what_es", has_addendum=False)
-  - pop_other_es: ALDocument.using(title="Empodérate de tu futuro - Otros pasos de planificación anticipada", filename="pop_other_es", has_addendum=False)
+  - pop_powers_es: ALDocument.using(title="Información sobre los poderes notariales", filename="pop_powers_es", has_addendum=False)
 ---
 code: |
   instructions.enabled = False
   poa_health_care.enabled = False
-  planning.enabled = False
-  pop_caregivers.enabled = False
   pop_powers.enabled = False
-  pop_memory.enabled = False
-  pop_what.enabled = False
-  pop_other.enabled = False
   instructions_es.enabled = False
   poa_health_care_es.enabled = False
-  planning_es.enabled = False
-  pop_caregivers_es.enabled = False
   pop_powers_es.enabled = False
-  pop_memory_es.enabled = False
-  pop_what_es.enabled = False
-  pop_other_es.enabled = False
 
   if session_local.attr("al_user_language") == "es":
     instructions_es.enabled = True
     poa_health_care_es.enabled = True
-    planning_es.enabled = True
-    pop_caregivers_es.enabled = True
     pop_powers_es.enabled = True
-    pop_memory_es.enabled = True
-    pop_what_es.enabled = True
-    pop_other_es.enabled = True 
-
   else:
     instructions.enabled = True
     poa_health_care.enabled = True
-    planning.enabled = True
-    pop_caregivers.enabled = True
-    pop_powers.enabled = True
-    pop_memory.enabled = True
-    pop_what.enabled = True
-    pop_other.enabled = True
-
----
-objects:
-  - pop_bundle: ALDocumentBundle.using(elements=[pop_powers, pop_caregivers, pop_memory, pop_other], filename="power_of_planning_information", enabled=True, title= "Info sheets")
-  - pop_bundle_es: ALDocumentBundle.using(elements=[pop_powers_es, pop_caregivers_es, pop_memory_es, pop_other_es], filename="power_of_planning_information", enabled=True, title= "Info sheets")
-    
+    pop_powers.enabled = True    
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title="All forms")
-
 ---
 attachment:
   - name: Instructions
@@ -2089,8 +2085,8 @@ attachment:
 attachment:
   - name: Instrucciones
     variable name: instructions_es[i]
-    filename: instructions_for_poa_health_care
-    pdf template file: cdel_poa_health_instructions_es.pdf
+    filename: instrucciones_bilingue
+    pdf template file: instructions_es_and_en.pdf
     skip undefined: True
     editable: False
     fields:
@@ -2109,93 +2105,12 @@ attachment:
 attachment:
   - name: Poder Notarial página de información
     variable name: pop_powers_es[i]
-    filename: pop_powers_es
-    pdf template file: ES-POP-Powers_of_Attorney.pdf
+    filename: informacion_poderes_bilingue
+    pdf template file: info_sheet_es_and_en.pdf
     skip undefined: True
     editable: False
     fields:
       - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - Memory Loss
-    variable name: pop_memory[i]
-    filename: pop_memory
-    pdf template file: POP_-_Memory_Loss_&_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Pérdida de memoria y planificación
-    variable name: pop_memory_es[i]
-    filename: pop_memory_es
-    pdf template file: ES-POP-Memory_Loss.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - Caregivers
-    variable name: pop_caregivers[i]
-    filename: pop_caregivers
-    pdf template file: POP_-_Caregivers.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Empodérate de tu futuro - Cuidadores
-    variable name: pop_caregivers_es[i]
-    filename: pop_caregivers_es
-    pdf template file: ES-POP-Caregivers.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - Other Advance Planning
-    variable name: pop_other[i]
-    filename: pop_other
-    pdf template file: POP_-_Other_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Empodérate de tu futuro - Otros pasos de planificación anticipada
-    variable name: pop_other_es[i]
-    filename: pop_other_es
-    pdf template file: ES-POP-Other_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - What is Advance Planning
-    variable name: pop_what[i]
-    filename: pop_what
-    pdf template file: POP_-_What_is_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Empodérate de tu futuro - ¿Qué es la planificación anticipada?
-    variable name: pop_what_es[i]
-    filename: pop_what_es
-    pdf template file: ES-POP-What_is_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
-        
 ---
 # creates a single string variable for international address
 depends on:
@@ -2281,7 +2196,7 @@ attachment:
 attachment:
   - name: Poder Notarial para el Cuidado de la Salud
     variable name: poa_health_care_es[i]
-    filename: poa_health_care_es
+    filename: poder_notarial_salud_bilingue
     docx template file: poa_health_care_bilingual_formatted.docx
     # docx template file: poa_health_care_bilingual.docx
 
