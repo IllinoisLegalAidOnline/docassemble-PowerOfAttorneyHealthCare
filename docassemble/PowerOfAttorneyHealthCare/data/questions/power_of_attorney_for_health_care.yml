@@ -761,6 +761,7 @@ subquestion: |
   % endif
 fields:
   - Phone number: agent.phone_number
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' )}
     datatype: al_international_phone
 ---
 id: agent as guardian
@@ -2017,7 +2018,7 @@ under: |
   % endif
 
 
-  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: ¿Fue útil este programa?', color="#181c36", size="md", new_window=True) }
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", lang="es", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title_es, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: ¿Fue útil este programa?', color="#181c36", size="md", new_window=True) }
 ---
 generic object: ALDocumentBundle
 template: x.send_email_template
@@ -2068,7 +2069,7 @@ code: |
     pop_powers.enabled = True    
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title="All forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title=word("All forms"))
 ---
 attachment:
   - name: Instructions
