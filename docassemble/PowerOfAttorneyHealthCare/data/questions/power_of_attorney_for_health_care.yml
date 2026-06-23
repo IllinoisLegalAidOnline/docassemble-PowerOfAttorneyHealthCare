@@ -189,8 +189,6 @@ id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
-  ${ get_language_list(lang_codes=al_interview_languages, current=al_user_language) }
-  
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
   
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
