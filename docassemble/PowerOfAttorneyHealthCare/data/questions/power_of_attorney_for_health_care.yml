@@ -151,7 +151,7 @@ code: |
   stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
 
   try:
-    stuff_to_snapshot['language'] = session_local.attr('al_user_language')
+    stuff_to_snapshot['language'] = get_language()
   except:
     pass
   
@@ -189,6 +189,8 @@ id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
+  ${ get_language_list(lang_codes=al_interview_languages, current=get_language()) }
+  
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
   
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
@@ -789,7 +791,7 @@ template: video_agent_when
 subject: |
   **Video: When do you want to start your Power of Attorney?**
 content: |
-  % if session_local.attr("al_user_language") == "es":
+  % if get_language() == "es":
   [YOUTUBE ztiRHBkDYSg]
   % else:
   % if user_path == "Shirley":
@@ -915,7 +917,7 @@ template: video_life_quality
 subject: |
   **Video: Quality of life and length of life**
 content: |
-  % if session_local.attr("al_user_language") == "es":
+  % if get_language() == "es":
   [YOUTUBE 8ttJ_YzzCkc]
   % else:  
   % if user_path == "Shirley":
@@ -2059,7 +2061,7 @@ code: |
   poa_health_care_es.enabled = False
   pop_powers_es.enabled = False
 
-  if session_local.attr("al_user_language") == "es":
+  if get_language() == "es":
     instructions_es.enabled = True
     poa_health_care_es.enabled = True
     pop_powers_es.enabled = True
