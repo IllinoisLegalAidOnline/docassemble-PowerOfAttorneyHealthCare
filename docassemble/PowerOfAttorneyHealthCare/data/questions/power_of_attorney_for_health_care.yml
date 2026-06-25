@@ -189,8 +189,6 @@ id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
-  ${ get_language_list(lang_codes=al_interview_languages, current=get_language()) }
-  
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
   
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
@@ -1611,6 +1609,7 @@ subquestion: |
   % endif
 fields:
   - Phone number: successors[i].phone_number
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' )}
     datatype: al_international_phone
 ---
 id: witness info
@@ -2049,9 +2048,9 @@ objects:
   - instructions: ALDocument.using(title="Instructions and next steps", filename="instructions", has_addendum=False)
   - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", has_addendum=False)
   - pop_powers: ALDocument.using(title="Information on Powers of Attorney", filename="pop_powers", has_addendum=False)
-  - instructions_es: ALDocument.using(title="Instrucciones y próximos pasos", filename="instructions_es", has_addendum=False)
-  - poa_health_care_es: ALDocument.using(title="Poder Notarial para el Cuidado de la Salud", filename="poa_health_care_es", has_addendum=False)
-  - pop_powers_es: ALDocument.using(title="Información sobre los poderes notariales", filename="pop_powers_es", has_addendum=False)
+  - instructions_es: ALDocument.using(title="Instrucciones y próximos pasos", filename="Instrucciones", has_addendum=False)
+  - poa_health_care_es: ALDocument.using(title="Poder Notarial para el Cuidado de la Salud", filename="Poder Notarial para el Cuidado de la Salud", has_addendum=False)
+  - pop_powers_es: ALDocument.using(title="Información sobre los poderes notariales", filename="Información sobre los poderes notariales", has_addendum=False)
 ---
 code: |
   instructions.enabled = False
