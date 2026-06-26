@@ -761,8 +761,8 @@ subquestion: |
   % endif
 fields:
   - Phone number: agent.phone_number
-    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' )}
     datatype: al_international_phone
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' ) }
 ---
 id: agent as guardian
 question: |
@@ -1609,7 +1609,7 @@ subquestion: |
   % endif
 fields:
   - Phone number: successors[i].phone_number
-    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' )}
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' ) }
     datatype: al_international_phone
 ---
 id: witness info
@@ -2004,11 +2004,11 @@ subquestion: |
 
   **Nota:** Estos son formularios e instrucciones bilingües en inglés y español. Para obtener formularios solo en inglés, seleccione **English** en el selector de idioma :globe: del menú.
 
-  ${ al_user_bundle.download_list_html() }
+  ${ al_user_bundle_es.download_list_html() }
 
   &nbsp;
 
-  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+  ${ al_user_bundle_es.send_button_html(show_editable_checkbox=False) }
 
   **Nota:** El Poder Notarial debe firmarse frente a al menos un testigo para que sea válido.
 
@@ -2033,6 +2033,7 @@ content: |
   [Illinois Legal Aid Online](https://www.illinoislegalaid.org)
 ---
 language: es
+generic object: ALDocumentBundle
 template: x.send_email_template
 subject: |
   Poder Notarial para el Cuidado de la Salud
@@ -2071,6 +2072,7 @@ code: |
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title=word("All forms"))
+  - al_user_bundle_es: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title=word("Todos los formularios"))
 ---
 attachment:
   - name: Instructions
