@@ -64,12 +64,12 @@ sections:
 mandatory: True
 code: |
   nav.set_section('section_intro')
+  set_progress(1)
   sees_nav_bar
   snapshot_start
+  how_to_use
   set_progress(5)
   about_poa
-  about_agents
-  how_to_use
   accept_terms
   next_steps
   nav.set_section('section_principal')
@@ -87,6 +87,7 @@ code: |
   if agent.in_america == False:
     agent.intl_address_full
   set_progress(40)
+  about_agents
   agent.phone_number
   is_guardian
   if when_authorize == "do_not":
@@ -95,7 +96,6 @@ code: |
     health_records
   if quality_of_life == "do_not":
     quality_warning
-  set_progress(60)
   if for_yourself == True:
     self_remains_preference
     self_organ_donor
@@ -107,6 +107,7 @@ code: |
   revocation_info
   delayed_revocation
   nav.set_section('section_successors')
+  set_progress(60)
   if any_successors == True:
     successors.gather()
     #show_successors
@@ -189,6 +190,12 @@ id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
+  % if get_language() == 'en':
+  :globe: English | [Español](${ interview_url(new_session=1, lang="es") })
+  % else:
+  :globe: [English](${ interview_url(new_session=1, lang="en") }) | Español
+  % endif
+   
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
   
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
@@ -247,9 +254,9 @@ content: |
 id: next steps
 continue button field: next_steps
 question: |
-  Your next steps
+  After you download your form
 subquestion: |
-    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. You do not need to know who the witness will be to use this program.
+    Once you download and print your form, you will need to sign it in front of a witness. The witness will also need to sign the form. You do not need to know who the witness will be to use this program.
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. Your forms will include instructions with more information.
     
@@ -436,7 +443,10 @@ subquestion: |
   If you are making these forms for someone else, that person will be the principal.
 fields:
   - no label: for_yourself
-    datatype: yesnoradio
+    datatype: radio
+    choices:
+      - "Yes, I'm making a Power of Attorney for myself.": True
+      - "No, I'm helping someone else make a Power of Attorney.": False
 terms:
   - principal: |
        The **principal** is the person who chooses someone they trust to make decisions about their health care. If this is your document, you are the principal. 
