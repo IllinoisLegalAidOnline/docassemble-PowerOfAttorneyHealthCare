@@ -143,7 +143,7 @@ code: |
   except:
     pass
   
-  stuff_to_snapshot['user_zip'] = showifdef('users[0].address.zip')
+  stuff_to_snapshot['user_zip'] = showifdef('principal.address.zip')
 
   stuff_to_snapshot['downloaded_forms'] = showifdef('forms_assembling')
   
@@ -756,7 +756,7 @@ template: intl_address_help
 subject: |
   **Does the agent have to live in the United States or be a US citizen?**
 content: |
-  No. You are able to list someone outside of the United States as the agent. The agent does not need to be a United States citizen. However, there may issues if a bank or financial organization is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
+  No. You are able to list someone outside of the United States as the agent. The agent does not need to be a United States citizen. However, there may be issues if a doctor or health care provider is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
   
   For international addresses, there will be space for two lines to enter the address. You should enter the international address using the English alphabet.
 ---
