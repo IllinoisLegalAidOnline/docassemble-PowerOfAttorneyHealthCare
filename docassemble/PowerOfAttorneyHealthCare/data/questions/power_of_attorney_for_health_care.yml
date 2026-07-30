@@ -2034,6 +2034,16 @@ under: |
 
 
   ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", lang="es", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title_es, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: ¿Fue útil este programa?', color="#181c36", size="md", new_window=True) }
+script: |
+  <script>
+    $(document).on('daPageLoad', function() {
+      function setEmailPlaceholder() {
+        $('.al_email_address input[type="email"]').attr('placeholder', 'Correo electrónico');
+      }
+      // Call it to add the placeholder
+      setEmailPlaceholder();
+    });
+  </script>
 ---
 generic object: ALDocumentBundle
 template: x.send_email_template
