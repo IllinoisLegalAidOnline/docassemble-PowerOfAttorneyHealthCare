@@ -725,6 +725,10 @@ fields:
     default: True
     help: |
       Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
+  - note: |
+      Enter ${agent.name_full()}'s address below.
+    js show if:
+      val('agent.in_america') === true || val('agent.in_america') === false
   - Street address: agent.address.address
     address autocomplete: True
     required: False
@@ -1053,7 +1057,7 @@ fields:
 ---
 id: self remains disposal
 question: |
-  When you pass away, what would you like ${agent.name_full()} to do with your remains?
+  Do you have any wishes about what should happen after you pass away?
 subquestion: |
   If you have a prepaid burial plan or cemetery plot, you should select **I have a specific preference** and enter information regarding the plan or plot.
   
@@ -1077,7 +1081,7 @@ fields:
 language: es
 id: self remains disposal
 question: |
-  Cuando fallezcas, ¿qué te gustaría que ${agent.name_full()} hiciera con tus restos?
+  ¿Tienes algún deseo sobre lo que debería suceder después de que fallezcas?
 subquestion: |
   Si tienes un plan funerario prepagado o una parcela (un lote) en un cementerio, debes seleccionar **Tengo una preferencia específica** e ingresar información sobre el plan o la parcela.
 
@@ -1094,7 +1098,7 @@ fields:
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
         <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
-      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     show if: 
       variable: self_remains_preference
@@ -1110,7 +1114,7 @@ fields:
 ---
 id: other remains disposal
 question: |
-  If ${principal.name_full()} passes away, what would they like ${agent.name_full()} to do with their remains?
+  Does ${principal.name_full()} have any wishes about what should happen after they pass away?
 subquestion: |
   If ${principal.name_full()} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference** and enter information regarding the plan or plot.
   
@@ -1136,7 +1140,7 @@ fields:
 language: es
 id: other remains disposal
 question: |
-  Si ${principal.name_full()} fallece, ¿qué le gustaría que ${agent.name_full()} hiciera con sus restos?
+  ¿Tiene ${principal.name_full()} algún deseo sobre lo que debería suceder después de que fallezca?
 subquestion: |
   Si ${principal.name_full()} tiene un plan funerario prepagado o una parcela en un cementerio, debes seleccionar **Tiene una preferencia específica** e ingresar información sobre el plan o la parcela.
 
@@ -1153,7 +1157,7 @@ fields:
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
         <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
-      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     show if: 
       variable: other_remains_preference
@@ -1293,7 +1297,7 @@ fields:
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
         <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
-      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
       ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) }
@@ -1301,7 +1305,7 @@ fields:
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
         <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
-      <p>Pídele a una persona de confianza que verifique que la traducción sea correcta. Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
       ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) } === false
@@ -2018,7 +2022,7 @@ subquestion: |
 
   &nbsp;
 
-  ${ al_user_bundle_es.send_button_html(show_editable_checkbox=False) }
+  ${ al_user_bundle_es.send_button_html(show_editable_checkbox=False, email_label="") }
 
   **Nota:** El Poder Notarial debe firmarse frente a al menos un testigo para que sea válido.
 
@@ -2346,7 +2350,13 @@ review:
     button: |
       **Your disposition of remains instructions:**
       % if self_remains_preference != "specific":
-      ${self_remains_preference}
+      % if self_remains_preference == "I would prefer a burial for my remains.":
+      I would prefer a burial for my remains.
+      % elif self_remains_preference == "I would prefer my remains be cremated.":
+      I would prefer my remains be cremated.
+      % else:
+      I do not have a preference.
+      % endif
       % else:
       ${self_specific_burial_preference}
       % endif
@@ -2355,7 +2365,13 @@ review:
     button: |
       **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != "specific":
-      ${other_remains_preference}
+      % if other_remains_preference == "They would prefer a burial for their remains.":
+      They would prefer a burial for their remains.
+      % elif other_remains_preference == "They would prefer their remains be cremated.":
+      They would prefer their remains be cremated.
+      % else:
+      They do not have a preference.
+      % endif
       % else:
       ${other_specific_burial_preference}
       % endif
@@ -2363,12 +2379,20 @@ review:
   - Edit: self_organ_donor
     button: |
       **Would you like to donate your organs?**
+      % if self_organ_donor == "I would like my agent to decide this.":
+      I would like my agent to decide this.
+      % else:
       ${self_organ_donor}
+      % endif
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name_full()} like to donate their organs?**
+      % if other_organ_donor == "They would like their agent to decide this.":
+      They would like their agent to decide this.
+      % else:
       ${other_organ_donor}
+      % endif
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
@@ -2671,7 +2695,13 @@ review:
     button: |
       **Your disposition of remains instructions:**
       % if self_remains_preference != "specific":
-      ${self_remains_preference}
+      % if self_remains_preference == "I would prefer a burial for my remains.":
+      I would prefer a burial for my remains.
+      % elif self_remains_preference == "I would prefer my remains be cremated.":
+      I would prefer my remains be cremated.
+      % else:
+      I do not have a preference.
+      % endif
       % else:
       ${self_specific_burial_preference}
       % endif
@@ -2680,7 +2710,13 @@ review:
     button: |
       **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != "specific":
-      ${other_remains_preference}
+      % if other_remains_preference == "They would prefer a burial for their remains.":
+      They would prefer a burial for their remains.
+      % elif other_remains_preference == "They would prefer their remains be cremated.":
+      They would prefer their remains be cremated.
+      % else:
+      They do not have a preference.
+      % endif
       % else:
       ${other_specific_burial_preference}
       % endif
@@ -2688,12 +2724,20 @@ review:
   - Edit: self_organ_donor
     button: |
       **Would you like to donate your organs?**
+      % if self_organ_donor == "I would like my agent to decide this.":
+      I would like my agent to decide this.
+      % else:
       ${self_organ_donor}
+      % endif
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name_full()} like to donate their organs?**
+      % if other_organ_donor == "They would like their agent to decide this.":
+      They would like their agent to decide this.
+      % else:
       ${other_organ_donor}
+      % endif
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
