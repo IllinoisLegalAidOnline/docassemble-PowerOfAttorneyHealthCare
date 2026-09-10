@@ -1097,7 +1097,7 @@ fields:
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     show if: 
@@ -1156,7 +1156,7 @@ fields:
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     show if: 
@@ -1296,7 +1296,7 @@ fields:
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
@@ -1304,7 +1304,7 @@ fields:
   - note: |
       <div class="alert alert-info ilao-info" role="alert">
         <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
-        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Guiado no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
       <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
       </div>
     js show if: |
@@ -1365,9 +1365,9 @@ subquestion: |
 id: delayed revocation
 question: |    
   % if for_yourself == True:
-  Do you want to delay future revocation of this Power of Attorney by 30 days?
+  Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?
   % else:
-  Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?
+  Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?
   % endif
 subquestion: |
   % if for_yourself == True:
@@ -2026,10 +2026,10 @@ subquestion: |
 
   **Nota:** El Poder Notarial debe firmarse frente a al menos un testigo para que sea válido.
 
-  ¡Gracias por usar los Formularios Guiados de ILAO!
+  ¡Gracias por usar los Formularios Fáciles de ILAO!
 under: |
   % if not user_logged_in():
-  [${fa_icon("sign-in-alt", color="#0079d0", size="sm")} **Iniciar sesión**](${url_of('login', next=interview_url())}) o [**crear**](${url_of('register', next=interview_url())}) una cuenta de Formularios Guiados de ILAO para guardar tu progreso (opcional).
+  [${fa_icon("sign-in-alt", color="#0079d0", size="sm")} **Iniciar sesión**](${url_of('login', next=interview_url())}) o [**crear**](${url_of('register', next=interview_url())}) una cuenta de Formularios Fáciles de ILAO para guardar tu progreso (opcional).
   % endif
 
 
@@ -2064,7 +2064,7 @@ subject: |
 content: |
   Tus formularios están adjuntos.
 
-  ¡Gracias por usar los Formularios Guiados de ILAO!
+  ¡Gracias por usar los Formularios Fáciles de ILAO!
 
   [Illinois Legal Aid Online](https://es.illinoislegalaid.org)
 
@@ -2443,9 +2443,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
+      **Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?**
       % else:
-      **Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?**
+      **Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?**      
       % endif
       ${word(yesno(delayed_revocation))}
   - Edit: any_successors
@@ -2788,9 +2788,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
+      **Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?**
       % else:
-      **Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?**
+      **Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?**      
       % endif
       ${word(yesno(delayed_revocation))}
 ---
