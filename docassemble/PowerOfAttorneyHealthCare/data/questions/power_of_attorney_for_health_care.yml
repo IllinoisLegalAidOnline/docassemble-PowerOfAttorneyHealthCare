@@ -53,7 +53,7 @@ sections:
 ---
 language: es
 sections:
-  - section_intro: Inicio
+  - section_intro: Introducción
   - section_principal: Otorgante
   - section_agent: Agente y poderes
   - section_successors: Agentes sucesores
@@ -2016,7 +2016,7 @@ subquestion: |
 
   ${ action_button_html(url_action('review_answers'), label=':edit: Hacer cambios', color='success', size="md") }
 
-  **Nota:** Estos son formularios e instrucciones bilingües en inglés y español. Para obtener formularios solo en inglés, seleccione **English** en el selector de idioma :globe: del menú.
+  **Nota:** Estos son formularios e instrucciones bilingües en inglés y español. Para obtener formularios solo en inglés, selecciona **English** en el selector de idioma :globe: del menú.
 
   ${ al_user_bundle_es.download_list_html() }
 
