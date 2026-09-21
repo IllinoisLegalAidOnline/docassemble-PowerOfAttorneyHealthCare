@@ -1,6 +1,17 @@
+translations:
+  - poa_hc_es.xlsx
+---
+initial: True
+code: |
+  al_interview_languages = ["en", "es"]
+---
 metadata:
-  title: Power of Attorney for Health Care
-  short title: POA health care
+  title: 
+    "en*": Power of Attorney for Health Care
+    "es": Poder Notarial para el Cuidado de la Salud
+  short title: 
+    "en*": POA health care
+    "es": Poder médico
   comment: This program helps you create documents to give another person access or control of your health care decisions.
   authors:
     - Vivian McNaughton
@@ -21,36 +32,44 @@ objects:
   - witnesses: ALPeopleList
   - success_strings: DAList
   - preview: DAStaticFile.using(filename="power_of_planning.pdf")
+  - preview_es: DAStaticFile.using(filename="power_of_planning_es.pdf")
 ---
 code: |
   ilao_easy_form_title = "Power of Attorney for Health Care"
   ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/power-attorney-health-care"
+  ilao_easy_form_title_es = "Poder Notarial para el Cuidado de la Salud"
+  ilao_easy_form_url_es = "https://es.illinoislegalaid.org/legal-information/power-attorney-health-care"
   github_user = 'IllinoisLegalAidOnline'
   github_repo_name = 'docassemble-PowerOfAttorneyHealthCare'
-#---
-#sections:
-#  - review_answers: Review your answers
 ---
 # Road map
 sections:
   - section_intro: Start
-  #- section_qualify: Do you qualify?
   - section_principal: Principal
   - section_agent: Agent and powers
   - section_successors: Successor agents
   - section_witness: Witnesses
   - section_download: Download
 ---
+language: es
+sections:
+  - section_intro: Introducción
+  - section_principal: Otorgante
+  - section_agent: Agente y poderes
+  - section_successors: Agentes sucesores
+  - section_witness: Testigos
+  - section_download: Descargar
+---
 # interview order block
 mandatory: True
 code: |
   nav.set_section('section_intro')
+  set_progress(1)
   sees_nav_bar
   snapshot_start
+  how_to_use
   set_progress(5)
   about_poa
-  about_agents
-  how_to_use
   accept_terms
   next_steps
   nav.set_section('section_principal')
@@ -68,6 +87,7 @@ code: |
   if agent.in_america == False:
     agent.intl_address_full
   set_progress(40)
+  about_agents
   agent.phone_number
   is_guardian
   if when_authorize == "do_not":
@@ -76,7 +96,6 @@ code: |
     health_records
   if quality_of_life == "do_not":
     quality_warning
-  set_progress(60)
   if for_yourself == True:
     self_remains_preference
     self_organ_donor
@@ -88,6 +107,7 @@ code: |
   revocation_info
   delayed_revocation
   nav.set_section('section_successors')
+  set_progress(60)
   if any_successors == True:
     successors.gather()
     #show_successors
@@ -130,6 +150,11 @@ code: |
   stuff_to_snapshot['user_is_principal'] = showifdef('for_yourself') 
 
   stuff_to_snapshot['video_path'] = showifdef('snapshot_path')
+
+  try:
+    stuff_to_snapshot['language'] = get_language()
+  except:
+    pass
   
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
@@ -165,8 +190,14 @@ id: welcome
 question: |
   Power of Attorney for Health Care
 subquestion: |
+  % if get_language() == 'en':
+  :globe: English | [Español](${ interview_url(new_session=1, lang="es") })
+  % else:
+  :globe: [English](${ interview_url(new_session=1, lang="en") }) | Español
+  % endif
+   
   Welcome to Illinois Legal Aid Online's **Power of Attorney for Health Care** Easy Form.
-
+  
   This program helps you make documents that give someone you trust power of attorney to make decisions about your health care. This means they can make choices about your health care when you cannot. You can also let them make choices about your health care earlier, if you choose.
 
   This program has videos with information about making a Power of Attorney for Health Care. You do not have to watch them, but you may find them helpful.
@@ -181,6 +212,12 @@ subquestion: |
   
   To learn more, read ILAO's article about [**Power of Attorney for Health Care basics**](https://www.illinoislegalaid.org/legal-information/setting-power-attorney-healthcare).
 field: sees_nav_bar
+css: |
+  <style>
+    a {
+      font-weight:bold; 
+    }
+  </style>
 ---
 id: instructions
 continue button field: how_to_use
@@ -209,21 +246,17 @@ terms:
     A **successor agent** is a back-up agent. They would have power of attorney if the first dies, becomes incompetent, quits, or refuses to act as your power of attorney agent.
 ---
 template: help_example
-
 subject: |
-
   **You can expand sections like this to show more information.**
-
 content: |  
-
   This is an example of help. Click again to hide.
 ---
 id: next steps
 continue button field: next_steps
 question: |
-  Your next steps
+  After you download your form
 subquestion: |
-    After you download your forms, you will need to sign the form in the front of a witness. The witness will also need to sign the form. You do not need to know who the witness will be to use this program.
+    Once you download and print your form, you will need to sign it in front of a witness. The witness will also need to sign the form. You do not need to know who the witness will be to use this program.
     
     After the form is signed, you will want to give copies of the power of attorney to your agent as well as your health care providers. Your forms will include instructions with more information.
     
@@ -361,6 +394,46 @@ code: |
     am_are = "are"
     you_they = "they"
 ---
+language: es
+reconsider: True
+code: |
+  if for_yourself:
+    my_their = "mi"
+    my_subject = "mi"
+    your_their = "tu"
+    your_subject = "tu"
+    do_does = "haces"
+    you_subject = "tú"
+    i_subject = "yo"
+    myself_their_self = "mí mismo"
+    yourself_their_self = "tú mismo"
+    am_is = "eres"
+    have_has = "tienes"
+    i_they = "yo"
+    me_subject = "mi"
+    me_them = "me"
+    am_are = "estás"
+    you_they = "tú"
+  else:
+    my_their = "su"
+    my_subject = principal.name_full()
+    my_subject += "'s"
+    your_subject = principal.name_full()
+    your_subject += "'s"
+    your_their = "su"
+    you_subject = principal.name_full()
+    i_subject = principal.name_full()
+    do_does = " haces"
+    myself_their_self = "sí mismo"
+    yourself_their_self = "tú mismo"
+    am_is = "eres"
+    have_has = "tienes"
+    i_they = "ellos"
+    me_subject = principal.name_full()
+    me_them = "ellos"
+    am_are = "están"
+    you_they = "ellos"
+---
 id: for yourself
 question: |
   Are you making these forms for yourself?
@@ -370,7 +443,10 @@ subquestion: |
   If you are making these forms for someone else, that person will be the principal.
 fields:
   - no label: for_yourself
-    datatype: yesnoradio
+    datatype: radio
+    choices:
+      - "Yes, I'm making a Power of Attorney for myself.": True
+      - "No, I'm helping someone else make a Power of Attorney.": False
 terms:
   - principal: |
        The **principal** is the person who chooses someone they trust to make decisions about their health care. If this is your document, you are the principal. 
@@ -400,6 +476,14 @@ code: |
   else:
     i_they = "they"
 ---
+language: es
+reconsider: True
+code: |
+  if for_yourself:
+    i_they = "yo"
+  else:
+    i_they = "ellos"
+---
 id: principal name
 question: |
   % if for_yourself == True:
@@ -420,7 +504,7 @@ subquestion: |
   
   You can then enter that name in the **Additional name** field.
 
-  ${collapse_template(changed_name)}
+  ${collapse_template(changed_name_other)}
   % else:
   You should enter your legal name on your government-issued identification. 
 
@@ -448,6 +532,64 @@ fields:
     js show if:
       val('also_known_as') === true
 ---
+language: es
+id: principal name
+question: |
+  % if for_yourself == True:
+  ¿Cuál es tu nombre?
+  % else:
+  ¿Cómo se llama el otorgante?
+  % endif
+subquestion: |
+  % if for_yourself == False:
+  El otorgante es la persona que elige a un agente para tomar decisiones sobre su tratamiento médico.
+  
+  Debes ingresar su nombre legal tal como aparece en su identificación oficial emitida por el gobierno.
+  
+  Es posible que debas hacer clic en **Tiene otro nombre** si:
+  
+  * Usa un nombre distinto de su nombre legal, o
+  * Ha cambiado su nombre y también tiene un nombre legal anterior que no aparece en su identificación.
+  
+  Luego puedes ingresar ese nombre en el campo **Nombre adicional**.
+  
+  ${collapse_template(changed_name_other)}
+  % else:
+  Debes ingresar tu nombre legal tal como aparece en tu identificación oficial emitida por el gobierno.
+  
+  Es posible que debas hacer clic en **Tengo otro nombre** si:
+  
+  * Usas un nombre distinto a tu nombre legal, o
+  * Has cambiado tu nombre y también tienes un nombre legal anterior que no aparece en tu identificación.
+  
+  Luego puedes ingresar ese nombre en el campo **Nombre adicional**.
+  
+  ${collapse_template(changed_name)}
+  % endif
+fields:
+  - Nombre: principal.name.first
+  - Segundo nombre: principal.name.middle
+    required: False
+  - Apellido: principal.name.last
+  - "Tengo otro nombre.": also_known_as
+    datatype: yesnowide
+    show if:
+      code: |
+        for_yourself
+  - "Tiene otro nombre.": also_known_as
+    datatype: yesnowide
+    show if:
+      code: |
+        not for_yourself
+  - Nombre adicional: principal.aka_name
+    js show if:
+      val('also_known_as') === true
+  - ¿El nombre adicional corresponde a un nombre legal anterior?: formerly_or_also
+    datatype: yesnoradio
+    js show if:
+      val('also_known_as') === true
+
+---
 template: changed_name
 subject: |
   **What if I have gotten a legal name change?**
@@ -455,6 +597,32 @@ content: |
   If you have legally changed your name, you should click **I have another name** and list your old legal name in the **Additional name** field. This will list both names on your form.
 
   This is important to do if you have medical records or other documents that use your old name.
+---
+language: es
+template: changed_name
+subject: |
+  **¿Qué pasa si he cambiado legalmente mi nombre?**
+content: |
+  Si has cambiado legalmente tu nombre, debes hacer clic en **Tengo otro nombre** y escribir tu nombre legal anterior en el campo **Nombre adicional**. Esto hará que ambos nombres aparezcan en tu formulario.
+
+  Es importante hacerlo si tienes registros médicos u otros documentos que usan tu nombre anterior.
+---
+template: changed_name_other
+subject: |
+  **What if they have a legal name change?**
+content: |
+  If they have legally changed their name, you should click **They have another name** and list their old legal name in the **Additional name** field. This will list both names on the form.
+
+  This is important to do if they have medical records or other documents that use their old name.
+---
+language: es
+template: changed_name_other
+subject: |
+  **¿Qué pasa si el otorgante ha cambiado legalmente su nombre?**
+content: |
+  Si el otorgante ha cambiado legalmente su nombre, debes hacer clic en **Tiene otro nombre** y escribir su nombre legal anterior en el campo **Nombre adicional**. Esto hará que ambos nombres aparezcan en el formulario.
+
+  Es importante hacerlo si el otorgante tiene registros médicos u otros documentos que usan su nombre anterior.
 ---
 #id: formerly or also
 #question: |
@@ -500,6 +668,7 @@ question: |
 fields:
   - Street address: principal.address.address
     address autocomplete: True
+    hint: ${ word("Enter a location") }
   - Address line 2: principal.address.unit
     required: False
   - City: principal.address.city
@@ -556,9 +725,14 @@ fields:
     default: True
     help: |
       Click **No** if you want to list an address outside the United States. You should enter the international address using the English alphabet.
+  - note: |
+      Enter ${agent.name_full()}'s address below.
+    js show if:
+      val('agent.in_america') === true || val('agent.in_america') === false
   - Street address: agent.address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: agent.in_america
   - Address line 2: agent.address.unit
     required: False
@@ -586,7 +760,7 @@ template: intl_address_help
 subject: |
   **Does the agent have to live in the United States or be a US citizen?**
 content: |
-  No. You are able to list someone outside of the United States as the agent. The agent does not need to be a United States citizen. However, there may issues if a bank or financial organization is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
+  No. You are able to list someone outside of the United States as the agent. The agent does not need to be a United States citizen. However, there may be issues if a doctor or health care provider is unable to reach them. You may want to ask a lawyer for advice. Use [**Get Legal Help**](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
   
   For international addresses, there will be space for two lines to enter the address. You should enter the international address using the English alphabet.
 ---
@@ -602,6 +776,7 @@ subquestion: |
 fields:
   - Phone number: agent.phone_number
     datatype: al_international_phone
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' ) }
 ---
 id: agent as guardian
 question: |
@@ -628,12 +803,16 @@ template: video_agent_when
 subject: |
   **Video: When do you want to start your Power of Attorney?**
 content: |
+  % if get_language() == "es":
+  [YOUTUBE ztiRHBkDYSg]
+  % else:
   % if user_path == "Shirley":
   [YOUTUBE nKyck6-_OAM]
   % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE 65BgeawonKg]
   % elif user_path == "Lisa":
   [YOUTUBE kaobW4v0wnA]
+  % endif
   % endif
 ---
 id: agent authorization you
@@ -750,12 +929,16 @@ template: video_life_quality
 subject: |
   **Video: Quality of life and length of life**
 content: |
+  % if get_language() == "es":
+  [YOUTUBE 8ttJ_YzzCkc]
+  % else:  
   % if user_path == "Shirley":
   [YOUTUBE vb2lv4wQjho]
   % elif user_path == "Frederico" or user_path == "Federico":
   [YOUTUBE -TbZPQbf5GY]
   % elif user_path == "Lisa":
   [YOUTUBE LAW4i_wSREM]
+  % endif
   % endif
 ---
 id: quality of life you
@@ -874,7 +1057,7 @@ fields:
 ---
 id: self remains disposal
 question: |
-  When you pass away, what would you like ${agent.name_full()} to do with your remains?
+  Do you have any wishes about what should happen after you pass away?
 subquestion: |
   If you have a prepaid burial plan or cemetery plot, you should select **I have a specific preference** and enter information regarding the plan or plot.
   
@@ -895,9 +1078,43 @@ fields:
       variable: self_remains_preference
       is: "specific" 
 ---
+language: es
+id: self remains disposal
+question: |
+  ¿Tienes algún deseo sobre lo que debería suceder después de que fallezcas?
+subquestion: |
+  Si tienes un plan funerario prepagado o una parcela (un lote) en un cementerio, debes seleccionar **Tengo una preferencia específica** e ingresar información sobre el plan o la parcela.
+
+  Si seleccionas **No tengo una preferencia**, ${agent.name_full()} decidirá qué hacer con tus restos.
+fields: 
+  - Preferencia: self_remains_preference
+    input type: radio
+    choices: 
+    - Prefiero que mis restos sean enterrados.: I would prefer a burial for my remains.
+    - Prefiero que mis restos sean cremados.: I would prefer my remains be cremated.
+    - Tengo una preferencia específica. (Explica abajo): specific
+    - No tengo una preferencia.: I do not have a preference.
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    show if: 
+      variable: self_remains_preference
+      is: "specific" 
+  - Preferencia específica[NEWLINE]**(En inglés)**: self_specific_burial_preference
+    input type: area
+    rows: 7
+    maxlength: 250
+    show if: 
+      variable: self_remains_preference
+      is: "specific" 
+
+---
 id: other remains disposal
 question: |
-  If ${principal.name_full()} passes away, what would they like ${agent.name_full()} to do with their remains?
+  Does ${principal.name_full()} have any wishes about what should happen after they pass away?
 subquestion: |
   If ${principal.name_full()} has a prepaid burial plan or cemetery plot, you should select **They have a specific preference** and enter information regarding the plan or plot.
   
@@ -919,6 +1136,42 @@ fields:
     show if: 
       variable: other_remains_preference
       is: "specific" 
+---
+language: es
+id: other remains disposal
+question: |
+  ¿Tiene ${principal.name_full()} algún deseo sobre lo que debería suceder después de que fallezca?
+subquestion: |
+  Si ${principal.name_full()} tiene un plan funerario prepagado o una parcela en un cementerio, debes seleccionar **Tiene una preferencia específica** e ingresar información sobre el plan o la parcela.
+
+  Si seleccionas **No tiene una preferencia**, ${agent.name_full()} decidirá qué hacer con los restos de ${principal.name_full()}.
+fields: 
+  - Preferencia: other_remains_preference
+    input type: radio
+    choices: 
+    - Preferiría que sus restos fueran enterrados.: They would prefer a burial for their remains.
+    - Preferiría que sus restos fueran cremados.: They would prefer their remains be cremated.
+    - Tiene una preferencia específica. (Explica abajo): specific
+    - No tiene una preferencia.: They do not have a preference.
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    show if: 
+      variable: other_remains_preference
+      is: "specific" 
+  - Preferencia específica[NEWLINE]**(En inglés)**: other_specific_burial_preference
+    input type: area
+    maxlength: 250
+    rows: 7
+    help: |
+      Esta respuesta debe escribirse en primera persona. Por ejemplo: "I would prefer a natural burial for my remains."
+    show if: 
+      variable: other_remains_preference
+      is: "specific"
+
 ---
 id: self organ donor
 question: |
@@ -942,12 +1195,7 @@ fields:
       - No
       - They would like their agent to decide this.
 ---
-depends on: 
-  - for_yourself
-  - principal.name.first
-  - principal.name.middle
-  - principal.name.last
-  - principal.name.suffix
+reconsider: True
 code: |
   if for_yourself:
     my_their = "my"
@@ -958,6 +1206,20 @@ code: |
     subject_do_does = principal.name_full()
     subject_do_does += " does"
     do_does_subject = "does "
+    do_does_subject += principal.name_full()
+---
+language: es
+reconsider: True
+code: |
+  if for_yourself:
+    my_their = "mi"
+    subject_do_does = "Yo sí"
+    do_does_subject = "haces tú"
+  else:
+    my_their = "su"
+    subject_do_does = principal.name_full()
+    subject_do_does += " haces"
+    do_does_subject = "haces "
     do_does_subject += principal.name_full()
 ---
 id: other agent limits
@@ -978,7 +1240,7 @@ fields:
       - ${subject_do_does} not authorize donation of ${my_their} remains to science.: no_science
       - ${subject_do_does} not authorize starting certain treatments. (Explain below): no_start
       - ${subject_do_does} not authorize ending certain treatments. (Explain below): no_end
-      - Other limits: other
+      - Other limits (Explain below): other
   - What treatments ${do_does_subject} not want to start?: no_start_text
     input type: area
     rows: 7
@@ -997,6 +1259,89 @@ fields:
 validation code: |
     if limit_checkboxes.all_false():
       validation_error("You need to select at least one choice.", field="limit_checkboxes")
+---
+language: es
+id: other agent limits
+question: |
+  % if for_yourself == True:
+  ¿Qué límites o reglas especiales quieres incluir?
+  % else:
+  ¿Qué límites o reglas especiales quiere incluir ${principal.name_full()}?
+  % endif
+subquestion: |
+  Si no deseas incluir estos límites, haz clic en **Atrás** y cambia tu respuesta anterior.
+fields:
+  - no label: limit_checkboxes
+    datatype: checkboxes
+    none of the above: False
+    choices:
+      - "Yo no autorizo una autopsia.": no_autopsy
+      - "Yo no autorizo la donación de ${my_their} restos a la ciencia.": no_science
+      - "Yo no autorizo que se inicien ciertos tratamientos. (Explica abajo)": no_start
+      - "Yo no autorizo que se suspendan ciertos tratamientos. (Explica abajo)": no_end
+      - Otros límites (Explica abajo): other
+    show if:
+      code: for_yourself      
+  - no label: limit_checkboxes
+    datatype: checkboxes
+    none of the above: False
+    choices:
+      - "${ principal.name_full() } no autoriza una autopsia.": no_autopsy
+      - "${ principal.name_full() } no autoriza la donación de ${my_their} restos a la ciencia.": no_science
+      - "${ principal.name_full() } no autoriza que se inicien ciertos tratamientos. (Explica abajo)": no_start
+      - "${ principal.name_full() } no autoriza que se suspendan ciertos tratamientos. (Explica abajo)": no_end
+      - Otros límites (Explica abajo): other
+    show if:
+      code: not for_yourself
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir tus deseos. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    js show if: |
+      ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) }
+  - note: |
+      <div class="alert alert-info ilao-info" role="alert">
+        <h6 class="alert-heading">Escribe las respuestas en inglés</h6>
+        <p><strong>Importante:</strong> Las respuestas que escribas aquí deben estar en inglés para que puedan usarse en Illinois. Este Formulario Fácil no traduce por ti. Es muy importante que lo que escribas sea claro y esté en inglés para que las instituciones puedan seguir los deseos de ${ principal.name_full() }. Si escribes las respuestas en español o en otro idioma que no sea inglés, es posible que las instituciones no puedan seguir esos deseos.</p>
+      <p><strong>Pídele a una persona de confianza que verifique que la traducción sea correcta.</strong> Las traducciones en línea o generadas por inteligencia artificial pueden contener errores.</p>
+      </div>
+    js show if: |
+      ( val("limit_checkboxes['no_start']") || val("limit_checkboxes['no_end']") || val("limit_checkboxes['other']") ) && ${ json.dumps(for_yourself) } === false
+  - "¿Qué tratamientos no quieres que se inicien?[NEWLINE]**(En inglés)**": no_start_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_start']") && ${ json.dumps(for_yourself) }      
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se inicien?[NEWLINE]**(En inglés)**": no_start_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_start']") && ${ json.dumps(for_yourself) } === false
+  - "¿Qué tratamientos no quieres que se suspendan?[NEWLINE]**(En inglés)**": no_end_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_end']") && ${ json.dumps(for_yourself) }      
+  - "¿Qué tratamientos no quiere ${ principal.name_full() } que se suspendan?[NEWLINE]**(En inglés)**": no_end_text
+    input type: area
+    rows: 7
+    maxlength: 250
+    js show if: |
+      val("limit_checkboxes['no_end']") && ${ json.dumps(for_yourself) } === false
+  - Otros límites[NEWLINE]**(En inglés)**: other_limits
+    input type: area
+    rows: 7
+    show if: limit_checkboxes['other']
+    maxlength: 250
+validation code: |
+    if limit_checkboxes.all_false():
+      validation_error("Debes seleccionar al menos una opción.", field="limit_checkboxes")
+
 ---
 id: revocation info
 continue button field: revocation_info
@@ -1018,11 +1363,11 @@ subquestion: |
   % endif
 ---
 id: delayed revocation
-question: |
+question: |    
   % if for_yourself == True:
-  Do you want to delay future revocation of this Power of Attorney?
+  Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?
   % else:
-  Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?
+  Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?
   % endif
 subquestion: |
   % if for_yourself == True:
@@ -1047,7 +1392,7 @@ terms:
   revoke: |
     To **revoke** a Power of Attorney means to undo, destroy, or void it.
   legal capacity: |
-    You have the **legal capacity** to revoke a Power of Attorney for Health Care if you understand what you are signing and what it means for your future.
+    **Legal capacity** means a person is mentally able to understand what they are signing and understand what it means for their future.
 ---
 template: video_cooling
 subject: |
@@ -1233,6 +1578,7 @@ fields:
   - Street address: successors[i].address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: successors[i].in_america
   - Address line 2: successors[i].address.unit
     required: False
@@ -1277,6 +1623,7 @@ subquestion: |
   % endif
 fields:
   - Phone number: successors[i].phone_number
+    alInvalidInputMessage: ${ word( 'Please check the phone number and try again. If the number is from outside the United States, enter "+" followed by the country code and phone number.' ) }
     datatype: al_international_phone
 ---
 id: witness info
@@ -1334,6 +1681,26 @@ subquestion: |
   If you ever travel to another state, it would be helpful for your Power of Attorney to be notarized with two witness signatures.
   
   It is still worth making a Power of Attorney even with just one witness signature.
+---
+language: es
+id: notary info
+continue button field: notary_info
+question: |
+  Acerca de la notarización
+subquestion: |
+  % if for_yourself == True:
+  Illinois no exige que un Poder Notarial para el Cuidado de la Salud sea notarizado, pero algunos otros estados sí requieren notarización. Es posible que desees notarizar tu Poder Notarial. Puedes encontrar un notario público en un banco o casa de cambio, y en algunas bibliotecas.
+
+  Si alguna vez viajas a otro estado, puede ser útil que tu Poder Notarial esté notarizado y tenga dos firmas de testigos.
+
+  Aun así, vale la pena hacer un Poder Notarial incluso con la firma de un solo testigo.
+  % else:
+  Illinois no exige que un Poder Notarial para el Cuidado de la Salud sea notarizado, pero algunos otros estados sí requieren notarización. Es posible que el otorgante desee notarizar su Poder Notarial. Puedes encontrar un notario público en un banco o casa de cambio, y en algunas bibliotecas.
+
+  Si el otorgante alguna vez viaja a otro estado, puede ser útil que su Poder Notarial esté notarizado y tenga dos firmas de testigos.
+
+  Aun así, vale la pena hacer un Poder Notarial incluso con la firma de un solo testigo.
+  % endif  
 ---
 id: witness known
 question: |
@@ -1410,6 +1777,7 @@ fields:
   - Street address: witnesses[i].address.address
     address autocomplete: True
     required: False
+    hint: ${ word("Enter a location") }
     show if: witnesses[i].in_america
   - Address line 2: witnesses[i].address.unit
     required: False
@@ -1505,7 +1873,15 @@ code: |
     else:
       return successors[index_number].name_full() + ", " + successors[index_number].intl_address_1 + ", " + successors[index_number].intl_address_2
 ---
-id: completion reminder
+code: |
+  def successor_address_string(person):
+    if person.in_america:
+      return person.address.on_one_line(bare=True)
+    else:
+      return person.intl_address_1 + ", " + person.intl_address_2
+---
+id: completion reminder new
+continue button field: completion_reminder
 question: |
   Reminder about unanswered questions
 subquestion: |
@@ -1534,7 +1910,38 @@ subquestion: |
   % endif
   % endif
   % endif
+---
+language: es
+id: completion reminder
 continue button field: completion_reminder
+question: |
+  Recordatorio sobre preguntas sin responder
+subquestion: |
+  % if for_yourself == True:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  Has dejado algunas decisiones para más adelante. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esas decisiones antes de firmarlo.
+  % else:
+  No has decidido si quieres que ${agent.name_full()} priorice la calidad de tu vida o la duración de tu vida. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  No has decidido cuándo quieres que ${agent.name_full()} comience a tomar decisiones por ti. Es posible que quieras revisar tu formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % endif
+  % else:
+  % if quality_of_life == "do_not":
+  % if when_authorize == "do_not":
+  ${principal.name_full()} ha dejado algunas decisiones para más adelante. Es posible que quiera revisar su formulario de Poder Notarial para el Cuidado de la Salud y tomar esas decisiones antes de firmarlo.
+  % else:
+  ${principal.name_full()} no ha decidido si quiere que ${agent.name_full()} priorice la calidad de su vida o la duración de su vida. Es posible que quiera revisar su formulario de Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % else:
+  % if when_authorize == "do_not":
+  ${principal.name_full()} no ha decidido cuándo quiere que ${agent.name_full()} empiece a tomar decisiones en su nombre. Es posible que quiera revisar su Poder Notarial para el Cuidado de la Salud y tomar esa decisión antes de firmarlo.
+  % endif
+  % endif
+  % endif
 ---
 id: forms assembling
 continue button field: forms_assembling
@@ -1547,13 +1954,24 @@ subquestion: |
   
   [NEWLINE]
 ---
-#Add Power of Planning Information to templates
+language: es
+id: forms assembling
+continue button field: forms_assembling
+question: |
+  Casi listo
+subquestion: |
+  Después de hacer clic en **Continuar**, el programa puede tardar unos momentos en terminar de preparar tus formularios.
+  
+  ###### No necesitas actualizar tu pantalla. ¡Ánimo!
+  
+  [NEWLINE]
+---
 id: get docs screen
 event: get_docs_screen
 question: |
   Download
 subquestion: |
-  Your forms are ready. View and download your forms below. Click **Make changes** to fix any mistakes.
+  Your forms are ready. View and download your forms below. Click **:edit: Make changes** to fix any mistakes.
 
   % if user_path == "Shirley":
   [YOUTUBE NE0faXuz5v4]
@@ -1562,17 +1980,17 @@ subquestion: |
   % elif user_path == "Lisa":
   [YOUTUBE F2QbdrhcZ0g]
   % endif
-  
+
   Read the instructions to learn what to do next.
-  
-  ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size="md") }
 
-  ${ al_user_bundle.download_list_html() }
- 
-  &nbsp;
+  ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size='md') }
 
-  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
-  
+  **Note:** These forms and instructions are in English. To get bilingual English and Spanish forms, select **Español** from the :globe: language picker in the menu.
+
+  ${ al_user_bundle.download_list_html(view_label='View', download_label='Download', zip_label='Download all') }
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False, label='Send') }
+
   **Note:** The Power of Attorney needs to be signed in front of at least one witness to become official.
 
   Thank you for using ILAO Easy Forms!
@@ -1582,7 +2000,50 @@ under: |
   % endif
 
  
-  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: Was this program helpful?', color="#181c36", size="md", new_window=True) }
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=word(':comment: Was this program helpful?'), color="#181c36", size="md", new_window=True) }
+---
+language: es
+id: get docs screen
+event: get_docs_screen
+question: |
+  Descargar
+subquestion: |
+  Tus formularios están listos. Puedes verlos y descargarlos abajo. Haz clic en **:edit: Hacer cambios** para corregir cualquier error.
+
+  [YOUTUBE vuN6YBYEh6k]
+
+  Lee las instrucciones para saber qué hacer después.
+
+  ${ action_button_html(url_action('review_answers'), label=':edit: Hacer cambios', color='success', size="md") }
+
+  **Nota:** Estos son formularios e instrucciones bilingües en inglés y español. Para obtener formularios solo en inglés, selecciona **English** en el selector de idioma :globe: del menú.
+
+  ${ al_user_bundle_es.download_list_html() }
+
+  &nbsp;
+
+  ${ al_user_bundle_es.send_button_html(show_editable_checkbox=False, email_label="") }
+
+  **Nota:** El Poder Notarial debe firmarse frente a al menos un testigo para que sea válido.
+
+  ¡Gracias por usar los Formularios Fáciles de ILAO!
+under: |
+  % if not user_logged_in():
+  [${fa_icon("sign-in-alt", color="#0079d0", size="sm")} **Iniciar sesión**](${url_of('login', next=interview_url())}) o [**crear**](${url_of('register', next=interview_url())}) una cuenta de Formularios Fáciles de ILAO para guardar tu progreso (opcional).
+  % endif
+
+
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", lang="es", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title_es, easy_form_page=current_context().question_id, easy_form_variable=current_context().variable, local=False,reset=1), label=':comment: ¿Fue útil este programa?', color="#181c36", size="md", new_window=True) }
+script: |
+  <script>
+    $(document).on('daPageLoad', function() {
+      function setEmailPlaceholder() {
+        $('.al_email_address input[type="email"]').attr('placeholder', 'Correo electrónico');
+      }
+      // Call it to add the placeholder
+      setEmailPlaceholder();
+    });
+  </script>
 ---
 generic object: ALDocumentBundle
 template: x.send_email_template
@@ -1595,11 +2056,63 @@ content: |
   
   [Illinois Legal Aid Online](https://www.illinoislegalaid.org)
 ---
+language: es
+generic object: ALDocumentBundle
+template: x.send_email_template
+subject: |
+  Poder Notarial para el Cuidado de la Salud
+content: |
+  Tus formularios están adjuntos.
+
+  ¡Gracias por usar los Formularios Fáciles de ILAO!
+
+  [Illinois Legal Aid Online](https://es.illinoislegalaid.org)
+
+---
+objects:
+  - instructions: ALDocument.using(title="Instructions and next steps", filename="instructions", has_addendum=False)
+  - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", has_addendum=False)
+  - pop_powers: ALDocument.using(title="Information on Powers of Attorney", filename="pop_powers", has_addendum=False)
+  - instructions_es: ALDocument.using(title="Instrucciones y próximos pasos", filename="Instrucciones", has_addendum=False)
+  - poa_health_care_es: ALDocument.using(title="Poder Notarial para el Cuidado de la Salud", filename="Poder Notarial para el Cuidado de la Salud", has_addendum=False)
+  - pop_powers_es: ALDocument.using(title="Información sobre los poderes notariales", filename="Información sobre los poderes notariales", has_addendum=False)
+---
+code: |
+  instructions.enabled = False
+  poa_health_care.enabled = False
+  pop_powers.enabled = False
+  instructions_es.enabled = False
+  poa_health_care_es.enabled = False
+  pop_powers_es.enabled = False
+
+  if get_language() == "es":
+    instructions_es.enabled = True
+    poa_health_care_es.enabled = True
+    pop_powers_es.enabled = True
+  else:
+    instructions.enabled = True
+    poa_health_care.enabled = True
+    pop_powers.enabled = True    
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title=word("All forms"))
+  - al_user_bundle_es: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers, instructions_es, poa_health_care_es, pop_powers_es], filename="power_of_attorney_health_care.pdf", title=word("Todos los formularios"))
+---
 attachment:
   - name: Instructions
     variable name: instructions[i]
     filename: instructions_for_poa_health_care
     pdf template file: cdel_poa_health_instructions.pdf
+    skip undefined: True
+    editable: False
+    fields:
+      - "fake": ${""}
+---
+attachment:
+  - name: Instrucciones
+    variable name: instructions_es[i]
+    filename: instrucciones_bilingue
+    pdf template file: instructions_es_and_en.pdf
     skip undefined: True
     editable: False
     fields:
@@ -1616,41 +2129,10 @@ attachment:
       - "fake": ${""}
 ---
 attachment:
-  - name: Power of Planning - Memory Loss
-    variable name: pop_memory[i]
-    filename: pop_memory
-    pdf template file: POP_-_Memory_Loss_&_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - Caregivers
-    variable name: pop_caregivers[i]
-    filename: pop_caregivers
-    pdf template file: POP_-_Caregivers.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-
-attachment:
-  - name: Power of Planning - Other Advance Planning
-    variable name: pop_other[i]
-    filename: pop_other
-    pdf template file: POP_-_Other_Advance_Planning.pdf
-    skip undefined: True
-    editable: False
-    fields:
-      - "fake": ${""}
----
-attachment:
-  - name: Power of Planning - What is Advance Planning
-    variable name: pop_what[i]
-    filename: pop_what
-    pdf template file: POP_-_What_is_Advance_Planning.pdf
+  - name: Poder Notarial página de información
+    variable name: pop_powers_es[i]
+    filename: informacion_poderes_bilingue
+    pdf template file: info_sheet_es_and_en.pdf
     skip undefined: True
     editable: False
     fields:
@@ -1736,24 +2218,15 @@ attachment:
           Dated: _________________ 	 Signature: ________________________________ 
                                                                                                                     Notary Public
           My commission expires: _____________________________________________ 
+---
+attachment:
+  - name: Poder Notarial para el Cuidado de la Salud
+    variable name: poa_health_care_es[i]
+    filename: poder_notarial_salud_bilingue
+    docx template file: poa_health_care_bilingual_formatted.docx
+    # docx template file: poa_health_care_bilingual.docx
 
----
-objects:
-  - poa_health_care: ALDocument.using(title="Power of Attorney for Health Care", filename="poa_health_care", enabled=True, has_addendum=False)
-  - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
-  - planning: ALDocument.using(title="Power of Planning", filename="power_of_planning", enabled=True, has_addendum=False)
-  - pop_caregivers: ALDocument.using(title="Power of Planning - Caregivers", filename="pop_caregivers", enabled=True, has_addendum=False)
-  - pop_powers: ALDocument.using(title="Power of Attorney info sheet", filename="pop_powers", enabled=True, has_addendum=False)
-  - pop_memory: ALDocument.using(title="Power of Planning - Memory Loss & Advance Planning", filename="pop_memory", enabled=True, has_addendum=False)
-  - pop_what: ALDocument.using(title="Power of Planning - What is Advance Planning", filename="pop_what", enabled=True, has_addendum=False)
-  - pop_other: ALDocument.using(title="Power of Planning - Other Advance Planning", filename="pop_other", enabled=True, has_addendum=False)
----
-objects:
-  - pop_bundle: ALDocumentBundle.using(elements=[pop_powers, pop_caregivers, pop_memory, pop_other], filename="power_of_planning_information", enabled=True, title= "Info sheets")
----
-objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, poa_health_care, pop_powers], filename="power_of_attorney_health_care.pdf", title="All forms")
-  - al_court_bundle: ALDocumentBundle.using(elements=[poa_health_care], filename="power_of_attorney_health_care.pdf", title="All forms")
+
 ---
 id: review screen
 event: review_answers
@@ -1887,7 +2360,13 @@ review:
     button: |
       **Your disposition of remains instructions:**
       % if self_remains_preference != "specific":
-      ${self_remains_preference}
+      % if self_remains_preference == "I would prefer a burial for my remains.":
+      I would prefer a burial for my remains.
+      % elif self_remains_preference == "I would prefer my remains be cremated.":
+      I would prefer my remains be cremated.
+      % else:
+      I do not have a preference.
+      % endif
       % else:
       ${self_specific_burial_preference}
       % endif
@@ -1896,7 +2375,13 @@ review:
     button: |
       **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != "specific":
-      ${other_remains_preference}
+      % if other_remains_preference == "They would prefer a burial for their remains.":
+      They would prefer a burial for their remains.
+      % elif other_remains_preference == "They would prefer their remains be cremated.":
+      They would prefer their remains be cremated.
+      % else:
+      They do not have a preference.
+      % endif
       % else:
       ${other_specific_burial_preference}
       % endif
@@ -1904,12 +2389,20 @@ review:
   - Edit: self_organ_donor
     button: |
       **Would you like to donate your organs?**
+      % if self_organ_donor == "I would like my agent to decide this.":
+      I would like my agent to decide this.
+      % else:
       ${self_organ_donor}
+      % endif
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name_full()} like to donate their organs?**
+      % if other_organ_donor == "They would like their agent to decide this.":
+      They would like their agent to decide this.
+      % else:
       ${other_organ_donor}
+      % endif
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
@@ -1918,18 +2411,30 @@ review:
   - Edit: limit_checkboxes
     button: |
       **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
-      * ${subject_do_does} not authorize an autopsy.
+  
+      % if limit_checkboxes['no_autopsy'] and for_yourself:
+      * I do not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
-      * ${subject_do_does} not authorize donation of ${my_their} remains to science.
+      % if limit_checkboxes['no_science'] and for_yourself:
+      * I do not authorize donation of my remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
-      * ${subject_do_does} not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % if limit_checkboxes['no_start'] and for_yourself:
+      * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
-      * ${subject_do_does} not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % if limit_checkboxes['no_end'] and for_yourself:
+      * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % endif
+      % if limit_checkboxes['no_autopsy'] and not for_yourself:
+      * ${principal.name_full()} does not authorize an autopsy.
+      % endif
+      % if limit_checkboxes['no_science'] and not for_yourself:
+      * ${principal.name_full()} does not authorize donation of their remains to science.
+      % endif
+      % if limit_checkboxes['no_start'] and not for_yourself:
+      * ${principal.name_full()} does not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % endif
+      % if limit_checkboxes['no_end'] and not for_yourself:
+      * ${principal.name_full()} does not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
@@ -1938,9 +2443,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
+      **Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?**
       % else:
-      **Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?**
+      **Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?**      
       % endif
       ${word(yesno(delayed_revocation))}
   - Edit: any_successors
@@ -2200,7 +2705,13 @@ review:
     button: |
       **Your disposition of remains instructions:**
       % if self_remains_preference != "specific":
-      ${self_remains_preference}
+      % if self_remains_preference == "I would prefer a burial for my remains.":
+      I would prefer a burial for my remains.
+      % elif self_remains_preference == "I would prefer my remains be cremated.":
+      I would prefer my remains be cremated.
+      % else:
+      I do not have a preference.
+      % endif
       % else:
       ${self_specific_burial_preference}
       % endif
@@ -2209,7 +2720,13 @@ review:
     button: |
       **${principal.name_full()}'s disposition of remains instructions:**
       % if other_remains_preference != "specific":
-      ${other_remains_preference}
+      % if other_remains_preference == "They would prefer a burial for their remains.":
+      They would prefer a burial for their remains.
+      % elif other_remains_preference == "They would prefer their remains be cremated.":
+      They would prefer their remains be cremated.
+      % else:
+      They do not have a preference.
+      % endif
       % else:
       ${other_specific_burial_preference}
       % endif
@@ -2217,12 +2734,20 @@ review:
   - Edit: self_organ_donor
     button: |
       **Would you like to donate your organs?**
+      % if self_organ_donor == "I would like my agent to decide this.":
+      I would like my agent to decide this.
+      % else:
       ${self_organ_donor}
+      % endif
     show if: for_yourself
   - Edit: other_organ_donor
     button: |
       **Would ${principal.name_full()} like to donate their organs?**
+      % if other_organ_donor == "They would like their agent to decide this.":
+      They would like their agent to decide this.
+      % else:
       ${other_organ_donor}
+      % endif
     show if: for_yourself == False
   - Edit: agent_limitation
     button: |  
@@ -2231,18 +2756,30 @@ review:
   - Edit: limit_checkboxes
     button: |
       **Limits for ${agent.name_full()}:**
-
-      % if limit_checkboxes['no_autopsy']:
-      * ${subject_do_does} not authorize an autopsy.
+  
+      % if limit_checkboxes['no_autopsy'] and for_yourself:
+      * I do not authorize an autopsy.
       % endif
-      % if limit_checkboxes['no_science']:
-      * ${subject_do_does} not authorize donation of ${my_their} remains to science.
+      % if limit_checkboxes['no_science'] and for_yourself:
+      * I do not authorize donation of my remains to science.
       % endif
-      % if limit_checkboxes['no_start']:
-      * ${subject_do_does} not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % if limit_checkboxes['no_start'] and for_yourself:
+      * I do not authorize starting these treatments: ${fix_punctuation(no_start_text)}
       % endif
-      % if limit_checkboxes['no_end']:
-      * ${subject_do_does} not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % if limit_checkboxes['no_end'] and for_yourself:
+      * I do not authorize ending these treatments: ${fix_punctuation(no_end_text)}
+      % endif
+      % if limit_checkboxes['no_autopsy'] and not for_yourself:
+      * ${principal.name_full()} does not authorize an autopsy.
+      % endif
+      % if limit_checkboxes['no_science'] and not for_yourself:
+      * ${principal.name_full()} does not authorize donation of their remains to science.
+      % endif
+      % if limit_checkboxes['no_start'] and not for_yourself:
+      * ${principal.name_full()} does not authorize starting these treatments: ${fix_punctuation(no_start_text)}
+      % endif
+      % if limit_checkboxes['no_end'] and not for_yourself:
+      * ${principal.name_full()} does not authorize ending these treatments: ${fix_punctuation(no_end_text)}
       % endif
       % if limit_checkboxes['other']:
       * ${fix_punctuation(other_limits)}
@@ -2251,9 +2788,9 @@ review:
   - Edit: delayed_revocation
     button: |
       % if for_yourself == True:
-      **Do you want to delay future revocation of this Power of Attorney by 30 days?**
+      **Do you want a future revocation of this Power of Attorney to take effect 30 days after you revoke it?**
       % else:
-      **Does ${principal.name_full()} want to delay future revocation of this Power of Attorney by 30 days?**
+      **Does ${principal.name_full()} want a future revocation of this Power of Attorney to take effect 30 days after they revoke it?**      
       % endif
       ${word(yesno(delayed_revocation))}
 ---
