@@ -60,6 +60,14 @@ sections:
   - section_witness: Testigos
   - section_download: Descargar
 ---
+# new code added Oct 2026 to see if user changed lang to es during interview
+initial: True
+code: |
+  if not defined('used_spanish'):
+    used_spanish = False
+  if get_language() == 'es':
+    used_spanish = True
+---
 # interview order block
 mandatory: True
 code: |
@@ -83,11 +91,11 @@ code: |
     illinois_kickout
   principal.address.address
   nav.set_section('section_agent')
+  about_agents
   agent.name.first
   if agent.in_america == False:
     agent.intl_address_full
   set_progress(40)
-  about_agents
   agent.phone_number
   is_guardian
   if when_authorize == "do_not":
@@ -155,7 +163,12 @@ code: |
     stuff_to_snapshot['language'] = get_language()
   except:
     pass
-  
+
+  try:
+    stuff_to_snapshot['used_spanish'] = used_spanish
+  except:
+    pass
+
   store_variables_snapshot(
   	data=stuff_to_snapshot, persistent=True
   	)
